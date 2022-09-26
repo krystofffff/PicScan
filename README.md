@@ -1,4 +1,5 @@
 "# Annual-project-1"
+Two-semester project
 
 ## Roadmap
 1. Start
