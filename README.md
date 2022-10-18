@@ -13,6 +13,6 @@
 3. Download npm dependencies: `npm install`
 
 ### Useful commands to have:
-- Run whole app: `npm run electron-serve`
+- Run whole app: `npm run electron:serve`
 - Run venv: `[path]/backend/venv/Scripts/activate`
 - To run only python backend first start venv and then: `pic_scan/backend/main.py`
