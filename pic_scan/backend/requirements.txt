@@ -1,7 +1,0 @@
-eventlet
-python-socketio
-gevent
-numpy
-opencv-python
-matplotlib
-requests
