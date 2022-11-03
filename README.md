@@ -7,7 +7,7 @@
 3. Finish
 
 ### How to initialize project:
-0. Preconditions: Python 3.10, PyCharm recommended
+0. Preconditions: Python 3.10, Recommended: PyCharm, QtDesigner (GUI builder, .ui files)
 1. Create venv in project
    - PyCharm: `Add New Interpreter -> Add Local Interpreter -> Virtualenv Envirnoment -> New -> [path]/venv`
    - Cmd: `python  -m venv [path]/venv`

@@ -14,12 +14,16 @@ def loadImage(url):
     return bgrImage
 
 
-def rotateImage(img, angle):
-    (h, w) = img.shape[:2]
-    (cX, cY) = (w // 2, h // 2)
-    M = cv2.getRotationMatrix2D((cX, cY), angle, 1.0)
-    return cv2.warpAffine(img, M, (w, h))
+def rotateImage(img):
+    return cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
+def getRotatedPoint(point, center, angle):
+    angle = math.radians(angle)
+    ox, oy = center[0], center[1]
+    px, py = point[0], point[1]
 
+    qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
+    qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
+    return (qx, qy)
 
 def getNormalImage(img):
     return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)

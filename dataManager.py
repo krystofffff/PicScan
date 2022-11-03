@@ -2,7 +2,9 @@ import os.path
 
 
 class DataManager:
+    # TODO Move image storage location here (original, cutouts)
     files = []
+    cutouts = []
 
     def __init__(self):
         super(DataManager, self).__init__()

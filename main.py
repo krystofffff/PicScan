@@ -1,25 +1,24 @@
 import cv2
 from PyQt5 import QtWidgets, uic
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
 import sys
+
+from PyQt5.QtGui import QIcon
+
 import graphicOperations as Go
-import dataManager as Do
+import dataManager as Dm
 from PyQt5.QtWidgets import QFileDialog
 
 
 class MainUi(QtWidgets.QMainWindow):
     path = None
-    cutOuts = None
+    # cutOuts = None
     canvasIMG = None
 
     def __init__(self):
         super(MainUi, self).__init__()
         uic.loadUi('uis/ui.ui', self)
         self.setFixedSize(self.size())
-        # self.button1 = self.findChild(QtWidgets.QPushButton, 'getDirButton')
-        # self.button1.clicked.connect(lambda: self.getDir())
-        self.rotateButton = self.findChild(QtWidgets.QPushButton, 'rotateButton')
-        self.rotateButton.clicked.connect(lambda: self.rotateCanvasIMG())
         self.canvas = self.findChild(QtWidgets.QLabel, 'canvas')
         self.urlTextField = self.findChild(QtWidgets.QLineEdit, 'dirTextField')
         self.scrollArea = self.findChild(QtWidgets.QScrollArea, 'scrollArea')
@@ -38,7 +37,6 @@ class MainUi(QtWidgets.QMainWindow):
         else:
             self.nextButton.setEnabled(True)
         self.path = path
-        # self.urlTextField.setText(self.path)
         self.loadImage()
 
     def __clearScrollArea(self):
@@ -51,22 +49,23 @@ class MainUi(QtWidgets.QMainWindow):
     def loadImage(self):
         self.scrollArea.verticalScrollBar().minimum()
         img, points = Go.findRectangles(Go.loadImage(self.path))
-        images = Go.cutOutImages(img, points)
-        self.cutOuts = images
+        dataManager.cutouts = Go.cutOutImages(img, points)
         # TODO check deletion
         self.__clearScrollArea()
-        for idx, i in enumerate(images):
+        for idx, i in enumerate(dataManager.cutouts):
             layout = self.__buildItem(idx, i)
             x, y = idx % 2, idx // 2
             self.layout.addLayout(layout, y, x)
         self.canvasIMG = {
-            "img": img,
-            "angle": 0
+            "img": img
         }
         self.updateCanvasImage()
 
     def __buildItem(self, idx, img):
         h_layout = QtWidgets.QHBoxLayout()
+        frame = QtWidgets.QFrame()
+        v_layout = QtWidgets.QVBoxLayout(frame)
+        v_layout.setContentsMargins(0, 0, 10, 0)
         label = QtWidgets.QLabel("l" + str(idx))
         label.setFixedSize(150, 150)
         label.setScaledContents(False)
@@ -74,15 +73,23 @@ class MainUi(QtWidgets.QMainWindow):
         label.setFrameStyle(1)
         scaled = Go.resizeImageToFit(img, label.size())
         label.setPixmap(Go.getQPixmap(scaled))
-        button = QtWidgets.QPushButton("b" + str(idx))
-        button.setFixedSize(20, 20)
-        button.clicked.connect(lambda: print("ROTATE PLS"))
+        button = QtWidgets.QPushButton()
+        button.setFixedSize(25, 25)
+        button.clicked.connect(lambda: self.__rotateCutout(idx, label))
+        button.setIcon(QIcon("assets/rot.png"))
+        button.setIconSize(QSize(20, 20))
+        v_layout.addWidget(button)
         h_layout.addWidget(label)
-        h_layout.addWidget(button)
+        h_layout.addWidget(frame)
         return h_layout
 
+    def __rotateCutout(self, idx, label):
+        dataManager.cutouts[idx] = Go.rotateImage(dataManager.cutouts[idx])
+        scaled = Go.resizeImageToFit(dataManager.cutouts[idx], label.size())
+        label.setPixmap(Go.getQPixmap(scaled))
+
     def saveImages(self):
-        for idx, img in enumerate(self.cutOuts):
+        for idx, img in enumerate(dataManager.cutouts):
             cv2.imwrite(("./output/img_" + str(idx) + ".jpg"), img)
         print("DONE")
 
@@ -91,13 +98,8 @@ class MainUi(QtWidgets.QMainWindow):
         self.setPath(url)
         self.loadImage()
 
-    def rotateCanvasIMG(self):
-        self.canvasIMG["angle"] += 10
-        self.updateCanvasImage()
-
     def updateCanvasImage(self):
-        rotated = Go.rotateImage(self.canvasIMG["img"], self.canvasIMG["angle"])
-        scaled = Go.resizeImageToFit(rotated, self.canvas.size())
+        scaled = Go.resizeImageToFit(self.canvasIMG["img"], self.canvas.size())
         self.canvas.setPixmap(Go.getQPixmap(scaled))
 
     def switchToDrop(self):
@@ -137,7 +139,7 @@ class DropUi(QtWidgets.QMainWindow):
 
 
 if __name__ == "__main__":
-    dataManager = Do.DataManager()
+    dataManager = Dm.DataManager()
     app = QtWidgets.QApplication(sys.argv)
     main = MainUi()
     drop = DropUi()
