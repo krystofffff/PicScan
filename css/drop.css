@@ -1,0 +1,20 @@
+.QPushButton#browserButton{
+  border-radius: 25px;
+  border: 2px solid #73AD21;
+  padding: 3px;
+  width: auto;
+  height: auto;
+
+
+}
+
+.QPushButton:hover#browserButton  {
+  background-color: rgb(115, 173, 33);
+  color: white;
+
+}
+
+.QLabel#labelDrop {
+    border: 8px dashed gray;
+    border-radius: 25px;
+}

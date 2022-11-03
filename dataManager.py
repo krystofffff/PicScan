@@ -6,9 +6,6 @@ class DataManager:
     files = []
     cutouts = []
 
-    def __init__(self):
-        super(DataManager, self).__init__()
-
     def clearData(self):
         self.files = []
 
