@@ -1,6 +1,6 @@
 import cv2
 from PyQt5 import QtWidgets, uic
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt, QSize, QUrl
 import sys
 
 from PyQt5.QtGui import QIcon
@@ -8,6 +8,9 @@ from PyQt5.QtGui import QIcon
 import graphicOperations as Go
 import dataManager as Dm
 from PyQt5.QtWidgets import QFileDialog
+import dataManager as Dm
+from PyQt5.QtWidgets import QFileDialog, QPushButton
+
 
 
 class MainUi(QtWidgets.QMainWindow):
@@ -114,11 +117,16 @@ class DropUi(QtWidgets.QMainWindow):
         self.setFixedSize(self.size())
         self.setAcceptDrops(True)
         self.label = self.findChild(QtWidgets.QLabel, 'labelDrop')
+        self.label2 = self.findChild(QtWidgets.QLabel, 'labelDrop_2')
+        self.browserButton = self.findChild(QtWidgets.QPushButton, 'browserButton')
+        self.browserButton.clicked.connect(lambda: self.openFileExplorer())
         self.label.setStyleSheet('''
             QLabel {
                 border: 8px dashed gray;
                 border-radius: 25px;
             }''')
+
+
 
     def dragEnterEvent(self, event):
         self.label.setText("Drop it here")
@@ -131,16 +139,39 @@ class DropUi(QtWidgets.QMainWindow):
     def dropEvent(self, event):
         event.setDropAction(Qt.CopyAction)
         urls = event.mimeData().urls()
+        print(urls)
         dataManager.addFile(urls)
         main.setPath(dataManager.getNextImage())
         w.setCurrentIndex(0)
         self.label.setText("Drag & Drop")
         event.accept()
 
+    def openFileExplorer(self):
+        fname=QFileDialog.getOpenFileNames(self, 'Open file')
+        arrUrls = []
+        for url in fname[0]:
+            arrUrls.append(QUrl('file:///'+url))
+        if fname == ([],''): #if cancel is pressed prevents from sending empty string further
+            return
+        dataManager.addFile(arrUrls)
+        main.setPath(dataManager.getNextImage())
+        w.setCurrentIndex(0)
+        self.label.setText("Drag & Drop")
+
+
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
     dataManager = Dm.DataManager()
     app = QtWidgets.QApplication(sys.argv)
+    styleSheet = open("css\main.css", "r")
+    app.setStyleSheet(styleSheet.read())
     main = MainUi()
     drop = DropUi()
     w = QtWidgets.QStackedWidget()
