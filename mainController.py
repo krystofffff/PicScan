@@ -1,20 +1,16 @@
-import cv2
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QFileDialog
+import dataManager as Dm
 import graphicOperations as Go
 
 
 class MainUi(QtWidgets.QMainWindow):
-    path = None
-    canvasIMG = None
 
-    def __init__(self, sw, dm):
+    def __init__(self, sw):
         super(MainUi, self).__init__()
         uic.loadUi('uis/main.ui', self)
         self.sw = sw
-        self.dm = dm
         self.setFixedSize(self.size())
         self.canvas = self.findChild(QtWidgets.QLabel, 'canvas')
         self.urlTextField = self.findChild(QtWidgets.QLineEdit, 'dirTextField')
@@ -23,18 +19,10 @@ class MainUi(QtWidgets.QMainWindow):
         self.saveButton = self.findChild(QtWidgets.QPushButton, 'saveButton')
         self.saveButton.clicked.connect(lambda: self.saveImages())
         self.nextButton = self.findChild(QtWidgets.QPushButton, 'nextButton')
-        self.nextButton.clicked.connect(lambda: self.setPath(self.dm.getNextImage()))
+        self.nextButton.clicked.connect(lambda: self.loadNewImage())
         self.endButton = self.findChild(QtWidgets.QPushButton, 'endButton')
         self.endButton.clicked.connect(lambda: self.switchToDrop())
         self.setStyleSheet(open('css/main.css').read())
-
-    def setPath(self, path):
-        if self.dm.isEmpty():
-            self.nextButton.setEnabled(False)
-        else:
-            self.nextButton.setEnabled(True)
-        self.path = path
-        self.loadImage()
 
     def __clearScrollArea(self):
         for i in reversed(range(self.layout.count())):
@@ -43,20 +31,19 @@ class MainUi(QtWidgets.QMainWindow):
                 a.layout().itemAt(j).widget().deleteLater()
             a.layout().deleteLater()
 
-    def loadImage(self):
+    def loadNewImage(self):
+        Dm.loadNewCanvas()
+        Dm.generateCutouts()
+        self.nextButton.setEnabled(not Dm.isEmpty())
         self.scrollArea.verticalScrollBar().minimum()
-        img, points = Go.findRectangles(Go.loadImage(self.path))
-        self.dm.cutouts = Go.cutOutImages(img, points)
         # TODO check deletion
         self.__clearScrollArea()
-        for idx, i in enumerate(self.dm.cutouts):
+        for idx, i in enumerate(Dm.getCutouts()):
             layout = self.__buildItem(idx, i)
             x, y = idx % 2, idx // 2
             self.layout.addLayout(layout, y, x)
-        self.canvasIMG = {
-            "img": img
-        }
-        self.updateCanvasImage()
+        scaled = Go.resizeImageToFit(Dm.getCanvas(), self.canvas.size())
+        self.canvas.setPixmap(Go.getQPixmap(scaled))
 
     def __buildItem(self, idx, img):
         h_layout = QtWidgets.QHBoxLayout()
@@ -81,25 +68,13 @@ class MainUi(QtWidgets.QMainWindow):
         return h_layout
 
     def __rotateCutout(self, idx, label):
-        self.dm.cutouts[idx] = Go.rotateImage(self.dm.cutouts[idx])
-        scaled = Go.resizeImageToFit(self.dm.cutouts[idx], label.size())
+        Dm.getCutouts()[idx] = Go.rotateImage(Dm.getCutouts()[idx])
+        scaled = Go.resizeImageToFit(Dm.getCutouts()[idx], label.size())
         label.setPixmap(Go.getQPixmap(scaled))
 
     def saveImages(self):
-        for idx, img in enumerate(self.dm.cutouts):
-            # TODO move to datamanager
-            cv2.imwrite(("./output/img_" + str(idx) + ".jpg"), img)
-        print("DONE")
-
-    def getDir(self):
-        url = QFileDialog.getOpenFileName(self, "Select Directory")[0]
-        self.setPath(self=self, path=url)
-        self.loadImage()
-
-    def updateCanvasImage(self):
-        scaled = Go.resizeImageToFit(self.canvasIMG["img"], self.canvas.size())
-        self.canvas.setPixmap(Go.getQPixmap(scaled))
+        Dm.saveCutouts()
 
     def switchToDrop(self):
-        self.dm.clearData()
+        Dm.clearData()
         self.sw.setCurrentIndex(1)

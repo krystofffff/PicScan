@@ -6,11 +6,10 @@ from dropController import DropUi
 from mainController import MainUi
 
 if __name__ == "__main__":
-    dm = Dm.DataManager()
     app = QtWidgets.QApplication(sys.argv)
     sw = QtWidgets.QStackedWidget()
-    main = MainUi(sw, dm)
-    drop = DropUi(sw, dm, main)
+    main = MainUi(sw)
+    drop = DropUi(sw, main)
     sw.addWidget(main)
     sw.addWidget(drop)
     sw.setCurrentIndex(1)
