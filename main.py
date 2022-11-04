@@ -1,6 +1,5 @@
-from PyQt5 import QtWidgets
 import sys
-import dataManager as Dm
+from PyQt5 import QtWidgets
 
 from dropController import DropUi
 from mainController import MainUi
