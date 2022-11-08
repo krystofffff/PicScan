@@ -4,7 +4,7 @@ import numpy as np
 import graphicOperations as Go
 
 _files = []
-_cutouts = []
+_cutouts = dict()
 _canvas = None
 
 
@@ -17,7 +17,7 @@ def getCanvas():
 
 
 def saveCutouts():
-    for idx, img in enumerate(_cutouts):
+    for idx, img in _cutouts.items():
         cv2.imwrite(("./output/img_" + str(idx) + ".jpg"), img)
     print("DONE")
 
@@ -29,7 +29,8 @@ def loadNewCanvas():
 
 def generateCutouts():
     global _cutouts
-    _cutouts = Go.getCutOutImages(_canvas)
+    cts = Go.getCutOutImages(_canvas)
+    _cutouts = {i: img for i, img in enumerate(cts)}
 
 
 def _loadImage(url):
@@ -43,8 +44,12 @@ def _loadImage(url):
 def clearData():
     global _files, _cutouts, _canvas
     _files = []
-    _cutouts = []
+    _cutouts = dict()
     _canvas = None
+
+def removeCutout(key):
+    global _cutouts
+    _cutouts.pop(key)
 
 
 def addFile(path):
