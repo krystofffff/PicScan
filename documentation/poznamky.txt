@@ -1,0 +1,30 @@
+ročníkový projekt 
+scénaře
+- otevření + úprava dohodit vše do jedné scénaře 
+- detekce fotografií (automaticky detekuje - dodat kdo)
+
+architektura 
+-dopsat verzi existuje python10
+-datamanager ->aby nedělal operace řešil perzistenci a dělal aplikační logiku -- rozdělit na Managera a datamanager
+-vyřešit aplikační logiku 
+-openCV vyndat z architektury (není součástí/připojím pomocí pip install)
+
+
+risk-list
+-1.doložit aplikace zákazníkovi aby ji schválil 
+
+
+zahodit kdyztak architekturu, eventuálně dodělat uložení všech fotografií do adresáře
+vyhodit aktora ze scénářů, jelikož to nemá autentizaci 
+
+postcondition prvního scénare - načtení souboru v aplikaci vizuálně
+
+v aplikaci přihodit feature pro uložení jednotlivých vyřeraných obrázků ze souboru / respektive označit obrázky, které nechci ukládat např.
+
+8.11.2022
+
+udelat user storky pro zakaznika 
+pri odstraneni v preview okně ji dostat zpatky pri 
+edit tlacitko odstranit pryc z previeew okna, zvetseni okna v preview okně (architektonicky zjistit zda Qt dokáže) 
+wireframy + scénář - aby zákazník veděl co mu budeme prezentovat, prihodit wireframy na tlačítka atd 
+obrázky jak v preview tak malé výřezy zvětšit 
