@@ -7,6 +7,7 @@ from mainController import MainUi
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     sw = QtWidgets.QStackedWidget()
+    sw.setWindowTitle("PicScan beta")
     main = MainUi(sw)
     drop = DropUi(sw, main)
     sw.addWidget(main)

@@ -1,21 +1,40 @@
-from PyQt5 import uic, QtWidgets
+import os
+import tkinter.filedialog
+from tkinter import filedialog
+
+from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QUrl, Qt
 from PyQt5.QtWidgets import QFileDialog
 import dataManager as Dm
 
 
-class DropUi(QtWidgets.QMainWindow):
+class DropUi(QMainWindow):
     def __init__(self, sw, main):
         super(DropUi, self).__init__()
-        uic.loadUi('uis/drop.ui', self)
+
         self.sw = sw
         self.main = main
-        self.setFixedSize(self.size())
+        self.center = QLabel()
+        self.center.setObjectName("outer")
+        self.center.setMinimumSize(960, 480)
+        self.setCentralWidget(self.center)
         self.setAcceptDrops(True)
-        self.label = self.findChild(QtWidgets.QLabel, 'labelDrop')
-        self.label2 = self.findChild(QtWidgets.QLabel, 'labelDrop_2')
-        self.browserButton = self.findChild(QtWidgets.QPushButton, 'browserButton')
+        self.label = QLabel("Drag & Drop")
+        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setFixedSize(200, 50)
+        self.label2 = QLabel("or")
+        self.label2.setAlignment(Qt.AlignCenter)
+        self.layout = QVBoxLayout()
+        self.layout.setAlignment(Qt.AlignCenter)
+        self.center.setLayout(self.layout)
+
+        self.browserButton = QPushButton("Choose file")
         self.browserButton.clicked.connect(lambda: self.openFileExplorer())
+        self.browserButton.setObjectName("browserButton")
+
+        self.layout.addWidget(self.label)
+        self.layout.addWidget(self.label2)
+        self.layout.addWidget(self.browserButton)
         self.setStyleSheet(open('css/drop.css').read())
 
     def dragEnterEvent(self, event):

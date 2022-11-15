@@ -1,5 +1,4 @@
 import math
-import random
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,17 +8,14 @@ from PyQt5.QtGui import QImage, QPixmap
 def rotateImage(img):
     return cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
+
 def _getRotatedPoint(point, center, angle):
     angle = math.radians(angle)
     ox, oy = center[0], center[1]
     px, py = point[0], point[1]
-
     qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
     qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
-    return (qx, qy)
-
-def _getNormalImage(img):
-    return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    return qx, qy
 
 
 def resizeImageToFit(img, shape):
@@ -33,7 +29,7 @@ def resizeImageToFit(img, shape):
 
 
 def show(img):
-    plt.imshow(_getNormalImage(img))
+    plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
     plt.show()
 
 
@@ -117,10 +113,29 @@ def _getIndexOfBottom(corners):
     return index
 
 
+# TODO setting new disabledImg on every toggle ???
+def getDisabledImage(img):
+    img = np.copy(img)
+    lines = 5
+    lin_1 = (lines // 2) + 1
+    c = 0
+    w = min(img.shape[1], img.shape[0]) // (lines * 4)
+    for i in range(1, lin_1):
+        cv2.line(img, (i * int(img.shape[1] / lin_1), 0), (img.shape[1], (lin_1 - i) * int(img.shape[0] / lin_1)),
+                 (c, c, c), w)
+        c += 255 // lines
+    cv2.line(img, (0, 0), (img.shape[1], img.shape[0]), (c, c, c), w)
+    c += 255 // lines
+    for i in range(1, lin_1):
+        cv2.line(img, (0, i * int(img.shape[0] / lin_1)), ((lin_1 - i) * int(img.shape[1] / lin_1), img.shape[0]),
+                 (c, c, c), w)
+        c += 255 // lines
+    return img
+
+
 def _subimage(image, corners):
     sx = sy = 0
     index = _getIndexOfBottom(corners)
-    # image = cv2.circle(image, (corners[index][0][0], corners[index][0][1]), 25, (100,), -1)
     width = int(_getDistance(corners[index][0], corners[(index + 1) % 4][0]))
     height = int(_getDistance(corners[index][0], corners[(index + 3) % 4][0]))
     for point in corners:
@@ -138,8 +153,8 @@ def _subimage(image, corners):
 
 
 def getQPixmap(img):
-    img = _getNormalImage(img)
-    height, width, channel = img.shape
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    height, width, _ = img.shape
     bytesPerLine = 3 * width
     qImg = QImage(img.data, width, height, bytesPerLine, QImage.Format_RGB888)
     return QPixmap(qImg)

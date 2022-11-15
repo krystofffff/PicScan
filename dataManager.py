@@ -4,8 +4,15 @@ import numpy as np
 import graphicOperations as Go
 
 _files = []
-_cutouts = dict()
+_cutouts = {}
 _canvas = None
+
+
+class Cutout:
+    def __init__(self, img, enabled):
+        self.img = img
+        self.disabledImg = Go.getDisabledImage(img)
+        self.enabled = enabled
 
 
 def getCutouts():
@@ -18,7 +25,8 @@ def getCanvas():
 
 def saveCutouts():
     for idx, img in _cutouts.items():
-        cv2.imwrite(("./output/img_" + str(idx) + ".jpg"), img)
+        if img.enabled:
+            cv2.imwrite(("./output/img_" + str(idx) + ".jpg"), img.img)
     print("DONE")
 
 
@@ -30,7 +38,7 @@ def loadNewCanvas():
 def generateCutouts():
     global _cutouts
     cts = Go.getCutOutImages(_canvas)
-    _cutouts = {i: img for i, img in enumerate(cts)}
+    _cutouts = {i: Cutout(img, True) for i, img in enumerate(cts)}
 
 
 def _loadImage(url):
@@ -46,10 +54,6 @@ def clearData():
     _files = []
     _cutouts = dict()
     _canvas = None
-
-def removeCutout(key):
-    global _cutouts
-    _cutouts.pop(key)
 
 
 def addFile(path):
@@ -102,3 +106,12 @@ def getNextImage():
                 return file
             else:
                 return getNextImage()
+
+
+def rotateCutout(idx):
+    _cutouts[idx].img = Go.rotateImage(_cutouts[idx].img)
+    _cutouts[idx].disabledImg = Go.rotateImage(_cutouts[idx].disabledImg)
+
+
+def toggleCutout(key):
+    _cutouts.get(key).enabled = not _cutouts.get(key).enabled
