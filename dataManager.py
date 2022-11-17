@@ -6,6 +6,7 @@ import graphicOperations as Go
 _files = []
 _cutouts = {}
 _canvas = None
+_current_file = ""
 
 
 class Cutout:
@@ -30,7 +31,7 @@ def saveCutouts():
     print("DONE")
 
 
-def loadNewCanvas():
+def getNewCanvas():
     global _canvas
     _canvas = _loadImage(getNextImage())
 
@@ -93,17 +94,17 @@ def _addDirContent(file):
 
 
 def getNextImage():
-    global _files
+    global _files, _current_file
     if isEmpty():
         return None
     else:
-        file = _files.pop(0)
-        if _isFolder(file):
-            _addDirContent(file)
+        _current_file = _files.pop(0)
+        if _isFolder(_current_file):
+            _addDirContent(_current_file)
             return getNextImage()
         else:
-            if _isImage(file):
-                return file
+            if _isImage(_current_file):
+                return _current_file
             else:
                 return getNextImage()
 
@@ -115,3 +116,9 @@ def rotateCutout(idx):
 
 def toggleCutout(key):
     _cutouts.get(key).enabled = not _cutouts.get(key).enabled
+
+
+def getFileName():
+    global _current_file
+    s = _current_file.split("/")
+    return s[-1]

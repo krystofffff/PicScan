@@ -29,6 +29,9 @@ class MainUi(QMainWindow):
         self.scrollInnerContainer.setLayout(self.gridLayout)
         self.scrollArea.setWidget(self.scrollInnerContainer)
         self.buttonHLayout = QHBoxLayout()
+        self.fileNameLabel = QLabel()
+        self.fileNameLabel.setAlignment(Qt.AlignCenter)
+        self.VLayout.addWidget(self.fileNameLabel, 1)
         self.VLayout.addLayout(self.buttonHLayout, 1)
 
         self.saveButton = QPushButton("SAVE")
@@ -54,10 +57,11 @@ class MainUi(QMainWindow):
 
     def loadNewImage(self):
         self.__clearScrollArea()
-        Dm.loadNewCanvas()
+        Dm.getNewCanvas()
         Dm.generateCutouts()
         self.nextButton.setEnabled(not Dm.isEmpty())
         self.scrollArea.verticalScrollBar().minimum()
+        self.fileNameLabel.setText(Dm.getFileName())
         counter = 0
         for key, co in Dm.getCutouts().items():
             layout = self.__buildItem(self.scrollArea, counter, key, co.img)
