@@ -4,8 +4,16 @@ import numpy as np
 import graphicOperations as Go
 
 _files = []
-_cutouts = dict()
+_cutouts = {}
 _canvas = None
+_current_file = ""
+
+
+class Cutout:
+    def __init__(self, img, enabled):
+        self.img = img
+        self.disabledImg = Go.getDisabledImage(img)
+        self.enabled = enabled
 
 
 def getCutouts():
@@ -18,11 +26,12 @@ def getCanvas():
 
 def saveCutouts():
     for idx, img in _cutouts.items():
-        cv2.imwrite(("./output/img_" + str(idx) + ".jpg"), img)
+        if img.enabled:
+            cv2.imwrite(("./output/img_" + str(idx) + ".jpg"), img.img)
     print("DONE")
 
 
-def loadNewCanvas():
+def getNewCanvas():
     global _canvas
     _canvas = _loadImage(getNextImage())
 
@@ -30,7 +39,7 @@ def loadNewCanvas():
 def generateCutouts():
     global _cutouts
     cts = Go.getCutOutImages(_canvas)
-    _cutouts = {i: img for i, img in enumerate(cts)}
+    _cutouts = {i: Cutout(img, True) for i, img in enumerate(cts)}
 
 
 def _loadImage(url):
@@ -46,10 +55,6 @@ def clearData():
     _files = []
     _cutouts = dict()
     _canvas = None
-
-def removeCutout(key):
-    global _cutouts
-    _cutouts.pop(key)
 
 
 def addFile(path):
@@ -89,16 +94,31 @@ def _addDirContent(file):
 
 
 def getNextImage():
-    global _files
+    global _files, _current_file
     if isEmpty():
         return None
     else:
-        file = _files.pop(0)
-        if _isFolder(file):
-            _addDirContent(file)
+        _current_file = _files.pop(0)
+        if _isFolder(_current_file):
+            _addDirContent(_current_file)
             return getNextImage()
         else:
-            if _isImage(file):
-                return file
+            if _isImage(_current_file):
+                return _current_file
             else:
                 return getNextImage()
+
+
+def rotateCutout(idx):
+    _cutouts[idx].img = Go.rotateImage(_cutouts[idx].img)
+    _cutouts[idx].disabledImg = Go.rotateImage(_cutouts[idx].disabledImg)
+
+
+def toggleCutout(key):
+    _cutouts.get(key).enabled = not _cutouts.get(key).enabled
+
+
+def getFileName():
+    global _current_file
+    s = _current_file.split("/")
+    return s[-1]
