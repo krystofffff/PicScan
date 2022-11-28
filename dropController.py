@@ -44,7 +44,7 @@ class DropUi(QMainWindow):
     def dropEvent(self, event):
         event.setDropAction(Qt.CopyAction)
         urls = event.mimeData().urls()
-        Dm.addFile(urls)
+        Dm.add_file(urls)
         self.main.loadNewImage()
         self.sw.setCurrentIndex(0)
         self.label.setText("Drag & Drop")
@@ -57,7 +57,7 @@ class DropUi(QMainWindow):
             arrUrls.append(QUrl('file:///' + url))
         if fname == ([], ''):  # if cancel is pressed prevents from sending empty string further
             return
-        Dm.addFile(arrUrls)
+        Dm.add_file(arrUrls)
         self.main.loadNewImage()
         self.sw.setCurrentIndex(0)
         self.label.setText("Drag & Drop")

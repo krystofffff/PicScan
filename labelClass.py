@@ -31,9 +31,9 @@ class Label(QLabel):
             Qt.SmoothTransformation))
 
     def updatePixMap(self):
-        co = Dm.getCutouts()[self.idx]
+        co = Dm.get_cutouts()[self.idx]
         if co.enabled:
             self.pixmap = Go.getQPixmap(co.img)
         else:
-            self.pixmap = Go.getQPixmap(co.disabledImg)
+            self.pixmap = Go.getQPixmap(co.disabled_img)
         self.__setScaledPixmap(self.pixmap)

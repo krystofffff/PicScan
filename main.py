@@ -1,17 +1,20 @@
 import sys
 from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QStackedWidget
 
 from dropController import DropUi
+from editController import EditUi
 from mainController import MainUi
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    sw = QtWidgets.QStackedWidget()
+    sw = QStackedWidget()
     sw.setWindowTitle("PicScan beta")
     main = MainUi(sw)
     drop = DropUi(sw, main)
-    sw.addWidget(main)
-    sw.addWidget(drop)
+    for i in [main, drop]:
+        sw.addWidget(i)
     sw.setCurrentIndex(1)
     sw.show()
     app.exec_()

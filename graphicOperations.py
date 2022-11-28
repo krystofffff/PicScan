@@ -95,7 +95,7 @@ def getCutOutImages(image):
     images = []
     for i in points:
         images.append(_subimage(img, i))
-    return images
+    return images, points
 
 
 def _getIndexOfBottom(corners):
@@ -114,6 +114,7 @@ def _getIndexOfBottom(corners):
 
 
 # TODO setting new disabledImg on every toggle ???
+# TODO ERROR on edit out of range
 def getDisabledImage(img):
     img = np.copy(img)
     lines = 5

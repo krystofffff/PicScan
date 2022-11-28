@@ -10,76 +10,81 @@ _current_file = ""
 
 
 class Cutout:
-    def __init__(self, img, enabled):
+    def __init__(self, img, enabled, points):
         self.img = img
-        self.disabledImg = Go.getDisabledImage(img)
+        self.disabled_img = Go.getDisabledImage(img)
         self.enabled = enabled
+        self.points = points
 
 
-def getCutouts():
+def get_cutouts():
     return _cutouts
 
 
-def getCanvas():
+def get_cutout_points(idx):
+    return _cutouts[idx].points
+
+
+def get_canvas():
     return _canvas
 
 
-def saveCutouts():
+def save_cutouts():
     for idx, img in _cutouts.items():
         if img.enabled:
             cv2.imwrite(("./output/img_" + str(idx) + ".jpg"), img.img)
     print("DONE")
 
 
-def getNewCanvas():
+def get_new_canvas():
     global _canvas
-    _canvas = _loadImage(getNextImage())
+    _canvas = _load_image(get_next_image())
 
 
-def generateCutouts():
+def generate_cutouts():
     global _cutouts
-    cts = Go.getCutOutImages(_canvas)
-    _cutouts = {i: Cutout(img, True) for i, img in enumerate(cts)}
+    cts, points = Go.getCutOutImages(_canvas)
+    _cutouts = {i: Cutout(img, True, points[i]) for i, img in enumerate(cts)}
 
 
-def _loadImage(url):
+def _load_image(url):
     stream = open(url, "rb")
     bts = bytearray(stream.read())
     nparray = np.asarray(bts, dtype=np.uint8)
-    bgrImage = cv2.imdecode(nparray, cv2.IMREAD_UNCHANGED)
-    return bgrImage
+    bgr_image = cv2.imdecode(nparray, cv2.IMREAD_UNCHANGED)
+    return bgr_image
 
 
-def clearData():
+def clear_data():
     global _files, _cutouts, _canvas
     _files = []
     _cutouts = dict()
     _canvas = None
 
 
-def addFile(path):
+def add_file(path):
     global _files
     for i in path:
         url = i.path()[1:]
-        if _isFolder(url):
-            _addDirContent(url)
+        if _is_folder(url):
+            _add_dir_content(url)
         else:
             _files.append(url)
 
 
-def _isImage(path):
-    fileName = path[path.rfind(".") + 1:]
-    if fileName in ["bmp", "jpeg", "jpg", "tiff", "png"]:
+def _is_image(path):
+    file_name = path[path.rfind(".") + 1:]
+    if file_name in ["bmp", "jpeg", "jpg", "tiff", "png"]:
         return True
     else:
         return False
 
 
-def _isFolder(path):
+def _is_folder(path):
     return os.path.isdir(path)
 
 
-def isEmpty():
+def is_empty():
     global _files
     if len(_files) == 0:
         return True
@@ -87,38 +92,43 @@ def isEmpty():
         return False
 
 
-def _addDirContent(file):
+def _add_dir_content(file):
     global _files
     a = [(file + "/" + x) for x in os.listdir(file)]
     _files += a
 
 
-def getNextImage():
+def get_next_image():
     global _files, _current_file
-    if isEmpty():
+    if is_empty():
         return None
     else:
         _current_file = _files.pop(0)
-        if _isFolder(_current_file):
-            _addDirContent(_current_file)
-            return getNextImage()
+        if _is_folder(_current_file):
+            _add_dir_content(_current_file)
+            return get_next_image()
         else:
-            if _isImage(_current_file):
+            if _is_image(_current_file):
                 return _current_file
             else:
-                return getNextImage()
+                return get_next_image()
 
 
-def rotateCutout(idx):
+def rotate_cutout(idx):
     _cutouts[idx].img = Go.rotateImage(_cutouts[idx].img)
-    _cutouts[idx].disabledImg = Go.rotateImage(_cutouts[idx].disabledImg)
+    _cutouts[idx].disabled_img = Go.rotateImage(_cutouts[idx].disabled_img)
 
 
-def toggleCutout(key):
+def toggle_cutout(key):
     _cutouts.get(key).enabled = not _cutouts.get(key).enabled
 
 
-def getFileName():
+def get_file_name():
     global _current_file
     s = _current_file.split("/")
     return s[-1]
+
+
+def update_coutout(idx, p):
+    points = [[x] for x in p]
+    get_cutouts()[idx] = Cutout(Go._subimage(get_canvas(), points), get_cutouts()[idx].enabled, points)
