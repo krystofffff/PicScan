@@ -1,4 +1,3 @@
-import math
 import statistics as stat
 
 from PyQt5 import QtGui, QtCore
@@ -17,6 +16,7 @@ class Anchor(QGraphicsEllipseItem):
 
     def __init__(self, point, r, rect, color):
         super().__init__(0, 0, r, r)
+        self.r = r
         self.setPos(point[0] - r//2, point[1] - r//2)
         pen = QPen()
         pen.setWidth(25)
@@ -27,6 +27,9 @@ class Anchor(QGraphicsEllipseItem):
 
     def mousePressEvent(self, event):
         pass
+
+    def get_point(self):
+        return [self.pos().x() + self.r//2, self.pos().y() + self.r//2]
 
 
 class CornerAnchor(Anchor):
@@ -74,7 +77,7 @@ class Line(QGraphicsLineItem):
         self.setPen(QtGui.QPen(QtGui.QColor(50, 50, 50), width, QtCore.Qt.DashLine))
 
     def update_pos(self, p1, p2):
-        self.setLine(p1[0] + self.a_size//2, p1[1] + self.a_size//2, p2[0] + self.a_size//2, p2[1]+ self.a_size//2)
+        self.setLine(p1[0], p1[1], p2[0], p2[1])
 
 
 class SelectionBox:
@@ -103,9 +106,9 @@ class SelectionBox:
             self.scene.removeItem(i)
 
     def get_points_from_anchors(self):
-        return _get_point_from_anchor(self.anchor1), \
-               _get_point_from_anchor(self.anchor2), \
-               _get_point_from_anchor(self.anchor3)
+        return self.anchor1.get_point(), \
+               self.anchor2.get_point(), \
+               self.anchor3.get_point()
 
     def update_lines(self):
         points = Geo.get_corners_from_anchors(*self.get_points_from_anchors())
