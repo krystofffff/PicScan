@@ -90,7 +90,8 @@ class MainUi(QMainWindow):
         label = Label(parent, img, idx)
         rot_button = self.__buildRotateButton(25, frame, idx, label)
         rem_button = self.__buildRemoveButton(25, frame, key, label)
-        for i in [rot_button, rem_button]:
+        zoom_button = self.__buildZoomButton(25, frame, key)
+        for i in [rot_button, rem_button, zoom_button]:
             v_layout.addWidget(i)
         h_layout.addWidget(label, 9)
         h_layout.addWidget(frame, 1)
@@ -113,6 +114,14 @@ class MainUi(QMainWindow):
         button = self.__buildButton(size, parent, "assets/rot.png")
         button.clicked.connect(lambda: self.__rotateCutout(idx, label))
         return button
+
+    def __buildZoomButton(self, size, parent, idx):
+        button = self.__buildButton(size, parent, "assets/zoom.png")
+        button.clicked.connect(lambda: self.__zoomImage(idx))
+        return button
+
+    def __zoomImage(self, idx):
+        Dm.zoomImage(idx)
 
     def __rotateCutout(self, idx, label):
         Dm.rotateCutout(idx)
