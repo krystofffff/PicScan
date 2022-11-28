@@ -32,7 +32,7 @@
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="text">
-     <string>Choose file</string>
+     <string>Upload</string>
     </property>
    </widget>
    <widget class="QLabel" name="labelDrop">
@@ -101,9 +101,33 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>450</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="currentText">
+     <string>File(s)</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>File(s)</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Directory</string>
+     </property>
+    </item>
+   </widget>
    <zorder>labelDrop</zorder>
    <zorder>browserButton</zorder>
    <zorder>labelDrop_2</zorder>
+   <zorder>comboBox</zorder>
   </widget>
  </widget>
  <resources/>
