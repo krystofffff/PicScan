@@ -1,10 +1,6 @@
 import os.path
 import cv2
 import numpy as np
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QDialog, QLabel, QVBoxLayout, QSizePolicy
-
 import graphicOperations as Go
 
 _files = []
@@ -123,24 +119,7 @@ def rotate_cutout(idx):
     _cutouts[idx].disabled_img = Go.rotateImage(_cutouts[idx].disabled_img)
 
 
-def zoomImage(idx):
-    dialog = QDialog()
-    dialog.setWindowTitle("image")
-    image = Go.getQPixmap(_cutouts[idx].img)
-    downscaled_image = image.scaled(1000, 800, Qt.KeepAspectRatio)
-
-    label = QLabel()
-    label.setPixmap((downscaled_image))
-    label.setMinimumSize(label.sizeHint())
-
-    vbox = QVBoxLayout()
-    vbox.addWidget(label)
-
-    dialog.setLayout(vbox)
-    dialog.exec_()
-
-
-def toggle_cutout(key):
+def toggleCutout(key):
     _cutouts.get(key).enabled = not _cutouts.get(key).enabled
 
 

@@ -3,7 +3,6 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QStackedWidget
 
 from dropController import DropUi
-from editController import EditUi
 from mainController import MainUi
 
 
