@@ -28,7 +28,7 @@ class EditUi(QMainWindow):
 
         self.scene = QGraphicsScene()
         pic = QGraphicsPixmapItem()
-        pixmap = Go.getQPixmap(canvas)
+        pixmap = Go.get_qpixmap(canvas)
         pic.setPixmap(pixmap)
         w, h = pixmap.width(), pixmap.height()
         self.scene.setSceneRect(0, 0, w, h)
@@ -71,7 +71,7 @@ class EditUi(QMainWindow):
 
     def _accept_selection(self):
         p = Geo.get_corners_from_anchors(*self.selectionBox.get_points_from_anchors())
-        Dm.update_coutout(self.idx, p)
+        Dm.update_cutout(self.idx, p)
         self.label.updatePixMap()
         self.sw.removeWidget(self)
         self.sw.setCurrentIndex(0)

@@ -25,7 +25,7 @@ class DropUi(QMainWindow):
         self.center.setLayout(self.layout)
 
         self.browserButton = QPushButton("Choose file")
-        self.browserButton.clicked.connect(lambda: self.openFileExplorer())
+        self.browserButton.clicked.connect(lambda: self.open_file_explorer())
         self.browserButton.setObjectName("browserButton")
 
         self.layout.addWidget(self.label)
@@ -45,19 +45,19 @@ class DropUi(QMainWindow):
         event.setDropAction(Qt.CopyAction)
         urls = event.mimeData().urls()
         Dm.add_file(urls)
-        self.main.loadNewImage()
+        self.main.load_new_image()
         self.sw.setCurrentIndex(0)
         self.label.setText("Drag & Drop")
         event.accept()
 
-    def openFileExplorer(self):
+    def open_file_explorer(self):
         fname = QFileDialog.getOpenFileNames(self, 'Open file')
         arrUrls = []
         for url in fname[0]:
             arrUrls.append(QUrl('file:///' + url))
-        if fname == ([], ''):  # if cancel is pressed prevents from sending empty string further
+        if fname == ([], ''):
             return
         Dm.add_file(arrUrls)
-        self.main.loadNewImage()
+        self.main.load_new_image()
         self.sw.setCurrentIndex(0)
         self.label.setText("Drag & Drop")

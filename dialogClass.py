@@ -10,7 +10,7 @@ class Dialog(QDialog):
         super().__init__()
         self.idx = idx
         self.setWindowTitle("image")
-        image = Go.getQPixmap(Dm.get_cutouts()[self.idx].img)
+        image = Go.get_qpixmap(Dm.get_cutouts()[self.idx].img)
         downscaled_image = image.scaled(1000, 800, Qt.KeepAspectRatio)
 
         label = QLabel()

@@ -11,7 +11,7 @@ class Label(QLabel):
         self.idx = idx
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setAlignment(Qt.AlignCenter)
-        self.pixmap = Go.getQPixmap(img)
+        self.pixmap = Go.get_qpixmap(img)
         self.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.setPixmap(self.pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.setAlignment(Qt.AlignCenter)
@@ -34,9 +34,9 @@ class Label(QLabel):
     def updatePixMap(self):
         co = Dm.get_cutouts()[self.idx]
         if co.enabled:
-            self.pixmap = Go.getQPixmap(co.img)
+            self.pixmap = Go.get_qpixmap(co.img)
         else:
-            self.pixmap = Go.getQPixmap(co.disabled_img)
+            self.pixmap = Go.get_qpixmap(co.disabled_img)
         self.__setScaledPixmap(self.pixmap)
 
     def mousePressEvent(self, event):

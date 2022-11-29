@@ -36,11 +36,11 @@ class MainUi(QMainWindow):
         self.VLayout.addLayout(self.buttonHLayout, 1)
 
         self.saveButton = QPushButton("SAVE")
-        self.saveButton.clicked.connect(lambda: self.__saveImages())
+        self.saveButton.clicked.connect(lambda: self.__save_images())
         self.nextButton = QPushButton("NEXT")
-        self.nextButton.clicked.connect(lambda: self.loadNewImage())
+        self.nextButton.clicked.connect(lambda: self.load_new_image())
         self.endButton = QPushButton("QUIT")
-        self.endButton.clicked.connect(lambda: self.__switchToDrop())
+        self.endButton.clicked.connect(lambda: self.__switch_to_drop())
         for i in [self.saveButton, self.nextButton, self.endButton]:
             i.setMinimumSize(80, 20)
             i.setMaximumSize(160, 40)
@@ -48,7 +48,7 @@ class MainUi(QMainWindow):
 
         self.setStyleSheet(open('css/main.css').read())
 
-    def __clearScrollArea(self):
+    def __clear_scroll_area(self):
         # TODO CHECK DELETION
         for i in reversed(range(self.gridLayout.count())):
             a = self.gridLayout.itemAt(i)
@@ -56,8 +56,8 @@ class MainUi(QMainWindow):
                 a.layout().itemAt(j).widget().setParent(None)
             a.layout().setParent(None)
 
-    def loadNewImage(self):
-        self.__clearScrollArea()
+    def load_new_image(self):
+        self.__clear_scroll_area()
         Dm.get_new_canvas()
         Dm.generate_cutouts()
         self.nextButton.setEnabled(not Dm.is_empty())
@@ -65,40 +65,40 @@ class MainUi(QMainWindow):
         self.fileNameLabel.setText(Dm.get_file_name())
         counter = 0
         for key, co in Dm.get_cutouts().items():
-            layout = self.__buildItem(self.scrollArea, counter, key, co.img)
+            layout = self.__build_item(self.scrollArea, counter, key, co.img)
             x, y = counter % 2, counter // 2
             counter += 1
             self.gridLayout.addLayout(layout, y, x)
-        self.pixmap = Go.getQPixmap(Dm.get_canvas())
+        self.pixmap = Go.get_qpixmap(Dm.get_canvas())
         self.canvas.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.canvas.setAlignment(Qt.AlignCenter)
-        self.updateLabel()
+        self.update_label()
 
     def resizeEvent(self, event):
-        scaledSize = self.canvas.size()
-        scaledSize.scale(self.canvas.size(), Qt.KeepAspectRatio)
-        if not self.canvas.pixmap() or scaledSize != self.canvas.pixmap().size():
-            self.updateLabel()
+        scaled_size = self.canvas.size()
+        scaled_size.scale(self.canvas.size(), Qt.KeepAspectRatio)
+        if not self.canvas.pixmap() or scaled_size != self.canvas.pixmap().size():
+            self.update_label()
 
-    def updateLabel(self):
+    def update_label(self):
         self.canvas.setPixmap(self.pixmap.scaled(self.canvas.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-    def __buildItem(self, parent, idx, key, img):
+    def __build_item(self, parent, idx, key, img):
         h_layout = QHBoxLayout()
         frame = QFrame()
         v_layout = QVBoxLayout(frame)
         v_layout.setContentsMargins(0, 0, 0, 0)
         label = Label(parent, img, idx)
-        rot_button = self.__buildRotateButton(25, frame, idx, label)
-        edi_button = self.__buildEditButton(25, frame, idx, label)
-        rem_button = self.__buildRemoveButton(25, frame, key, label)
+        rot_button = self.__build_rotate_button(25, frame, idx, label)
+        edi_button = self.__build_edit_button(25, frame, idx, label)
+        rem_button = self.__build_remove_button(25, frame, key, label)
         for i in [rot_button, edi_button, rem_button]:
             v_layout.addWidget(i)
         h_layout.addWidget(label, 9)
         h_layout.addWidget(frame, 1)
         return h_layout
 
-    def __buildButton(self, size, parent, icon_path):
+    def __build_button(self, size, parent, icon_path):
         button = QPushButton(parent=parent)
         button.setFixedSize(size, size)
         button.setIcon(QIcon(icon_path))
@@ -106,18 +106,18 @@ class MainUi(QMainWindow):
         button.setIconSize(QSize(icon_size, icon_size))
         return button
 
-    def __buildRemoveButton(self, size, parent, key, label):
-        button = self.__buildButton(size, parent, "assets/rem.png")
-        button.clicked.connect(lambda: self.__toggleCutout(key, label))
+    def __build_remove_button(self, size, parent, key, label):
+        button = self.__build_button(size, parent, "assets/rem.png")
+        button.clicked.connect(lambda: self.__toggle_cutout(key, label))
         return button
 
-    def __buildRotateButton(self, size, parent, idx, label):
-        button = self.__buildButton(size, parent, "assets/rot.png")
-        button.clicked.connect(lambda: self.__rotateCutout(idx, label))
+    def __build_rotate_button(self, size, parent, idx, label):
+        button = self.__build_button(size, parent, "assets/rot.png")
+        button.clicked.connect(lambda: self.__rotate_cutout(idx, label))
         return button
 
-    def __buildEditButton(self, size, parent, idx, label):
-        button = self.__buildButton(size, parent, "assets/edit.png")
+    def __build_edit_button(self, size, parent, idx, label):
+        button = self.__build_button(size, parent, "assets/edit.png")
         button.clicked.connect(lambda: self.__open_edit(idx, label))
         return button
 
@@ -132,18 +132,18 @@ class MainUi(QMainWindow):
     # def __zoomImage(self, idx):
     #     Dm.zoomImage(idx)
 
-    def __rotateCutout(self, idx, label):
+    def __rotate_cutout(self, idx, label):
         Dm.rotate_cutout(idx)
         label.updatePixMap()
 
-    def __toggleCutout(self, key, label):
+    def __toggle_cutout(self, key, label):
         Dm.toggle_cutout(key)
         label.updatePixMap()
 
-    def __saveImages(self):
+    def __save_images(self):
         Dm.save_cutouts()
 
-    def __switchToDrop(self):
+    def __switch_to_drop(self):
         Dm.clear_data()
-        self.__clearScrollArea()
+        self.__clear_scroll_area()
         self.sw.setCurrentIndex(1)

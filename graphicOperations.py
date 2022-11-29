@@ -5,11 +5,11 @@ import numpy as np
 from PyQt5.QtGui import QImage, QPixmap
 
 
-def rotateImage(img):
+def rotate_image(img):
     return cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
 
-def _getRotatedPoint(point, center, angle):
+def _get_rotated_point(point, center, angle):
     angle = math.radians(angle)
     ox, oy = center[0], center[1]
     px, py = point[0], point[1]
@@ -18,7 +18,7 @@ def _getRotatedPoint(point, center, angle):
     return qx, qy
 
 
-def resizeImageToFit(img, shape):
+def resize_image_to_fit(img, shape):
     wc, hc = shape.width(), shape.height()
     wi, hi = len(img[0]), len(img)
     if ((wc * 1.0) / hc) >= ((wi * 1.0) / hi):
@@ -33,12 +33,13 @@ def show(img):
     plt.show()
 
 
-def _getAngle(a, b, c):
+# TODO MERGE WITH GEOMETRIC
+def _get_angle(a, b, c):
     ang = math.degrees(math.atan2(c[1] - b[1], c[0] - b[0]) - math.atan2(a[1] - b[1], a[0] - b[0]))
     return ang + 360 if ang < 0 else ang
 
 
-def _findRectangles(img):
+def _find_rectangles(img):
     corners = []
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     ret, thresh = cv2.threshold(gray, 250, 255, cv2.THRESH_BINARY_INV)
@@ -51,54 +52,54 @@ def _findRectangles(img):
         hull = cv2.convexHull(cnt)
         approx = cv2.approxPolyDP(curve=hull, epsilon=100, closed=True)
         if len(approx) == 4:
-            if _isValidRectangle(approx):
+            if _is_valid_rectangle(approx):
                 # r, g, b = random.randint(25, 230), random.randint(25, 230), random.randint(25, 230)
                 # img = cv2.drawContours(img, [approx], -1, (r, g, b), 25)
                 corners.append(approx)
     return img, corners
 
 
-def _isValidRectangle(points):
+def _is_valid_rectangle(points):
     counter = 0
-    lastRight = None
+    last_right = None
     for i in range(4):
-        angle = _getAngle(points[i % 4][0], points[(i + 1) % 4][0], points[(i + 2) % 4][0]) % 180
+        angle = _get_angle(points[i % 4][0], points[(i + 1) % 4][0], points[(i + 2) % 4][0]) % 180
         if abs(90 - angle) > 2:
             counter += 1
         else:
-            lastRight = (i + 1) % 4
+            last_right = (i + 1) % 4
     if counter == 4:
         return False
     elif counter in (2, 3):
-        _repairRectangle(points, lastRight)
+        _repair_rectangle(points, last_right)
     return True
 
 
-def _repairRectangle(points, last_right_index):
+def _repair_rectangle(points, last_right_index):
     index = (last_right_index + 2) % 4
     v_x = points[(index + 3) % 4][0][1] - points[(index + 2) % 4][0][1]
     v_y = points[(index + 3) % 4][0][0] - points[(index + 2) % 4][0][0]
-    newPoint = [points[(index + 1) % 4][0][0] + v_y, points[(index + 1) % 4][0][1] + v_x]
-    points[index][0] = newPoint
+    new_point = [points[(index + 1) % 4][0][0] + v_y, points[(index + 1) % 4][0][1] + v_x]
+    points[index][0] = new_point
 
 
-def _getDistance(p1, p2):
+def _get_distance(p1, p2):
     return math.sqrt(math.pow(p1[0] - p2[0], 2) + math.pow(p1[1] - p2[1], 2))
 
 
-def _getAngleToAxis(p1, p2):
+def _get_angle_to_axis(p1, p2):
     return math.atan2(p2[1] - p1[1], p2[0] - p1[0])
 
 
-def getCutOutImages(image):
-    img, points = _findRectangles(image)
+def get_cut_out_images(image):
+    img, points = _find_rectangles(image)
     images = []
     for i in points:
-        images.append(_subimage(img, i))
+        images.append(subimage(img, i))
     return images, points
 
 
-def _getIndexOfBottom(corners):
+def _get_index_of_bottom(corners):
     maximal = corners[0][0][1]
     index = 0
     for idx, i in enumerate(corners):
@@ -113,37 +114,26 @@ def _getIndexOfBottom(corners):
     return index
 
 
-# TODO setting new disabledImg on every toggle ???
 # TODO ERROR on edit out of range
-def getDisabledImage(img):
+def get_disabled_image(img):
     img = np.copy(img)
-    lines = 5
-    lin_1 = (lines // 2) + 1
-    c = 0
-    w = min(img.shape[1], img.shape[0]) // (lines * 4)
-    for i in range(1, lin_1):
-        cv2.line(img, (i * int(img.shape[1] / lin_1), 0), (img.shape[1], (lin_1 - i) * int(img.shape[0] / lin_1)),
-                 (c, c, c), w)
-        c += 255 // lines
-    cv2.line(img, (0, 0), (img.shape[1], img.shape[0]), (c, c, c), w)
-    c += 255 // lines
-    for i in range(1, lin_1):
-        cv2.line(img, (0, i * int(img.shape[0] / lin_1)), ((lin_1 - i) * int(img.shape[1] / lin_1), img.shape[0]),
-                 (c, c, c), w)
-        c += 255 // lines
+    c = 25
+    w = min(img.shape[1], img.shape[0]) // 8
+    cv2.line(img, (0, 0), (img.shape[1], img.shape[0]), (c, c, 255), w)
+    cv2.line(img, (img.shape[1], 0), (0, img.shape[0]), (c, c, 255), w)
     return img
 
 
-def _subimage(image, corners):
+def subimage(image, corners):
     sx = sy = 0
-    index = _getIndexOfBottom(corners)
-    width = int(_getDistance(corners[index][0], corners[(index + 1) % 4][0]))
-    height = int(_getDistance(corners[index][0], corners[(index + 3) % 4][0]))
+    index = _get_index_of_bottom(corners)
+    width = int(_get_distance(corners[index][0], corners[(index + 1) % 4][0]))
+    height = int(_get_distance(corners[index][0], corners[(index + 3) % 4][0]))
     for point in corners:
         sx += point[0][0]
         sy += point[0][1]
     center = [int(sx / 4.0), int(sy / 4.0)]
-    theta = math.degrees(_getAngleToAxis(corners[index][0], corners[(index + 1) % 4][0]))
+    theta = math.degrees(_get_angle_to_axis(corners[index][0], corners[(index + 1) % 4][0]))
     shape = (image.shape[1], image.shape[0])
     matrix = cv2.getRotationMatrix2D(center=center, angle=theta, scale=1)
     img = cv2.warpAffine(src=image, M=matrix, dsize=shape)
@@ -153,9 +143,9 @@ def _subimage(image, corners):
     return img
 
 
-def getQPixmap(img):
+def get_qpixmap(img):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     height, width, _ = img.shape
-    bytesPerLine = 3 * width
-    qImg = QImage(img.data, width, height, bytesPerLine, QImage.Format_RGB888)
-    return QPixmap(qImg)
+    bytes_per_line = 3 * width
+    q_img = QImage(img.data, width, height, bytes_per_line, QImage.Format_RGB888)
+    return QPixmap(q_img)

@@ -12,7 +12,7 @@ _current_file = ""
 class Cutout:
     def __init__(self, img, enabled, points):
         self.img = img
-        self.disabled_img = Go.getDisabledImage(img)
+        self.disabled_img = Go.get_disabled_image(img)
         self.enabled = enabled
         self.points = points
 
@@ -43,7 +43,7 @@ def get_new_canvas():
 
 def generate_cutouts():
     global _cutouts
-    cts, points = Go.getCutOutImages(_canvas)
+    cts, points = Go.get_cut_out_images(_canvas)
     _cutouts = {i: Cutout(img, True, points[i]) for i, img in enumerate(cts)}
 
 
@@ -115,11 +115,11 @@ def get_next_image():
 
 
 def rotate_cutout(idx):
-    _cutouts[idx].img = Go.rotateImage(_cutouts[idx].img)
-    _cutouts[idx].disabled_img = Go.rotateImage(_cutouts[idx].disabled_img)
+    _cutouts[idx].img = Go.rotate_image(_cutouts[idx].img)
+    _cutouts[idx].disabled_img = Go.rotate_image(_cutouts[idx].disabled_img)
 
 
-def toggleCutout(key):
+def toggle_cutout(key):
     _cutouts.get(key).enabled = not _cutouts.get(key).enabled
 
 
@@ -129,6 +129,6 @@ def get_file_name():
     return s[-1]
 
 
-def update_coutout(idx, p):
+def update_cutout(idx, p):
     points = [[x] for x in p]
-    get_cutouts()[idx] = Cutout(Go._subimage(get_canvas(), points), get_cutouts()[idx].enabled, points)
+    get_cutouts()[idx] = Cutout(Go.subimage(get_canvas(), points), get_cutouts()[idx].enabled, points)
