@@ -1,13 +1,39 @@
 from PyQt5 import QtGui
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QWidget, QHBoxLayout, \
-    QMainWindow, QVBoxLayout, QPushButton, QGraphicsPixmapItem
+    QMainWindow, QVBoxLayout, QPushButton, QGraphicsPixmapItem, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt
 
 import graphicOperations as Go
 import geometricOperations as Geo
 import dataManager as Dm
 from selectionBoxClass import SelectionBox
+
+
+class MainView(QGraphicsView):
+
+    def __init__(self, scene):
+        super().__init__()
+        self.scene = scene
+        self.setScene(self.scene)
+        self.setRenderHint(QtGui.QPainter.Antialiasing)
+        self.fitInView(self.scene.sceneRect(), Qt.KeepAspectRatio)
+        self.setDragMode(QGraphicsView.ScrollHandDrag)
+        self.setInteractive(True)
+
+    def wheelEvent(self, event):
+        factor = 1.1
+        if event.angleDelta().y() < 0:
+            factor = 0.9
+        self.update_view(factor)
+
+    def update_view(self, factor):
+        view_pos = self.pos()
+        scene_pos = self.mapToScene(view_pos)
+        self.centerOn(scene_pos)
+        self.scale(factor, factor)
+        delta = self.mapToScene(view_pos) - self.mapToScene(self.viewport().rect().center())
+        self.centerOn(scene_pos - delta)
 
 
 class EditUi(QMainWindow):
@@ -24,21 +50,16 @@ class EditUi(QMainWindow):
         self.mainHLayout = QHBoxLayout()
         self.center.setLayout(self.mainHLayout)
 
-        self.graphicsView = QGraphicsView()
-
         self.scene = QGraphicsScene()
         pic = QGraphicsPixmapItem()
         pixmap = Go.get_qpixmap(canvas)
         pic.setPixmap(pixmap)
         w, h = pixmap.width(), pixmap.height()
-        self.scene.setSceneRect(0, 0, w, h)
+        off = 50
+        self.scene.setSceneRect(-off, -off, w+2*off, h+2*off)
         self.scene.addItem(pic)
         self.scene.setBackgroundBrush(QColor(150, 150, 150))
-
-        self.graphicsView.setScene(self.scene)
-        self.graphicsView.setRenderHint(QtGui.QPainter.Antialiasing)
-        self.graphicsView.fitInView(self.scene.sceneRect(), Qt.KeepAspectRatio)
-        self.graphicsView.setAlignment(Qt.AlignCenter | Qt.AlignCenter)
+        self.graphicsView = MainView(self.scene)
 
         self.mainHLayout.addWidget(self.graphicsView, 9)
 
@@ -52,10 +73,18 @@ class EditUi(QMainWindow):
         self.verticalBar.setAlignment(Qt.AlignBottom)
         self.barFrame.setLayout(self.verticalBar)
 
+        self.zoom_in_button = QPushButton("+")
+        self.zoom_in_button.clicked.connect(lambda: self.graphicsView.update_view(1.1))
+        self.zoom_out_button = QPushButton("-")
+        self.zoom_out_button.clicked.connect(lambda: self.graphicsView.update_view(0.9))
         self.resetButton = QPushButton("Reset")
         self.resetButton.clicked.connect(lambda: self._reset_selection_box())
         self.acceptButton = QPushButton("Ok")
         self.acceptButton.clicked.connect(lambda: self._accept_selection())
+        self.v_spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        for i in [self.zoom_in_button, self.zoom_out_button]:
+            self.verticalBar.addWidget(i)
+        self.verticalBar.addItem(self.v_spacer)
         for i in [self.resetButton, self.acceptButton]:
             self.verticalBar.addWidget(i)
 
@@ -75,8 +104,3 @@ class EditUi(QMainWindow):
         self.label.updatePixMap()
         self.sw.removeWidget(self)
         self.sw.setCurrentIndex(0)
-
-    def resizeEvent(self, event):
-        self.graphicsView.fitInView(self.scene.sceneRect(), Qt.KeepAspectRatio)
-    #     for i in [self.resetButton, self.acceptButton]:
-    #         i.setFixedHeight(i.width())

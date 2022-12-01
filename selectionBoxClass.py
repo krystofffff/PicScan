@@ -1,72 +1,107 @@
+import math
 import statistics as stat
 
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPen
+from PyQt5.QtGui import QPen, QCursor
 from PyQt5.QtWidgets import QGraphicsEllipseItem, QGraphicsLineItem
 
 import geometricOperations as Geo
 
 
-def _get_point_from_anchor(anchor):
-    return [anchor.scenePos().x(), anchor.scenePos().y()]
+def qpoint_to_point(p):
+    return [p.x(), p.y()]
 
 
 class Anchor(QGraphicsEllipseItem):
 
     def __init__(self, point, r, rect, color):
         super().__init__(0, 0, r, r)
+        self.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
         self.r = r
-        self.setPos(point[0] - r//2, point[1] - r//2)
+        self.setPos(self._off_pos(point[0]), self._off_pos(point[1]))
         pen = QPen()
-        pen.setWidth(25)
+        pen.setWidth(10)
         pen.setColor(color)
         self.setPen(pen)
         self.setAcceptHoverEvents(True)
         self.rect = rect
+        self.center_point = QGraphicsEllipseItem(self.r // 2, self.r // 2, 2, 2, self)
+        pen = QPen()
+        pen.setWidth(0)
+        self.center_point.setPen(pen)
 
     def mousePressEvent(self, event):
         pass
 
     def get_point(self):
-        return [self.pos().x() + self.r//2, self.pos().y() + self.r//2]
+        return [self.pos().x() + self.r // 2, self.pos().y() + self.r // 2]
+
+    def _off_pos(self, i):
+        return i - self.r // 2
+
+    def _get_event_points(self, event):
+        orig_anchor = self.scenePos()
+        orig_cursor = event.lastScenePos()
+        updated_cursor = event.scenePos()
+        p_oa = qpoint_to_point(orig_anchor)
+        p_oc = qpoint_to_point(orig_cursor)
+        p_uc = qpoint_to_point(updated_cursor)
+        return p_oa, p_oc, p_uc
 
 
 class CornerAnchor(Anchor):
 
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.anchor_s = None
+
+    def add_slide_anchor(self, a):
+        self.anchor_s = a
+
     def mouseMoveEvent(self, event):
-        orig_cursor = event.lastScenePos()
-        updated_cursor = event.scenePos()
-        orig_anchor = self.scenePos()
-        diff_cursor_x = updated_cursor.x() - orig_cursor.x()
-        diff_cursor_y = updated_cursor.y() - orig_cursor.y()
-        self.setPos(diff_cursor_x + orig_anchor.x(), diff_cursor_y + orig_anchor.y())
+        p_oa, p_oc, p_uc = self._get_event_points(event)
+        v = Geo.get_vector_between_points(p_oc, p_uc)
+        p = Geo.get_point_moved_by_vector(p_oa, v)
+        self.setPos(p[0], p[1])
+        self.center_point.setPos(0, 0)
+        self.anchor_s.corner_moved()
         self.rect.update_lines()
 
 
 class SlideAnchor(Anchor):
 
-    def __init__(self, *args, a1, a2):
+    def __init__(self, *args, a1: Anchor, a2: Anchor):
         super().__init__(*args)
         self.a1 = a1
         self.a2 = a2
+        self.dist_vect = {}
+        self._update_distance()
+
+    def corner_moved(self):
+        p1 = self.a1.get_point()
+        p2 = self.a2.get_point()
+        p_m = Geo.get_mid_point(p1, p2)
+        angle = Geo.get_angle(p1, p2) + self.dist_vect["angle"]
+        x = p_m[0] + math.cos(angle) * self.dist_vect["dist"]
+        y = p_m[1] + math.sin(angle) * self.dist_vect["dist"]
+        self.setPos(self._off_pos(x), self._off_pos(y))
+
+    def _update_distance(self):
+        p1 = self.a1.get_point()
+        p2 = self.a2.get_point()
+        angle, dist = Geo.get_angle_and_dist_from_line(p1, p2, self.get_point())
+        self.dist_vect = {"angle": angle, "dist": dist}
 
     def mouseMoveEvent(self, event):
-        orig_cursor = event.lastScenePos()
-        updated_cursor = event.scenePos()
-        orig_anchor = self.scenePos()
-        diff_cursor_x = updated_cursor.x() - orig_cursor.x()
-        diff_cursor_y = updated_cursor.y() - orig_cursor.y()
-        self.setPos(diff_cursor_x + orig_anchor.x(), diff_cursor_y + orig_anchor.y())
-        # p1 = _get_point_from_anchor(self.a1)
-        # p2 = _get_point_from_anchor(self.a2)
-        # angle1 = Geo.get_angle(p1, p2) - math.pi/2
-        # angle2 = Geo.get_angle([orig_cursor.x(), orig_cursor.y()], [updated_cursor.x(), updated_cursor.y()])
-        # angle_fin = angle2 - angle1
-        # length = math.sqrt(diff_cursor_x**2 + diff_cursor_y**2)
-        # a = math.cos(angle_fin) * length
-        # self.setPos(math.cos(angle1) * a + orig_anchor.x(), math.sin(angle1) * a + orig_anchor.y())
+        p_oa, p_oc, p_uc = self._get_event_points(event)
+        p1, p2 = self.a1.get_point(), self.a2.get_point()
+        v = Geo.get_vector_projected_on_axis(p1, p2, p_oc, p_uc)
+        p = Geo.get_point_moved_by_vector(p_oa, v)
+        self.setPos(p[0], p[1])
         self.rect.update_lines()
+        self._update_distance()
+        self.center_point.setPos(0, 0)
 
 
 class Line(QGraphicsLineItem):
@@ -74,10 +109,25 @@ class Line(QGraphicsLineItem):
     def __init__(self, a_radius, width):
         super().__init__(0, 0, 0, 0)
         self.a_size = a_radius
-        self.setPen(QtGui.QPen(QtGui.QColor(50, 50, 50), width, QtCore.Qt.DashLine))
+        pen = QPen()
+        pen.setWidth(width)
+        pen.setColor(QtGui.QColor(50, 50, 50))
+        pen.setStyle(QtCore.Qt.DashLine)
+        self.setPen(pen)
 
-    def update_pos(self, p1, p2):
-        self.setLine(p1[0], p1[1], p2[0], p2[1])
+    def update_pos(self, p1, p2, p1_is_anchor, p2_is_anchor):
+        angle = Geo.get_angle(p1, p2)
+        r = self.a_size / 2
+        dx = math.cos(angle) * r
+        dy = math.sin(angle) * r
+        ax, ay, bx, by = p1[0], p1[1], p2[0], p2[1]
+        if p1_is_anchor:
+            ax += dx
+            ay += dy
+        if p2_is_anchor:
+            bx -= dx
+            by -= dy
+        self.setLine(ax, ay, bx, by)
 
 
 class SelectionBox:
@@ -86,31 +136,38 @@ class SelectionBox:
         self.points = points
         self.scene = scene
         self.a_radius = 100
-        self.lines = [Line(self.a_radius, 10) for _ in range(4)]
+        self.l_width = 10
+        self.lines = [Line(self.a_radius, self.l_width) for _ in range(5)]
         point_mid = [stat.mean([self.points[2][0], self.points[3][0]]),
                      stat.mean([self.points[2][1], self.points[3][1]])]
-        self.anchor1 = CornerAnchor(self.points[0], self.a_radius, self, Qt.red)
-        self.anchor2 = CornerAnchor(self.points[1], self.a_radius, self, Qt.red)
-        self.anchor3 = SlideAnchor(point_mid, self.a_radius, self, Qt.blue, a1=self.anchor1, a2=self.anchor2)
+        self.anchor_c1 = CornerAnchor(self.points[0], self.a_radius, self, Qt.red)
+        self.anchor_c2 = CornerAnchor(self.points[1], self.a_radius, self, Qt.red)
+        self.anchor_s = SlideAnchor(point_mid, self.a_radius, self, Qt.blue,
+                                    a1=self.anchor_c1, a2=self.anchor_c2)
+        self.anchor_c1.add_slide_anchor(self.anchor_s)
+        self.anchor_c2.add_slide_anchor(self.anchor_s)
+        self.anchors = [self.anchor_c1, self.anchor_c2, self.anchor_s]
         self.update_lines()
         for i in self.lines:
             self.scene.addItem(i)
-        for i in [self.anchor1, self.anchor2, self.anchor3]:
+        for i in self.anchors:
             self.scene.addItem(i)
 
     def drop_all(self):
-        self.scene.removeItem(self.anchor1)
-        self.scene.removeItem(self.anchor2)
-        self.scene.removeItem(self.anchor3)
+        for i in self.anchors:
+            self.scene.removeItem(i)
         for i in self.lines:
             self.scene.removeItem(i)
 
     def get_points_from_anchors(self):
-        return self.anchor1.get_point(), \
-               self.anchor2.get_point(), \
-               self.anchor3.get_point()
+        return self.anchor_c1.get_point(), \
+               self.anchor_c2.get_point(), \
+               self.anchor_s.get_point()
 
     def update_lines(self):
         points = Geo.get_corners_from_anchors(*self.get_points_from_anchors())
+        points.insert(3, self.anchor_s.get_point())
         for idx, line in enumerate(self.lines):
-            line.update_pos(points[idx % 4], points[(idx + 1) % 4])
+            i = idx % 5
+            j = (idx + 1) % 5
+            line.update_pos(points[i], points[j], i in [0, 1, 3], j in [0, 1, 3])
