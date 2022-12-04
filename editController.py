@@ -36,13 +36,45 @@ class MainView(QGraphicsView):
         self.centerOn(scene_pos - delta)
 
 
+class MainScene(QGraphicsScene):
+
+    def __init__(self, canvas, points, accept_button):
+        super().__init__()
+        pic = QGraphicsPixmapItem()
+        pixmap = Go.get_qpixmap(canvas)
+        pic.setPixmap(pixmap)
+        w, h = pixmap.width(), pixmap.height()
+        offset = 50
+        self.setSceneRect(-offset, -offset, w + 2 * offset, h + 2 * offset)
+        self.addItem(pic)
+        self.setBackgroundBrush(QColor(150, 150, 150))
+        self.points = points
+        self.accept_button = accept_button
+        self.selection_box = SelectionBox(self, self.points)
+
+    def reset_selection_box(self):
+        self.selection_box.drop_all()
+        self.selection_box = SelectionBox(self, self.points)
+        self.accept_button.setEnabled(self.selection_box.is_ready)
+
+    def mousePressEvent(self, event):
+        if not self.selection_box.is_ready:
+            self.selection_box.add_anchor(event.scenePos().x(), event.scenePos().y())
+            self.accept_button.setEnabled(self.selection_box.is_ready)
+        else:
+            super().mousePressEvent(event)
+
+    def select_points(self):
+        self.selection_box.drop_all()
+        self.selection_box = SelectionBox(self, None)
+
+
 class EditUi(QMainWindow):
     def __init__(self, sw, idx, label, canvas):
         super(EditUi, self).__init__()
 
         self.idx = idx
         self.label = label
-
         self.center = QWidget()
         self.center.setObjectName("outer")
         self.center.setMinimumSize(960, 480)
@@ -50,57 +82,48 @@ class EditUi(QMainWindow):
         self.mainHLayout = QHBoxLayout()
         self.center.setLayout(self.mainHLayout)
 
-        self.scene = QGraphicsScene()
-        pic = QGraphicsPixmapItem()
-        pixmap = Go.get_qpixmap(canvas)
-        pic.setPixmap(pixmap)
-        w, h = pixmap.width(), pixmap.height()
-        off = 50
-        self.scene.setSceneRect(-off, -off, w+2*off, h+2*off)
-        self.scene.addItem(pic)
-        self.scene.setBackgroundBrush(QColor(150, 150, 150))
+        self.zoom_in_button = QPushButton("+")
+        self.zoom_in_button.clicked.connect(lambda: self.graphicsView.update_view(1.1))
+        self.zoom_out_button = QPushButton("-")
+        self.zoom_out_button.clicked.connect(lambda: self.graphicsView.update_view(0.9))
+        self.select_button = QPushButton("Select\npoints")
+        self.select_button.clicked.connect(lambda: self._select_points())
+        self.reset_button = QPushButton("Reset")
+        self.reset_button.clicked.connect(lambda: self.scene.reset_selection_box())
+        self.accept_button = QPushButton("Ok")
+        self.accept_button.clicked.connect(lambda: self._accept_selection())
+        self.v_spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.points = [x[0] for x in Dm.get_cutout_points(self.idx)]
+        self.scene = MainScene(canvas, self.points, self.accept_button)
         self.graphicsView = MainView(self.scene)
 
         self.mainHLayout.addWidget(self.graphicsView, 9)
-
-        self.points = [x[0] for x in Dm.get_cutout_points(self.idx)]
-
-        self.selectionBox = SelectionBox(self.scene, self.points)
-
         self.barFrame = QWidget()
         self.mainHLayout.addWidget(self.barFrame, 1)
         self.verticalBar = QVBoxLayout()
         self.verticalBar.setAlignment(Qt.AlignBottom)
         self.barFrame.setLayout(self.verticalBar)
 
-        self.zoom_in_button = QPushButton("+")
-        self.zoom_in_button.clicked.connect(lambda: self.graphicsView.update_view(1.1))
-        self.zoom_out_button = QPushButton("-")
-        self.zoom_out_button.clicked.connect(lambda: self.graphicsView.update_view(0.9))
-        self.resetButton = QPushButton("Reset")
-        self.resetButton.clicked.connect(lambda: self._reset_selection_box())
-        self.acceptButton = QPushButton("Ok")
-        self.acceptButton.clicked.connect(lambda: self._accept_selection())
-        self.v_spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
         for i in [self.zoom_in_button, self.zoom_out_button]:
             self.verticalBar.addWidget(i)
         self.verticalBar.addItem(self.v_spacer)
-        for i in [self.resetButton, self.acceptButton]:
+        for i in [self.select_button, self.reset_button, self.accept_button]:
             self.verticalBar.addWidget(i)
-
-        self.setStyleSheet(open('css/edit.css').read())
 
         self.sw = sw
         self.sw.addWidget(self)
         self.sw.setCurrentIndex(2)
 
-    def _reset_selection_box(self):
-        self.selectionBox.drop_all()
-        self.selectionBox = SelectionBox(self.scene, self.points)
+        self.setStyleSheet(open('css/edit.css').read())
 
     def _accept_selection(self):
-        p = Geo.get_corners_from_anchors(*self.selectionBox.get_points_from_anchors())
+        p = Geo.get_corners_from_anchors(*self.scene.selection_box.get_points_from_anchors())
         Dm.update_cutout(self.idx, p)
         self.label.updatePixMap()
         self.sw.removeWidget(self)
         self.sw.setCurrentIndex(0)
+
+    def _select_points(self):
+        self.accept_button.setEnabled(False)
+        self.scene.select_points()

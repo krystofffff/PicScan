@@ -132,26 +132,50 @@ class Line(QGraphicsLineItem):
 
 class SelectionBox:
 
-    def __init__(self, scene, points):
+    def __init__(self, scene, points=None):
         self.points = points
         self.scene = scene
         self.a_radius = 100
         self.l_width = 10
         self.lines = [Line(self.a_radius, self.l_width) for _ in range(5)]
-        point_mid = [stat.mean([self.points[2][0], self.points[3][0]]),
-                     stat.mean([self.points[2][1], self.points[3][1]])]
-        self.anchor_c1 = CornerAnchor(self.points[0], self.a_radius, self, Qt.red)
-        self.anchor_c2 = CornerAnchor(self.points[1], self.a_radius, self, Qt.red)
-        self.anchor_s = SlideAnchor(point_mid, self.a_radius, self, Qt.blue,
-                                    a1=self.anchor_c1, a2=self.anchor_c2)
-        self.anchor_c1.add_slide_anchor(self.anchor_s)
-        self.anchor_c2.add_slide_anchor(self.anchor_s)
-        self.anchors = [self.anchor_c1, self.anchor_c2, self.anchor_s]
+        self.anchors = []
+        self.is_ready = False
+        if self.points is not None:
+            self.is_ready = True
+            self.anchors = self._make_anchors_from_points(self.points)
+            for i in self.anchors:
+                self.scene.addItem(i)
         self.update_lines()
         for i in self.lines:
             self.scene.addItem(i)
-        for i in self.anchors:
-            self.scene.addItem(i)
+
+    def _make_anchors_from_points(self, points):
+        point_mid = [stat.mean([points[2][0], points[3][0]]),
+                     stat.mean([points[2][1], points[3][1]])]
+        anchor_c1 = CornerAnchor(points[0], self.a_radius, self, Qt.red)
+        anchor_c2 = CornerAnchor(points[1], self.a_radius, self, Qt.red)
+        anchor_s = SlideAnchor(point_mid, self.a_radius, self, Qt.blue,
+                               a1=anchor_c1, a2=anchor_c2)
+        anchor_c1.add_slide_anchor(anchor_s)
+        anchor_c2.add_slide_anchor(anchor_s)
+        return [anchor_c1, anchor_c2, anchor_s]
+
+    def _make_anchor_from_event(self, x, y):
+        if len(self.anchors) < 2:
+            anchor = CornerAnchor([x, y], self.a_radius, self, Qt.red)
+        else:
+            anchor = SlideAnchor([x, y], self.a_radius, self, Qt.blue, a1=self.anchors[0], a2=self.anchors[1])
+            self.anchors[0].add_slide_anchor(anchor)
+            self.anchors[1].add_slide_anchor(anchor)
+        return anchor
+
+    def add_anchor(self, x, y):
+        anchor = self._make_anchor_from_event(x, y)
+        self.anchors.append(anchor)
+        if len(self.anchors) == 3:
+            self.is_ready = True
+        self.scene.addItem(anchor)
+        self.update_lines()
 
     def drop_all(self):
         for i in self.anchors:
@@ -160,14 +184,13 @@ class SelectionBox:
             self.scene.removeItem(i)
 
     def get_points_from_anchors(self):
-        return self.anchor_c1.get_point(), \
-               self.anchor_c2.get_point(), \
-               self.anchor_s.get_point()
+        return [x.get_point() for x in self.anchors]
 
     def update_lines(self):
-        points = Geo.get_corners_from_anchors(*self.get_points_from_anchors())
-        points.insert(3, self.anchor_s.get_point())
-        for idx, line in enumerate(self.lines):
-            i = idx % 5
-            j = (idx + 1) % 5
-            line.update_pos(points[i], points[j], i in [0, 1, 3], j in [0, 1, 3])
+        if self.is_ready:
+            points = Geo.get_corners_from_anchors(*self.get_points_from_anchors())
+            points.insert(3, self.anchors[2].get_point())
+            for idx, line in enumerate(self.lines):
+                i = idx % 5
+                j = (idx + 1) % 5
+                line.update_pos(points[i], points[j], i in [0, 1, 3], j in [0, 1, 3])
