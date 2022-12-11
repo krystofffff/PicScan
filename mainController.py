@@ -46,7 +46,7 @@ class MainUi(QMainWindow):
             i.setMaximumSize(160, 40)
             self.buttonHLayout.addWidget(i)
 
-        self.setStyleSheet(open('css/main.css').read())
+        self.setStyleSheet(open('./css/main.css').read())
 
     def __clear_scroll_area(self):
         # TODO CHECK DELETION
@@ -108,29 +108,24 @@ class MainUi(QMainWindow):
 
     def __build_remove_button(self, size, parent, key, label):
         button = self.__build_button(size, parent, "assets/rem.png")
+        button.setObjectName("rem")
         button.clicked.connect(lambda: self.__toggle_cutout(key, label))
         return button
 
     def __build_rotate_button(self, size, parent, idx, label):
         button = self.__build_button(size, parent, "assets/rot.png")
+        button.setObjectName("rot")
         button.clicked.connect(lambda: self.__rotate_cutout(idx, label))
         return button
 
     def __build_edit_button(self, size, parent, idx, label):
         button = self.__build_button(size, parent, "assets/edit.png")
+        button.setObjectName("edit")
         button.clicked.connect(lambda: self.__open_edit(idx, label))
         return button
 
     def __open_edit(self, idx, label):
         EditUi(self.sw, idx, label, Dm.get_canvas())
-    #
-    # def __buildZoomButton(self, size, parent, idx):
-    #     button = self.__buildButton(size, parent, "assets/zoom.png")
-    #     button.clicked.connect(lambda: self.__zoomImage(idx))
-    #     return button
-    #
-    # def __zoomImage(self, idx):
-    #     Dm.zoomImage(idx)
 
     def __rotate_cutout(self, idx, label):
         Dm.rotate_cutout(idx)

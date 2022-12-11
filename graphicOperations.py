@@ -3,6 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5.QtGui import QImage, QPixmap
+import geometricOperations as Geo
 
 
 def rotate_image(img):
@@ -114,7 +115,6 @@ def _get_index_of_bottom(corners):
     return index
 
 
-# TODO ERROR on edit out of range
 def get_disabled_image(img):
     img = np.copy(img)
     c = 25
@@ -124,7 +124,9 @@ def get_disabled_image(img):
     return img
 
 
+# TODO transparent instead of black
 def subimage(image, corners):
+    image = image.copy()
     sx = sy = 0
     index = _get_index_of_bottom(corners)
     width = int(_get_distance(corners[index][0], corners[(index + 1) % 4][0]))
@@ -132,15 +134,52 @@ def subimage(image, corners):
     for point in corners:
         sx += point[0][0]
         sy += point[0][1]
-    center = [int(sx / 4.0), int(sy / 4.0)]
+    c_center = [int(sx / 4.0), int(sy / 4.0)]
     theta = math.degrees(_get_angle_to_axis(corners[index][0], corners[(index + 1) % 4][0]))
-    shape = (image.shape[1], image.shape[0])
-    matrix = cv2.getRotationMatrix2D(center=center, angle=theta, scale=1)
-    img = cv2.warpAffine(src=image, M=matrix, dsize=shape)
-    x = int(center[0] - width / 2)
-    y = int(center[1] - height / 2)
-    img = img[y:y + height, x:x + width]
-    return img
+
+    rot = get_rotated_image(image, theta)
+
+    # cv2.imwrite("C:/Users/Dumar/PycharmProjects/Annual-project-1/a.png", rot)
+
+    h, w = image.shape[:2]
+    oi_center = (w / 2, h / 2)
+    h, w = rot.shape[:2]
+    ni_center = (w / 2, h / 2)
+    v = Geo.get_vector_between_points(oi_center, c_center)
+    vv = Geo.get_point_rotated_around_point([0, 0], v, -theta)
+    p = Geo.get_point_moved_by_vector(ni_center, vv)
+    p = [int(p[0]), int(p[1])]
+    p = Geo.get_point_moved_by_vector(p, [-width // 2, -height // 2])
+
+    x = p[0]
+    y = p[1]
+
+    zer = np.zeros((height, width, 3), np.uint8)
+
+    # TODO optimize
+    for i in range(x, x+width):
+        for j in range(y, y+height):
+            if 0 <= j < h and 0 <= i < w:
+                zer[j-y][i-x] = rot[j][i]
+
+    return zer
+
+
+def get_rotated_image(image, angle):
+    height, width = image.shape[:2]
+    image_center = (width/2, height/2)
+    rotation_mat = cv2.getRotationMatrix2D(image_center, angle, 1.)
+    abs_cos = abs(rotation_mat[0, 0])
+    abs_sin = abs(rotation_mat[0, 1])
+    bound_w = int(height * abs_sin + width * abs_cos)
+    bound_h = int(height * abs_cos + width * abs_sin)
+    rotation_mat[0, 2] += bound_w/2 - image_center[0]
+    rotation_mat[1, 2] += bound_h/2 - image_center[1]
+    # image = cv2.cvtColor(image, cv2.COLOR_RGB2RGBA)
+    # rotated_mat = cv2.warpAffine(image, rotation_mat, (bound_w, bound_h), borderMode=cv2.BORDER_CONSTANT,
+    #                              borderValue=(0, 0, 0, 0))
+    rotated_mat = cv2.warpAffine(image, rotation_mat, (bound_w, bound_h))
+    return rotated_mat
 
 
 def get_qpixmap(img):
