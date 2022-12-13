@@ -1,15 +1,15 @@
-.QPushButton#browserButton {
-    font-size: 24px;
-    border: 2px solid #73AD21;
-    border-radius: 10px;
-    padding: 3px;
-    width: auto;
-    height: auto;
+.QPushButton {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: #B3BBBC;
+    color: #353B3C;
+    font-size: 20px;
+    padding: 10px;
 }
 
-.QPushButton:hover#browserButton  {
-    background-color: rgb(115, 173, 33);
-    color: white;
+.QPushButton:hover {
+    background-color: #353B3C;
+    color: lightgray;
 }
 
 .QLabel {

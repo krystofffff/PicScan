@@ -119,8 +119,8 @@ def get_disabled_image(img):
     img = np.copy(img)
     c = 25
     w = min(img.shape[1], img.shape[0]) // 8
-    cv2.line(img, (0, 0), (img.shape[1], img.shape[0]), (c, c, 255), w)
-    cv2.line(img, (img.shape[1], 0), (0, img.shape[0]), (c, c, 255), w)
+    cv2.line(img, (0, 0), (img.shape[1], img.shape[0]), (c, c, 255, 255), w)
+    cv2.line(img, (img.shape[1], 0), (0, img.shape[0]), (c, c, 255, 255), w)
     return img
 
 
@@ -137,6 +137,7 @@ def subimage(image, corners):
     c_center = [int(sx / 4.0), int(sy / 4.0)]
     theta = math.degrees(_get_angle_to_axis(corners[index][0], corners[(index + 1) % 4][0]))
 
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2RGBA)
     rot = get_rotated_image(image, theta)
 
     # cv2.imwrite("C:/Users/Dumar/PycharmProjects/Annual-project-1/a.png", rot)
@@ -154,7 +155,7 @@ def subimage(image, corners):
     x = p[0]
     y = p[1]
 
-    zer = np.zeros((height, width, 3), np.uint8)
+    zer = np.zeros((height, width, 4), np.uint8)
 
     # TODO optimize
     for i in range(x, x+width):
@@ -175,16 +176,22 @@ def get_rotated_image(image, angle):
     bound_h = int(height * abs_cos + width * abs_sin)
     rotation_mat[0, 2] += bound_w/2 - image_center[0]
     rotation_mat[1, 2] += bound_h/2 - image_center[1]
-    # image = cv2.cvtColor(image, cv2.COLOR_RGB2RGBA)
-    # rotated_mat = cv2.warpAffine(image, rotation_mat, (bound_w, bound_h), borderMode=cv2.BORDER_CONSTANT,
-    #                              borderValue=(0, 0, 0, 0))
-    rotated_mat = cv2.warpAffine(image, rotation_mat, (bound_w, bound_h))
+    rotated_mat = cv2.warpAffine(image, rotation_mat, (bound_w, bound_h), borderMode=cv2.BORDER_CONSTANT,
+                                 borderValue=(0, 0, 0, 0))
+    # rotated_mat = cv2.warpAffine(image, rotation_mat, (bound_w, bound_h))
     return rotated_mat
 
 
 def get_qpixmap(img):
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    height, width, _ = img.shape
-    bytes_per_line = 3 * width
-    q_img = QImage(img.data, width, height, bytes_per_line, QImage.Format_RGB888)
+    height, width, color_bytes = img.shape
+    bytes_per_line = color_bytes * width
+    if color_bytes == 4:
+        conv_format = cv2.COLOR_BGRA2RGBA
+        qimage_format = QImage.Format_RGBA8888
+    else:
+        conv_format = cv2.COLOR_BGR2RGB
+        qimage_format = QImage.Format_RGB888
+    img = cv2.cvtColor(img, conv_format)
+    q_img = QImage(img.data, width, height, bytes_per_line, qimage_format)
+
     return QPixmap(q_img)

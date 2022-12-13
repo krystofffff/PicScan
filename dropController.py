@@ -31,7 +31,7 @@ class DropUi(QMainWindow):
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.label2)
         self.layout.addWidget(self.browserButton)
-        self.setStyleSheet(open('C:/Users/urban/PycharmProjects/Annual-project-1/css/drop.css').read())
+        self.setStyleSheet(open('C:/Users/Dumar/PycharmProjects/Annual-project-1/css/drop.css').read())
 
     def dragEnterEvent(self, event):
         self.label.setText("Drop it here")

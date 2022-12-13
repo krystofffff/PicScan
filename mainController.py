@@ -46,7 +46,7 @@ class MainUi(QMainWindow):
             i.setMaximumSize(160, 40)
             self.buttonHLayout.addWidget(i)
 
-        self.setStyleSheet(open('C:/Users/urban/PycharmProjects/Annual-project-1/css/main.css').read())
+        self.setStyleSheet(open('C:/Users/Dumar/PycharmProjects/Annual-project-1/css/main.css').read())
 
     def __clear_scroll_area(self):
         # TODO CHECK DELETION
