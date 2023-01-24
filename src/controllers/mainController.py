@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon
-from src import dataManager as Dm
+from src.managers import dataManager as Dm
 from src.operations import graphicOperations as Go
 from src.controllers.editController import EditUi
 from src.labelClass import Label
@@ -36,11 +36,11 @@ class MainUi(QMainWindow):
         self.VLayout.addLayout(self.buttonHLayout, 1)
 
         self.saveButton = QPushButton("SAVE")
-        self.saveButton.clicked.connect(lambda: self.__save_images())
+        self.saveButton.clicked.connect(lambda: self._save_images())
         self.nextButton = QPushButton("NEXT")
         self.nextButton.clicked.connect(lambda: self.load_new_image())
         self.endButton = QPushButton("QUIT")
-        self.endButton.clicked.connect(lambda: self.__switch_to_drop())
+        self.endButton.clicked.connect(lambda: self._switch_to_drop())
         for i in [self.saveButton, self.nextButton, self.endButton]:
             i.setMinimumSize(80, 20)
             i.setMaximumSize(160, 40)
@@ -48,7 +48,7 @@ class MainUi(QMainWindow):
 
         self.setStyleSheet(open('css/main.css').read())
 
-    def __clear_scroll_area(self):
+    def _clear_scroll_area(self):
         # TODO CHECK DELETION
         for i in reversed(range(self.gridLayout.count())):
             a = self.gridLayout.itemAt(i)
@@ -57,16 +57,17 @@ class MainUi(QMainWindow):
             a.layout().setParent(None)
 
     def load_new_image(self):
-        self.__clear_scroll_area()
+        self._clear_scroll_area()
         Dm.get_new_canvas()
         Dm.generate_cutouts()
         self.nextButton.setEnabled(not Dm.is_empty())
         self.scrollArea.verticalScrollBar().minimum()
         self.fileNameLabel.setText(Dm.get_file_name())
         counter = 0
+        COLUMN_COUNT = 2
         for key, co in Dm.get_cutouts().items():
-            layout = self.__build_item(self.scrollArea, counter, key, co.img)
-            x, y = counter % 2, counter // 2
+            layout = self._build_item(self.scrollArea, counter, key, co.img)
+            x, y = counter % COLUMN_COUNT, counter // COLUMN_COUNT
             counter += 1
             self.gridLayout.addLayout(layout, y, x)
         self.pixmap = Go.get_qpixmap(Dm.get_canvas())
@@ -83,22 +84,22 @@ class MainUi(QMainWindow):
     def update_label(self):
         self.canvas.setPixmap(self.pixmap.scaled(self.canvas.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-    def __build_item(self, parent, idx, key, img):
+    def _build_item(self, parent, idx, key, img):
         h_layout = QHBoxLayout()
         frame = QFrame()
         v_layout = QVBoxLayout(frame)
         v_layout.setContentsMargins(0, 0, 0, 0)
         label = Label(parent, img, idx)
-        rot_button = self.__build_rotate_button(25, frame, idx, label)
-        edi_button = self.__build_edit_button(25, frame, idx, label)
-        rem_button = self.__build_remove_button(25, frame, key, label)
+        rot_button = self._build_rotate_button(25, frame, idx, label)
+        edi_button = self._build_edit_button(25, frame, idx, label)
+        rem_button = self._build_remove_button(25, frame, key, label)
         for i in [rot_button, edi_button, rem_button]:
             v_layout.addWidget(i)
         h_layout.addWidget(label, 9)
         h_layout.addWidget(frame, 1)
         return h_layout
 
-    def __build_button(self, size, parent, icon_path):
+    def _build_button(self, size, parent, icon_path):
         button = QPushButton(parent=parent)
         button.setFixedSize(size, size)
         button.setIcon(QIcon(icon_path))
@@ -106,39 +107,39 @@ class MainUi(QMainWindow):
         button.setIconSize(QSize(icon_size, icon_size))
         return button
 
-    def __build_remove_button(self, size, parent, key, label):
-        button = self.__build_button(size, parent, "assets/rem.png")
+    def _build_remove_button(self, size, parent, key, label):
+        button = self._build_button(size, parent, "assets/rem.png")
         button.setObjectName("rem")
-        button.clicked.connect(lambda: self.__toggle_cutout(key, label))
+        button.clicked.connect(lambda: self._toggle_cutout(key, label))
         return button
 
-    def __build_rotate_button(self, size, parent, idx, label):
-        button = self.__build_button(size, parent, "assets/rot.png")
+    def _build_rotate_button(self, size, parent, idx, label):
+        button = self._build_button(size, parent, "assets/rot.png")
         button.setObjectName("rot")
-        button.clicked.connect(lambda: self.__rotate_cutout(idx, label))
+        button.clicked.connect(lambda: self._rotate_cutout(idx, label))
         return button
 
-    def __build_edit_button(self, size, parent, idx, label):
-        button = self.__build_button(size, parent, "assets/edit.png")
+    def _build_edit_button(self, size, parent, idx, label):
+        button = self._build_button(size, parent, "assets/edit.png")
         button.setObjectName("edit")
-        button.clicked.connect(lambda: self.__open_edit(idx, label))
+        button.clicked.connect(lambda: self._open_edit(idx, label))
         return button
 
-    def __open_edit(self, idx, label):
+    def _open_edit(self, idx, label):
         EditUi(self.sw, idx, label, Dm.get_canvas())
 
-    def __rotate_cutout(self, idx, label):
+    def _rotate_cutout(self, idx, label):
         Dm.rotate_cutout(idx)
         label.updatePixMap()
 
-    def __toggle_cutout(self, key, label):
+    def _toggle_cutout(self, key, label):
         Dm.toggle_cutout(key)
         label.updatePixMap()
 
-    def __save_images(self):
+    def _save_images(self):
         Dm.save_cutouts()
 
-    def __switch_to_drop(self):
+    def _switch_to_drop(self):
         Dm.clear_data()
-        self.__clear_scroll_area()
+        self._clear_scroll_area()
         self.sw.setCurrentIndex(1)

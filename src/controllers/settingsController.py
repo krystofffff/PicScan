@@ -1,6 +1,4 @@
-from PyQt5.QtCore import QUrl
-
-import src.configManager as Cm
+import src.managers.configManager as Cm
 from PyQt5.QtWidgets import *
 
 

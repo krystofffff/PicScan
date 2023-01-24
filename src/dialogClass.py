@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QDialog, QVBoxLayout, QGraphicsScene, \
     QGraphicsPixmapItem
 
 from src.operations import graphicOperations as Go
-import src.dataManager as Dm
+import src.managers.dataManager as Dm
 from src.controllers.editController import MainView
 
 

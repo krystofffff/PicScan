@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QSizePolicy
 from src.operations import graphicOperations as Go
-import src.dataManager as Dm
+import src.managers.dataManager as Dm
 from src.dialogClass import Dialog
 
 

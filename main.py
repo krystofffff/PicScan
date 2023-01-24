@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QStackedWidget
 
 from src.controllers.dropController import DropUi
 from src.controllers.mainController import MainUi
-import src.configManager as cM
+import src.managers.configManager as cM
 
 
 if __name__ == "__main__":

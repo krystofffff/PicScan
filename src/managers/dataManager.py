@@ -2,7 +2,7 @@ import os.path
 import cv2
 import numpy as np
 from src.operations import graphicOperations as Go
-import src.configManager as Cm
+import src.managers.configManager as Cm
 
 _files = []
 _cutouts = {}

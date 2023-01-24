@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QUrl, Qt
 from PyQt5.QtWidgets import QFileDialog
-import src.dataManager as Dm
+import src.managers.dataManager as Dm
 import src.controllers.settingsController as sC
 
 
