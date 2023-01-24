@@ -2,17 +2,10 @@ import sys
 import unittest
 
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QStackedWidget, QLabel, QVBoxLayout, QPushButton, QWidget, QWidgetItem, QFrame
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QWidget
 
-import main
-from dropController import DropUi
-from labelClass import Label
-from mainController import MainUi
-from editController import EditUi
-import dataManager as dm
-import graphicOperations
-import pytestqt
+from src.controllers.dropController import DropUi
+from src.controllers.mainController import MainUi
 
 
 class MyTestCase(unittest.TestCase):
@@ -46,16 +39,16 @@ class MyTestCase(unittest.TestCase):
         layout = self.drop.layout.layout()
         count = self.drop.layout.count()
         self.assertEqual(count, 3)
-        for i in [self.drop.label, self.drop.label2, self.drop.browserButton]:
+        for i in [self.drop.label, self.drop.label2, self.drop.browser_button]:
             self.drop.layout.removeWidget(i)
         countUpdate = self.drop.layout.count()
         self.assertEqual(countUpdate, 0)
 
     def test_browseButtonConfigDropUi(self):
-        button = self.drop.browserButton.text()
-        self.assertEqual(self.drop.browserButton.isVisible(), False)
+        button = self.drop.browser_button.text()
+        self.assertEqual(self.drop.browser_button.isVisible(), False)
         self.assertEqual(button, "Choose file")
-        self.assertEqual(self.drop.browserButton.objectName(), "browserButton")
+        self.assertEqual(self.drop.browser_button.objectName(), "browserButton")
 
     # def test_getDistance(self, number, number1):
     #     number[0] = 5.5

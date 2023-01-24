@@ -1,10 +1,9 @@
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QLabel, QVBoxLayout, QScrollArea, QGraphicsView, QGraphicsScene, \
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QGraphicsScene, \
     QGraphicsPixmapItem
 
-import graphicOperations as Go
-import dataManager as Dm
-from editController import MainView
+from src.operations import graphicOperations as Go
+import src.dataManager as Dm
+from src.controllers.editController import MainView
 
 
 class Dialog(QDialog):

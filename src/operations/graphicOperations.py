@@ -3,7 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5.QtGui import QImage, QPixmap
-import geometricOperations as Geo
+import src.operations.geometricOperations as Geo
 
 
 def rotate_image(img):

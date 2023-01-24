@@ -1,12 +1,14 @@
 import os.path
 import cv2
 import numpy as np
-import graphicOperations as Go
+from src.operations import graphicOperations as Go
+import src.configManager as Cm
 
 _files = []
 _cutouts = {}
 _canvas = None
 _current_file = ""
+OUTPUT_FORMATS = [".jpg", ".png"]
 
 
 class Cutout:
@@ -30,9 +32,10 @@ def get_canvas():
 
 
 def save_cutouts():
+    of = OUTPUT_FORMATS[Cm.get_output_format()]
     for idx, img in _cutouts.items():
         if img.enabled:
-            cv2.imwrite(("./output/img_" + str(idx) + ".png"), img.img)
+            cv2.imwrite(("output/img_" + str(idx) + of), img.img)
     print("DONE")
 
 

@@ -1,7 +1,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QUrl, Qt
 from PyQt5.QtWidgets import QFileDialog
-import dataManager as Dm
+import src.dataManager as Dm
+import src.controllers.settingsController as sC
 
 
 class DropUi(QMainWindow):
@@ -24,14 +25,18 @@ class DropUi(QMainWindow):
         self.layout.setAlignment(Qt.AlignCenter)
         self.center.setLayout(self.layout)
 
-        self.browserButton = QPushButton("Choose file")
-        self.browserButton.clicked.connect(lambda: self.open_file_explorer())
-        self.browserButton.setObjectName("browserButton")
+        self.browser_button = QPushButton("Choose file")
+        self.browser_button.clicked.connect(lambda: self.open_file_explorer())
+        self.browser_button.setObjectName("browserButton")
 
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.label2)
-        self.layout.addWidget(self.browserButton)
-        self.setStyleSheet(open('C:/Users/Dumar/PycharmProjects/Annual-project-1/css/drop.css').read())
+        self.layout.addWidget(self.browser_button)
+        self.setStyleSheet(open('css/drop.css').read())
+
+        self.settings_button = QPushButton("Settings")
+        self.settings_button.clicked.connect(lambda: sC.SettingsDialog())
+        self.layout.addWidget(self.settings_button)
 
     def dragEnterEvent(self, event):
         self.label.setText("Drop it here")

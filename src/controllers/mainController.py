@@ -1,10 +1,10 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon
-import dataManager as Dm
-import graphicOperations as Go
-from editController import EditUi
-from labelClass import Label
+from src import dataManager as Dm
+from src.operations import graphicOperations as Go
+from src.controllers.editController import EditUi
+from src.labelClass import Label
 
 
 class MainUi(QMainWindow):
@@ -46,7 +46,7 @@ class MainUi(QMainWindow):
             i.setMaximumSize(160, 40)
             self.buttonHLayout.addWidget(i)
 
-        self.setStyleSheet(open('C:/Users/Dumar/PycharmProjects/Annual-project-1/css/main.css').read())
+        self.setStyleSheet(open('css/main.css').read())
 
     def __clear_scroll_area(self):
         # TODO CHECK DELETION

@@ -4,10 +4,9 @@ from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QWidget, QHBoxLayout,
     QMainWindow, QVBoxLayout, QPushButton, QGraphicsPixmapItem, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt
 
-import graphicOperations as Go
-import geometricOperations as Geo
-import dataManager as Dm
-from selectionBoxClass import SelectionBox
+from src.operations import graphicOperations as Go, geometricOperations as Geo
+import src.dataManager as Dm
+from src.selectionBoxClass import SelectionBox
 
 
 class MainView(QGraphicsView):

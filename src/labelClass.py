@@ -1,8 +1,8 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QSizePolicy
-import graphicOperations as Go
-import dataManager as Dm
-from dialogClass import Dialog
+from src.operations import graphicOperations as Go
+import src.dataManager as Dm
+from src.dialogClass import Dialog
 
 
 class Label(QLabel):
