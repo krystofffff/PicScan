@@ -7,6 +7,11 @@
     padding: 10px;
 }
 
+.QPushButton#browse {
+    font-size: 14px;
+    padding: 5px;
+}
+
 .QPushButton:disabled {
     background-color: rgba(179, 187, 188, 128);
     color: rgba(53, 59, 60, 128)
@@ -19,4 +24,8 @@
 
 .QLabel {
     font-size: 16px;
+}
+
+.QVBoxLayout#block {
+    padding: 25px;
 }

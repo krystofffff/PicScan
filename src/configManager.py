@@ -28,6 +28,16 @@ def get_output_format():
     return _config["output_format"]
 
 
+def get_output_folder():
+    global _config
+    return _config["output_folder"]
+
+
 def set_output_format(val):
     global _temp_config
     _temp_config["output_format"] = val
+
+
+def set_output_folder(val):
+    global _temp_config
+    _temp_config["output_folder"] = val

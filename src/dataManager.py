@@ -32,10 +32,11 @@ def get_canvas():
 
 
 def save_cutouts():
-    of = OUTPUT_FORMATS[Cm.get_output_format()]
+    output_format = OUTPUT_FORMATS[Cm.get_output_format()]
+    output_folder = Cm.get_output_folder()
     for idx, img in _cutouts.items():
         if img.enabled:
-            cv2.imwrite(("output/img_" + str(idx) + of), img.img)
+            cv2.imwrite((output_folder + "/img_" + str(idx) + output_format), img.img)
     print("DONE")
 
 
