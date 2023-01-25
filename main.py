@@ -5,14 +5,16 @@ from PyQt5.QtWidgets import QStackedWidget
 
 from src.controllers.dropController import DropUi
 from src.controllers.mainController import MainUi
-import src.managers.configManager as cM
+import src.managers.configManager as Cm
+import src.managers.hashManager as Hm
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     app.setAttribute(Qt.AA_DisableWindowContextHelpButton)
 
-    cM.load_config()
+    Cm.load_config()
+    Hm.load_hashes()
 
     sw = QStackedWidget()
     sw.setWindowTitle("PicScan beta")

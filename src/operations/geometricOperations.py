@@ -74,6 +74,10 @@ def get_vector_between_points(p1, p2):
     return [*_get_diffs(p1, p2)]
 
 
+def get_distance(p1, p2):
+    return math.sqrt(math.pow(p1[0] - p2[0], 2) + math.pow(p1[1] - p2[1], 2))
+
+
 def get_point_moved_by_vector(p, v):
     return [p[0] + v[0], p[1] + v[1]]
 

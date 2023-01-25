@@ -6,24 +6,24 @@ from src.dialogClass import Dialog
 
 
 class Label(QLabel):
-    def __init__(self, parent, img, idx):
+    def __init__(self, parent, idx):
         QLabel.__init__(self, parent)
         self.idx = idx
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setAlignment(Qt.AlignCenter)
-        self.pixmap = Go.get_qpixmap(img)
+        self.updatePixMap()
         self.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.setPixmap(self.pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.setAlignment(Qt.AlignCenter)
 
     def resizeEvent(self, event):
         self.setFixedHeight(self.width())
-        scaledSize = self.size()
-        scaledSize.scale(self.size(), Qt.KeepAspectRatio)
-        if not self.pixmap or scaledSize != self.pixmap.size():
+        scaled_size = self.size()
+        scaled_size.scale(self.size(), Qt.KeepAspectRatio)
+        if not self.pixmap or scaled_size != self.pixmap.size():
             self.updateLabel()
 
-    def __setScaledPixmap(self, pixmap):
+    def __set_scaled_pixmap(self, pixmap):
         self.setPixmap(pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
     def updateLabel(self):
@@ -37,7 +37,7 @@ class Label(QLabel):
             self.pixmap = Go.get_qpixmap(co.img)
         else:
             self.pixmap = Go.get_qpixmap(co.disabled_img)
-        self.__setScaledPixmap(self.pixmap)
+        self.__set_scaled_pixmap(self.pixmap)
 
     def mousePressEvent(self, event):
         Dialog(self.idx)

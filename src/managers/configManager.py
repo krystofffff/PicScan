@@ -7,7 +7,7 @@ _temp_config = {}
 
 def load_config():
     global _config
-    with open("src/config.json", 'r') as f:
+    with open("src/data/config.json", 'r') as f:
         _config = json.load(f)
 
 
@@ -19,7 +19,7 @@ def create_temp_config():
 def save_config():
     global _config, _temp_config
     _config = _temp_config
-    with open("src/config.json", 'w') as f:
+    with open("src/data/config.json", 'w') as f:
         json.dump(_config, f)
 
 

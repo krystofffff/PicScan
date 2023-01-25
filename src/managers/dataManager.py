@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from src.operations import graphicOperations as Go
 import src.managers.configManager as Cm
+import src.managers.hashManager as Hm
 
 _files = []
 _cutouts = {}
@@ -12,10 +13,10 @@ OUTPUT_FORMATS = [".jpg", ".png"]
 
 
 class Cutout:
-    def __init__(self, img, enabled, points):
+    def __init__(self, img, points):
         self.img = img
         self.disabled_img = Go.get_disabled_image(img)
-        self.enabled = enabled
+        self.enabled = not Hm.image_is_similar(img)
         self.points = points
 
 
@@ -48,7 +49,7 @@ def get_new_canvas():
 def generate_cutouts():
     global _cutouts
     cts, points = Go.get_cut_out_images(_canvas)
-    _cutouts = {i: Cutout(img, True, points[i]) for i, img in enumerate(cts)}
+    _cutouts = {i: Cutout(img, points[i]) for i, img in enumerate(cts)}
 
 
 def _load_image(url):
@@ -103,6 +104,8 @@ def _add_dir_content(file):
 
 
 def get_next_image():
+    # TODO SAVE HASHES HERE ?
+    Hm.save_hashes()
     global _files, _current_file
     if is_empty():
         return None
@@ -135,4 +138,4 @@ def get_file_name():
 
 def update_cutout(idx, p):
     points = [[x] for x in p]
-    get_cutouts()[idx] = Cutout(Go.subimage(get_canvas(), points), get_cutouts()[idx].enabled, points)
+    get_cutouts()[idx] = Cutout(Go.subimage(get_canvas(), points), points)

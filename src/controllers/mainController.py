@@ -49,7 +49,7 @@ class MainUi(QMainWindow):
         self.setStyleSheet(open('css/main.css').read())
 
     def _clear_scroll_area(self):
-        # TODO CHECK DELETION
+        # TODO CHECK DELETION (QFrame content?)
         for i in reversed(range(self.gridLayout.count())):
             a = self.gridLayout.itemAt(i)
             for j in reversed(range(a.layout().count())):
@@ -89,7 +89,7 @@ class MainUi(QMainWindow):
         frame = QFrame()
         v_layout = QVBoxLayout(frame)
         v_layout.setContentsMargins(0, 0, 0, 0)
-        label = Label(parent, img, idx)
+        label = Label(parent, idx)
         rot_button = self._build_rotate_button(25, frame, idx, label)
         edi_button = self._build_edit_button(25, frame, idx, label)
         rem_button = self._build_remove_button(25, frame, key, label)
