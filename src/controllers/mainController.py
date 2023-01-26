@@ -1,3 +1,5 @@
+import time
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QSize, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QIcon
@@ -47,6 +49,8 @@ class MainUi(QMainWindow):
             i.setMaximumSize(160, 40)
             self.buttons_h_layout.addWidget(i)
 
+        self.icons = {x: QIcon(f"assets/{x}.png") for x in ["rem", "rot", "edit"]}
+
         self.setStyleSheet(open('css/main.css').read())
 
     def _clear_scroll_area(self):
@@ -65,7 +69,6 @@ class MainUi(QMainWindow):
     @pyqtSlot()
     def load_new_image(self):
         self._clear_scroll_area()
-
         self.scroll_area.verticalScrollBar().minimum()
         self.file_name_label.setText(Dm.get_file_name())
         counter = 0
@@ -108,26 +111,23 @@ class MainUi(QMainWindow):
     def _build_button(self, size, parent, icon_path):
         button = QPushButton(parent=parent)
         button.setFixedSize(size, size)
-        button.setIcon(QIcon(icon_path))
+        button.setIcon(self.icons[icon_path])
         icon_size = size - 5
         button.setIconSize(QSize(icon_size, icon_size))
         return button
 
     def _build_remove_button(self, size, parent, key, label):
-        button = self._build_button(size, parent, "assets/rem.png")
-        button.setObjectName("rem")
+        button = self._build_button(size, parent, "rem")
         button.clicked.connect(lambda: self._toggle_cutout(key, label))
         return button
 
     def _build_rotate_button(self, size, parent, idx, label):
-        button = self._build_button(size, parent, "assets/rot.png")
-        button.setObjectName("rot")
+        button = self._build_button(size, parent, "rot")
         button.clicked.connect(lambda: self._rotate_cutout(idx, label))
         return button
 
     def _build_edit_button(self, size, parent, idx, label):
-        button = self._build_button(size, parent, "assets/edit.png")
-        button.setObjectName("edit")
+        button = self._build_button(size, parent, "edit")
         button.clicked.connect(lambda: self._open_edit(idx, label))
         return button
 
@@ -145,5 +145,5 @@ class MainUi(QMainWindow):
 
     def _switch_to_drop(self):
         Dm.clear_data()
-        self._clear_scroll_area()
         self.sw.setCurrentIndex(0)
+        self._clear_scroll_area()
