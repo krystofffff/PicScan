@@ -28,9 +28,9 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(self.main.center.layout(), self.main.mainHLayout)
 
     def test_labelMainUi(self):
-        save = self.main.saveButton.text()
-        next = self.main.nextButton.text()
-        end = self.main.endButton.text()
+        save = self.main.save_button.text()
+        next = self.main.next_button.text()
+        end = self.main.quit_button.text()
         self.assertEqual(save, "SAVE")
         self.assertEqual(next, "NEXT")
         self.assertEqual(end, "QUIT")

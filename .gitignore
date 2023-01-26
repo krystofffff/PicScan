@@ -2,3 +2,4 @@
 /output
 /dist
 /build
+/src/data/hashes.hdf5

@@ -1,16 +1,18 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QUrl, Qt
+from PyQt5.QtCore import QUrl, Qt, pyqtSignal
 from PyQt5.QtWidgets import QFileDialog
 import src.managers.dataManager as Dm
-import src.controllers.settingsController as sC
+import src.controllers.settingsController as Sc
 
 
 class DropUi(QMainWindow):
-    def __init__(self, sw, main):
+    progress = pyqtSignal(bool)
+
+    def __init__(self, sw):
         super(DropUi, self).__init__()
 
         self.sw = sw
-        self.main = main
+        # self.progress = progress
         self.center = QLabel()
         self.center.setObjectName("outer")
         self.center.setMinimumSize(960, 480)
@@ -35,7 +37,7 @@ class DropUi(QMainWindow):
         self.setStyleSheet(open('css/drop.css').read())
 
         self.settings_button = QPushButton("Settings")
-        self.settings_button.clicked.connect(lambda: sC.SettingsDialog())
+        self.settings_button.clicked.connect(lambda: Sc.SettingsDialog())
         self.layout.addWidget(self.settings_button)
 
     def dragEnterEvent(self, event):
@@ -50,8 +52,8 @@ class DropUi(QMainWindow):
         event.setDropAction(Qt.CopyAction)
         urls = event.mimeData().urls()
         Dm.add_file(urls)
-        self.main.load_new_image()
-        self.sw.setCurrentIndex(0)
+        self.progress.emit(False)
+        self.sw.setCurrentIndex(1)
         self.label.setText("Drag & Drop")
         event.accept()
 
@@ -63,6 +65,6 @@ class DropUi(QMainWindow):
         if fname == ([], ''):
             return
         Dm.add_file(arrUrls)
-        self.main.load_new_image()
-        self.sw.setCurrentIndex(0)
+        self.sw.setCurrentIndex(1)
+        self.progress.emit(False)
         self.label.setText("Drag & Drop")

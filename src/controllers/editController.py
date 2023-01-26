@@ -112,7 +112,7 @@ class EditUi(QMainWindow):
 
         self.sw = sw
         self.sw.addWidget(self)
-        self.sw.setCurrentIndex(2)
+        self.sw.setCurrentIndex(3)
 
         self.setStyleSheet(open('css/edit.css').read())
 
@@ -121,7 +121,7 @@ class EditUi(QMainWindow):
         Dm.update_cutout(self.idx, p)
         self.label.updatePixMap()
         self.sw.removeWidget(self)
-        self.sw.setCurrentIndex(0)
+        self.sw.setCurrentIndex(2)
 
     def _select_points(self):
         self.accept_button.setEnabled(False)

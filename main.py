@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QStackedWidget
 
 from src.controllers.dropController import DropUi
 from src.controllers.mainController import MainUi
+from src.controllers.progressController import ProgressUi
 import src.managers.configManager as Cm
 import src.managers.hashManager as Hm
 
@@ -19,9 +20,14 @@ if __name__ == "__main__":
     sw = QStackedWidget()
     sw.setWindowTitle("PicScan beta")
     main = MainUi(sw)
-    drop = DropUi(sw, main)
-    for i in [main, drop]:
+    progress = ProgressUi(sw)
+    drop = DropUi(sw)
+    main.progress.connect(progress.process)
+    drop.progress.connect(progress.process)
+    progress.main_update.connect(main.load_new_image)
+    for i in [drop, progress, main]:
         sw.addWidget(i)
-    sw.setCurrentIndex(1)
+    sw.setCurrentIndex(0)
     sw.show()
+
     app.exec_()

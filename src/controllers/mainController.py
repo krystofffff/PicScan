@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QIcon
 from src.managers import dataManager as Dm
 from src.operations import graphicOperations as Go
@@ -8,6 +8,7 @@ from src.labelClass import Label
 
 
 class MainUi(QMainWindow):
+    progress = pyqtSignal(bool)
 
     def __init__(self, sw):
         super(MainUi, self).__init__()
@@ -35,13 +36,15 @@ class MainUi(QMainWindow):
         self.VLayout.addWidget(self.fileNameLabel, 1)
         self.VLayout.addLayout(self.buttonHLayout, 1)
 
-        self.saveButton = QPushButton("SAVE")
-        self.saveButton.clicked.connect(lambda: self._save_images())
-        self.nextButton = QPushButton("NEXT")
-        self.nextButton.clicked.connect(lambda: self.load_new_image())
-        self.endButton = QPushButton("QUIT")
-        self.endButton.clicked.connect(lambda: self._switch_to_drop())
-        for i in [self.saveButton, self.nextButton, self.endButton]:
+        self.save_button = QPushButton("SAVE")
+        self.save_button.clicked.connect(lambda: self._save_images())
+        self.next_button = QPushButton("NEXT")
+        self.next_button.clicked.connect(lambda: self.switch_to_progress(False))
+        self.auto_button = QPushButton("AUTO")
+        self.auto_button.clicked.connect(lambda: self.switch_to_progress(True))
+        self.quit_button = QPushButton("QUIT")
+        self.quit_button.clicked.connect(lambda: self._switch_to_drop())
+        for i in [self.save_button, self.next_button, self.auto_button, self.quit_button]:
             i.setMinimumSize(80, 20)
             i.setMaximumSize(160, 40)
             self.buttonHLayout.addWidget(i)
@@ -56,14 +59,20 @@ class MainUi(QMainWindow):
                 a.layout().itemAt(j).widget().setParent(None)
             a.layout().setParent(None)
 
+    def switch_to_progress(self, in_auto_mode):
+        # TODO LINK TO AUTO BUTTON
+        self.progress.emit(in_auto_mode)
+        self.sw.setCurrentIndex(1)
+
+    @pyqtSlot()
     def load_new_image(self):
         self._clear_scroll_area()
-        Dm.get_new_canvas()
-        Dm.generate_cutouts()
-        self.nextButton.setEnabled(not Dm.is_empty())
+
+        self.next_button.setEnabled(not Dm.is_empty())
         self.scrollArea.verticalScrollBar().minimum()
         self.fileNameLabel.setText(Dm.get_file_name())
         counter = 0
+        # TODO COLUMN_COUNT IN SETTINGS ?
         COLUMN_COUNT = 2
         for key, co in Dm.get_cutouts().items():
             layout = self._build_item(self.scrollArea, counter, key, co.img)
@@ -126,6 +135,7 @@ class MainUi(QMainWindow):
         return button
 
     def _open_edit(self, idx, label):
+        # TODO should be persistent ? (+ sw indexing ?)
         EditUi(self.sw, idx, label, Dm.get_canvas())
 
     def _rotate_cutout(self, idx, label):
@@ -142,4 +152,4 @@ class MainUi(QMainWindow):
     def _switch_to_drop(self):
         Dm.clear_data()
         self._clear_scroll_area()
-        self.sw.setCurrentIndex(1)
+        self.sw.setCurrentIndex(0)

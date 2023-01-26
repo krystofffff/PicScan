@@ -13,7 +13,7 @@ def load_hashes():
     try:
         with h5py.File(HASHES_PATH, "r") as f:
             a_group_key = list(f.keys())[0]
-            _hashes = f[a_group_key][()]
+            _hashes = list(f[a_group_key][()])
     except FileNotFoundError:
         pass
 

@@ -1,4 +1,6 @@
 import os.path
+import time
+
 import cv2
 import numpy as np
 from src.operations import graphicOperations as Go
@@ -10,6 +12,7 @@ _cutouts = {}
 _canvas = None
 _current_file = ""
 OUTPUT_FORMATS = [".jpg", ".png"]
+INPUT_FORMATS = ["bmp", "jpeg", "jpg", "tiff", "png"]
 
 
 class Cutout:
@@ -33,17 +36,23 @@ def get_canvas():
 
 
 def save_cutouts():
+    Hm.save_hashes()
     output_format = OUTPUT_FORMATS[Cm.get_output_format()]
     output_folder = Cm.get_output_folder()
     for idx, img in _cutouts.items():
         if img.enabled:
             cv2.imwrite((output_folder + "/img_" + str(idx) + output_format), img.img)
-    print("DONE")
 
 
-def get_new_canvas():
+def process_next_image():
+    # time.sleep(5)
+    generate_canvas()
+    generate_cutouts()
+
+
+def generate_canvas():
     global _canvas
-    _canvas = _load_image(get_next_image())
+    _canvas = _load_image(_get_next_file())
 
 
 def generate_cutouts():
@@ -78,8 +87,9 @@ def add_file(path):
 
 
 def _is_image(path):
+    global INPUT_FORMATS
     file_name = path[path.rfind(".") + 1:]
-    if file_name in ["bmp", "jpeg", "jpg", "tiff", "png"]:
+    if file_name in INPUT_FORMATS:
         return True
     else:
         return False
@@ -103,9 +113,8 @@ def _add_dir_content(file):
     _files += a
 
 
-def get_next_image():
-    # TODO SAVE HASHES HERE ?
-    Hm.save_hashes()
+def _get_next_file():
+    # TODO WHERE IS SAVING CUTOUTS ON NEW IMAGE ?
     global _files, _current_file
     if is_empty():
         return None
@@ -113,12 +122,12 @@ def get_next_image():
         _current_file = _files.pop(0)
         if _is_folder(_current_file):
             _add_dir_content(_current_file)
-            return get_next_image()
+            return _get_next_file()
         else:
             if _is_image(_current_file):
                 return _current_file
             else:
-                return get_next_image()
+                return _get_next_file()
 
 
 def rotate_cutout(idx):
