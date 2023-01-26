@@ -60,3 +60,15 @@ def _get_similarity(h1, h2):
     for i in k:
         s += bin(i).count("1")
     return 1 - (s / 64.0)
+
+
+def get_hash_count():
+    global _hashes
+    return len(_hashes)
+
+
+def clear_hashes():
+    global _hashes
+    _hashes = []
+    save_hashes()
+

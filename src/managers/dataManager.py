@@ -20,8 +20,16 @@ class Cutout:
     def __init__(self, img, points):
         self.img = img
         self.disabled_img = Go.get_disabled_image(img)
-        self.enabled = not Hm.image_is_similar(img)
+        if Cm.get_similarity_mode() == 0:
+            self.enabled = True
+        else:
+            self.enabled = not Hm.image_is_similar(img)
         self.points = points
+
+
+def get_file_counter():
+    global _file_counter
+    return _file_counter
 
 
 def get_cutouts():
@@ -65,6 +73,14 @@ def generate_cutouts():
     global _cutouts
     cts, points = Go.get_cut_out_images(_canvas)
     _cutouts = {i: Cutout(img, points[i]) for i, img in enumerate(cts)}
+
+
+def any_disabled_cutouts():
+    global _cutouts
+    for i in _cutouts.values():
+        if not i.enabled:
+            return True
+    return False
 
 
 def _load_image(url):

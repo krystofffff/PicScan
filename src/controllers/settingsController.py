@@ -1,4 +1,5 @@
 import src.managers.configManager as Cm
+import src.managers.hashManager as Hm
 from PyQt5.QtWidgets import *
 
 
@@ -12,10 +13,12 @@ class SettingsDialog(QDialog):
         self.layout.setContentsMargins(25, 25, 25, 25)
         self.setLayout(self.layout)
 
-        self.setMinimumSize(360, 240)
+        self.setMinimumSize(640, 480)
 
         self._build_output_format_settings()
         self._build_output_folder_settings()
+        self._build_similar_settings()
+
         self.layout.addStretch()
         self._build_save_button()
 
@@ -33,8 +36,8 @@ class SettingsDialog(QDialog):
         self.radio_button_jpg.clicked.connect(lambda: Cm.set_output_format(0))
         self.radio_button_png = QRadioButton("PNG")
         self.radio_button_png.clicked.connect(lambda: Cm.set_output_format(1))
-        self.radio_buttons = [self.radio_button_jpg, self.radio_button_png]
-        for i in [self.label_format_title, *self.radio_buttons]:
+        self.format_radio_buttons = [self.radio_button_jpg, self.radio_button_png]
+        for i in [self.label_format_title, *self.format_radio_buttons]:
             self.layout_output_format.addWidget(i)
         self.layout.addWidget(self.frame_o_format)
 
@@ -50,8 +53,9 @@ class SettingsDialog(QDialog):
 
     def load_config(self):
         Cm.create_temp_config()
-        self.radio_buttons[Cm.get_output_format()].toggle()
+        self.format_radio_buttons[Cm.get_output_format()].toggle()
         self.label_o_folder.setText(Cm.get_output_folder())
+        self.s_radio_buttons[Cm.get_similarity_mode()].toggle()
 
     def _build_output_folder_settings(self):
         self.frame_o_folder = QFrame()
@@ -64,7 +68,7 @@ class SettingsDialog(QDialog):
         self.button_browse_o_folder.clicked.connect(lambda: self.browse_output_folder())
         self.button_browse_o_folder.setMinimumSize(60, 30)
         self.button_browse_o_folder.setMaximumSize(80, 40)
-        self.button_browse_o_folder.setObjectName("browse")
+        self.button_browse_o_folder.setObjectName("smaller")
         for i in [self.label_o_folder, self.button_browse_o_folder]:
             self.layout_o_folder.addWidget(i)
         self.layout_o_folder.addStretch()
@@ -78,3 +82,38 @@ class SettingsDialog(QDialog):
             return
         Cm.set_output_folder(folder)
         self.label_o_folder.setText(folder)
+
+    def _build_similar_settings(self):
+        self.frame_s = QFrame()
+        self.layout_s_outer = QHBoxLayout()
+        self.frame_s.setLayout(self.layout_s_outer)
+
+        self.layout_s_radios = QVBoxLayout()
+        self.label_s = QLabel("Similarity check mode:")
+        self.radio_button_s_disable = QRadioButton("Disabled")
+        self.radio_button_s_disable.clicked.connect(lambda: Cm.set_similarity_mode(0))
+        self.radio_button_s_skip = QRadioButton("Skip similar in AUTO")
+        self.radio_button_s_skip.clicked.connect(lambda: Cm.set_similarity_mode(1))
+        self.radio_button_s_stop = QRadioButton("Stop on similar in AUTO")
+        self.radio_button_s_stop.clicked.connect(lambda: Cm.set_similarity_mode(2))
+        self.s_radio_buttons = [self.radio_button_s_disable, self.radio_button_s_skip, self.radio_button_s_stop]
+        for i in [self.label_s, *self.s_radio_buttons]:
+            self.layout_s_radios.addWidget(i)
+
+        self.layout_hash_records = QHBoxLayout()
+        self.label_s_count = QLabel(f"Records: {Hm.get_hash_count()//4}")
+        self.button_s_clear_records = QPushButton("Clear records")
+        self.button_s_clear_records.setObjectName("smaller")
+        self.button_s_clear_records.clicked.connect(lambda: self.clear_hashes())
+        for i in [self.label_s_count, self.button_s_clear_records]:
+            self.layout_hash_records.addWidget(i)
+
+        self.layout_s_outer.addLayout(self.layout_s_radios)
+        self.layout_s_outer.addStretch()
+        self.layout_s_outer.addLayout(self.layout_hash_records)
+
+        self.layout.addWidget(self.frame_s)
+
+    def clear_hashes(self):
+        Hm.clear_hashes()
+        self.label_s_count.setText(f"Records: {Hm.get_hash_count()//4}")

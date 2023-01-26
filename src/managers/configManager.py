@@ -28,16 +28,26 @@ def get_output_format():
     return _config["output_format"]
 
 
-def get_output_folder():
-    global _config
-    return _config["output_folder"]
-
-
 def set_output_format(val):
     global _temp_config
     _temp_config["output_format"] = val
 
 
+def get_output_folder():
+    global _config
+    return _config["output_folder"]
+
+
 def set_output_folder(val):
     global _temp_config
     _temp_config["output_folder"] = val
+
+
+def get_similarity_mode():
+    global _similarity_mode
+    return _config["similarity_mode"]
+
+
+def set_similarity_mode(val):
+    global _similarity_mode
+    _temp_config["similarity_mode"] = val

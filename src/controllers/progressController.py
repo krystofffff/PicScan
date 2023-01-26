@@ -1,6 +1,7 @@
 from PyQt5.QtCore import Qt, QObject, pyqtSignal, QThread, pyqtSlot
 from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QPushButton, QHBoxLayout
 import src.managers.dataManager as Dm
+import src.managers.configManager as Cm
 from PyQt5.QtWidgets import QStackedWidget
 
 
@@ -23,11 +24,10 @@ class ProgressUi(QMainWindow):
         self.setCentralWidget(self.center)
 
         self.counter = 0
-        self.processed = 0
 
         self.thread = None
 
-        self.label = QLabel()
+        self.label = QLabel(f"Processed: {Dm.get_file_counter()} files")
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setFixedSize(400, 50)
         self.test_button = QPushButton("+1")
@@ -52,7 +52,7 @@ class ProgressUi(QMainWindow):
     @pyqtSlot(bool)
     def process(self, in_auto_mode):
         if Dm.is_empty():
-            self.label.setText(f"FINISHED! | Processed: {self.processed} files")
+            self.label.setText(f"FINISHED! | Processed: {Dm.get_file_counter()} files")
         else:
             self.run_thread(in_auto_mode)
 
@@ -68,12 +68,14 @@ class ProgressUi(QMainWindow):
         self.thread.finished.connect(lambda: self.next_step(in_auto_mode))
 
     def next_step(self, in_auto_mode):
+        self.update_processed()
         if in_auto_mode:
-            Dm.save_cutouts()
-            self.update_processed()
-            self.process(in_auto_mode)
+            if Cm.get_similarity_mode() == 2 and Dm.any_disabled_cutouts():
+                self.switch_to_main_controller()
+            else:
+                Dm.save_cutouts()
+                self.process(in_auto_mode)
         else:
-            self.update_processed()
             self.switch_to_main_controller()
 
     def switch_to_main_controller(self):
@@ -81,8 +83,7 @@ class ProgressUi(QMainWindow):
         self.sw.setCurrentIndex(2)
 
     def update_processed(self):
-        self.processed += 1
-        self.label.setText(f"Processed: {self.processed} files")
+        self.label.setText(f"Processed: {Dm.get_file_counter()} files")
 
     def update_counter(self):
         self.counter += 1
