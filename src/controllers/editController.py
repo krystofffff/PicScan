@@ -9,6 +9,7 @@ import src.managers.dataManager as Dm
 from src.selectionBoxClass import SelectionBox
 
 
+# TODO SPLIT IN SEPARATE FILES
 class MainView(QGraphicsView):
 
     def __init__(self, scene):

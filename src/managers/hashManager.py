@@ -4,7 +4,7 @@ import cv2
 
 _hashes = []
 
-SIMILARITY_THRESHOLD = 0.8
+SIMILARITY_THRESHOLD = 0.9
 HASHES_PATH = "src/data/hashes.hdf5"
 
 

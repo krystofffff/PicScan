@@ -11,6 +11,7 @@ _files = []
 _cutouts = {}
 _canvas = None
 _current_file = ""
+_file_counter = 0
 OUTPUT_FORMATS = [".jpg", ".png"]
 INPUT_FORMATS = ["bmp", "jpeg", "jpg", "tiff", "png"]
 
@@ -36,23 +37,28 @@ def get_canvas():
 
 
 def save_cutouts():
+    global OUTPUT_FORMATS, _file_counter
     Hm.save_hashes()
     output_format = OUTPUT_FORMATS[Cm.get_output_format()]
     output_folder = Cm.get_output_folder()
     for idx, img in _cutouts.items():
         if img.enabled:
-            cv2.imwrite((output_folder + "/img_" + str(idx) + output_format), img.img)
+            cv2.imwrite(f"{output_folder}/img_{_file_counter}_{idx}{output_format}", img.img)
 
 
 def process_next_image():
+    global _file_counter
     # time.sleep(5)
-    generate_canvas()
-    generate_cutouts()
+    if not is_empty():
+        _file_counter += 1
+        generate_canvas()
+        generate_cutouts()
 
 
 def generate_canvas():
     global _canvas
-    _canvas = _load_image(_get_next_file())
+    file = _get_next_file()
+    _canvas = _load_image(file)
 
 
 def generate_cutouts():
@@ -70,9 +76,10 @@ def _load_image(url):
 
 
 def clear_data():
-    global _files, _cutouts, _canvas
+    global _files, _cutouts, _canvas, _file_counter
+    _file_counter = 0
     _files = []
-    _cutouts = dict()
+    _cutouts = {}
     _canvas = None
 
 

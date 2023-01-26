@@ -27,9 +27,9 @@ class ProgressUi(QMainWindow):
 
         self.thread = None
 
-        self.label = QLabel(f"Processed: {self.processed}")
+        self.label = QLabel()
         self.label.setAlignment(Qt.AlignCenter)
-        self.label.setFixedSize(200, 50)
+        self.label.setFixedSize(400, 50)
         self.test_button = QPushButton("+1")
         self.test_button.setFixedSize(50, 50)
         self.test_button.clicked.connect(lambda: self.update_counter())
@@ -51,6 +51,12 @@ class ProgressUi(QMainWindow):
 
     @pyqtSlot(bool)
     def process(self, in_auto_mode):
+        if Dm.is_empty():
+            self.label.setText(f"FINISHED! | Processed: {self.processed} files")
+        else:
+            self.run_thread(in_auto_mode)
+
+    def run_thread(self, in_auto_mode):
         self.thread = QThread()
         self.worker = Worker()
         self.worker.moveToThread(self.thread)
@@ -59,19 +65,15 @@ class ProgressUi(QMainWindow):
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
         self.thread.start()
-        self.thread.finished.connect(
-            lambda: self.next_step(in_auto_mode)
-        )
+        self.thread.finished.connect(lambda: self.next_step(in_auto_mode))
 
     def next_step(self, in_auto_mode):
         if in_auto_mode:
             Dm.save_cutouts()
-            if Dm.is_empty():
-                self.label.setText("FINISHED")
-            else:
-                self.update_processed()
-                self.process(in_auto_mode)
+            self.update_processed()
+            self.process(in_auto_mode)
         else:
+            self.update_processed()
             self.switch_to_main_controller()
 
     def switch_to_main_controller(self):
@@ -80,7 +82,7 @@ class ProgressUi(QMainWindow):
 
     def update_processed(self):
         self.processed += 1
-        self.label.setText(f"Processed: {self.processed}")
+        self.label.setText(f"Processed: {self.processed} files")
 
     def update_counter(self):
         self.counter += 1

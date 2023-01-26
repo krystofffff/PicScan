@@ -16,8 +16,8 @@ class MyTestCase(unittest.TestCase):
     drop = DropUi(sw, main)
 
     def test_labelDropUi(self):
-        labelDragDrop = self.drop.label.text()
-        labelTwo = self.drop.label2.text()
+        labelDragDrop = self.drop.label_1.text()
+        labelTwo = self.drop.label_2.text()
         self.assertEqual(labelDragDrop, "Drag & Drop")
         self.assertEqual(labelTwo, "or")
 
@@ -25,7 +25,7 @@ class MyTestCase(unittest.TestCase):
         center = self.main.center.isVisible()
         self.assertEqual(center, False)
         self.assertEqual(self.main.center.objectName(), "outer")
-        self.assertEqual(self.main.center.layout(), self.main.mainHLayout)
+        self.assertEqual(self.main.center.layout(), self.main.main_h_layout)
 
     def test_labelMainUi(self):
         save = self.main.save_button.text()
@@ -39,7 +39,7 @@ class MyTestCase(unittest.TestCase):
         layout = self.drop.layout.layout()
         count = self.drop.layout.count()
         self.assertEqual(count, 3)
-        for i in [self.drop.label, self.drop.label2, self.drop.browser_button]:
+        for i in [self.drop.label_1, self.drop.label_2, self.drop.browser_button]:
             self.drop.layout.removeWidget(i)
         countUpdate = self.drop.layout.count()
         self.assertEqual(countUpdate, 0)

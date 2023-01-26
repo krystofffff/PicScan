@@ -18,49 +18,47 @@ class MainUi(QMainWindow):
         self.center.setObjectName("outer")
         self.center.setMinimumSize(960, 480)
         self.setCentralWidget(self.center)
-        self.mainHLayout = QHBoxLayout()
-        self.center.setLayout(self.mainHLayout)
+        self.main_h_layout = QHBoxLayout()
+        self.center.setLayout(self.main_h_layout)
         self.canvas = QLabel()
-        self.mainHLayout.addWidget(self.canvas, 5)
-        self.VLayout = QVBoxLayout()
-        self.mainHLayout.addLayout(self.VLayout, 5)
-        self.scrollArea = QScrollArea(widgetResizable=True)
-        self.VLayout.addWidget(self.scrollArea, 9)
-        self.gridLayout = QGridLayout()
-        self.scrollInnerContainer = QWidget()
-        self.scrollInnerContainer.setLayout(self.gridLayout)
-        self.scrollArea.setWidget(self.scrollInnerContainer)
-        self.buttonHLayout = QHBoxLayout()
-        self.fileNameLabel = QLabel()
-        self.fileNameLabel.setAlignment(Qt.AlignCenter)
-        self.VLayout.addWidget(self.fileNameLabel, 1)
-        self.VLayout.addLayout(self.buttonHLayout, 1)
+        self.main_h_layout.addWidget(self.canvas, 5)
+        self.v_layout = QVBoxLayout()
+        self.main_h_layout.addLayout(self.v_layout, 5)
+        self.scroll_area = QScrollArea(widgetResizable=True)
+        self.v_layout.addWidget(self.scroll_area, 9)
+        self.grid_layout = QGridLayout()
+        self.scroll_inner_container = QWidget()
+        self.scroll_inner_container.setLayout(self.grid_layout)
+        self.scroll_area.setWidget(self.scroll_inner_container)
+        self.buttons_h_layout = QHBoxLayout()
+        self.file_name_label = QLabel()
+        self.file_name_label.setAlignment(Qt.AlignCenter)
+        self.v_layout.addWidget(self.file_name_label, 1)
+        self.v_layout.addLayout(self.buttons_h_layout, 1)
 
-        self.save_button = QPushButton("SAVE")
-        self.save_button.clicked.connect(lambda: self._save_images())
         self.next_button = QPushButton("NEXT")
         self.next_button.clicked.connect(lambda: self.switch_to_progress(False))
         self.auto_button = QPushButton("AUTO")
         self.auto_button.clicked.connect(lambda: self.switch_to_progress(True))
         self.quit_button = QPushButton("QUIT")
         self.quit_button.clicked.connect(lambda: self._switch_to_drop())
-        for i in [self.save_button, self.next_button, self.auto_button, self.quit_button]:
+        for i in [self.next_button, self.auto_button, self.quit_button]:
             i.setMinimumSize(80, 20)
             i.setMaximumSize(160, 40)
-            self.buttonHLayout.addWidget(i)
+            self.buttons_h_layout.addWidget(i)
 
         self.setStyleSheet(open('css/main.css').read())
 
     def _clear_scroll_area(self):
         # TODO CHECK DELETION (QFrame content?)
-        for i in reversed(range(self.gridLayout.count())):
-            a = self.gridLayout.itemAt(i)
+        for i in reversed(range(self.grid_layout.count())):
+            a = self.grid_layout.itemAt(i)
             for j in reversed(range(a.layout().count())):
                 a.layout().itemAt(j).widget().setParent(None)
             a.layout().setParent(None)
 
     def switch_to_progress(self, in_auto_mode):
-        # TODO LINK TO AUTO BUTTON
+        Dm.save_cutouts()
         self.progress.emit(in_auto_mode)
         self.sw.setCurrentIndex(1)
 
@@ -68,17 +66,16 @@ class MainUi(QMainWindow):
     def load_new_image(self):
         self._clear_scroll_area()
 
-        self.next_button.setEnabled(not Dm.is_empty())
-        self.scrollArea.verticalScrollBar().minimum()
-        self.fileNameLabel.setText(Dm.get_file_name())
+        self.scroll_area.verticalScrollBar().minimum()
+        self.file_name_label.setText(Dm.get_file_name())
         counter = 0
         # TODO COLUMN_COUNT IN SETTINGS ?
         COLUMN_COUNT = 2
         for key, co in Dm.get_cutouts().items():
-            layout = self._build_item(self.scrollArea, counter, key, co.img)
+            layout = self._build_item(self.scroll_area, counter, key)
             x, y = counter % COLUMN_COUNT, counter // COLUMN_COUNT
             counter += 1
-            self.gridLayout.addLayout(layout, y, x)
+            self.grid_layout.addLayout(layout, y, x)
         self.pixmap = Go.get_qpixmap(Dm.get_canvas())
         self.canvas.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.canvas.setAlignment(Qt.AlignCenter)
@@ -93,7 +90,7 @@ class MainUi(QMainWindow):
     def update_label(self):
         self.canvas.setPixmap(self.pixmap.scaled(self.canvas.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-    def _build_item(self, parent, idx, key, img):
+    def _build_item(self, parent, idx, key):
         h_layout = QHBoxLayout()
         frame = QFrame()
         v_layout = QVBoxLayout(frame)
@@ -145,9 +142,6 @@ class MainUi(QMainWindow):
     def _toggle_cutout(self, key, label):
         Dm.toggle_cutout(key)
         label.updatePixMap()
-
-    def _save_images(self):
-        Dm.save_cutouts()
 
     def _switch_to_drop(self):
         Dm.clear_data()
