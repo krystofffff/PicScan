@@ -2,7 +2,7 @@ from PyQt5 import QtGui
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QWidget, QHBoxLayout, \
     QMainWindow, QVBoxLayout, QPushButton, QGraphicsPixmapItem, QSpacerItem, QSizePolicy
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QPoint
 
 from src.operations import graphicOperations as Go, geometricOperations as Geo
 import src.managers.dataManager as Dm
@@ -25,10 +25,13 @@ class MainView(QGraphicsView):
         factor = 1.1
         if event.angleDelta().y() < 0:
             factor = 0.9
-        self.update_view(factor)
+        self.update_view(factor, event)
 
-    def update_view(self, factor):
-        view_pos = self.pos()
+    def update_view(self, factor, event=None):
+        if event is None:
+            view_pos = QPoint(0, 0)
+        else:
+            view_pos = event.pos()
         scene_pos = self.mapToScene(view_pos)
         self.centerOn(scene_pos)
         self.scale(factor, factor)
