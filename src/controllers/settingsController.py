@@ -1,6 +1,6 @@
 import src.managers.configManager as Cm
 import src.managers.hashManager as Hm
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QRadioButton, QPushButton, QHBoxLayout, QFileDialog
 
 
 class SettingsDialog(QDialog):

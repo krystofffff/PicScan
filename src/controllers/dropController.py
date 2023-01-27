@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QPushButton
 from PyQt5.QtCore import QUrl, Qt, pyqtSignal
 from PyQt5.QtWidgets import QFileDialog
 import src.managers.dataManager as Dm
@@ -10,6 +10,8 @@ class DropUi(QMainWindow):
 
     def __init__(self, sw):
         super(DropUi, self).__init__()
+
+        self.setStyleSheet(open('css/drop.css').read())
 
         self.sw = sw
         self.center = QLabel()
@@ -30,14 +32,11 @@ class DropUi(QMainWindow):
         self.browser_button.clicked.connect(lambda: self.open_file_explorer())
         self.browser_button.setObjectName("browserButton")
 
-        self.layout.addWidget(self.label_1)
-        self.layout.addWidget(self.label_2)
-        self.layout.addWidget(self.browser_button)
-        self.setStyleSheet(open('css/drop.css').read())
-
         self.settings_button = QPushButton("Settings")
         self.settings_button.clicked.connect(lambda: Sc.SettingsDialog())
-        self.layout.addWidget(self.settings_button)
+
+        for i in [self.label_1, self.label_2, self.browser_button, self.settings_button]:
+            self.layout.addWidget(i)
 
     def dragEnterEvent(self, event):
         self.label_1.setText("Drop it here")

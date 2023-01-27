@@ -63,7 +63,6 @@ def _get_similarity(h1, h2):
 
 
 def get_hash_count():
-    global _hashes
     return len(_hashes)
 
 

@@ -6,39 +6,26 @@ from PyQt5.QtGui import QImage, QPixmap
 import src.operations.geometricOperations as Geo
 
 
+# TODO DELETE ?
+# def resize_image_to_fit(img, shape):
+#     wc, hc = shape.width(), shape.height()
+#     wi, hi = len(img[0]), len(img)
+#     print(wi, hi)
+#     print(img.shape())
+#     if ((wc * 1.0) / hc) >= ((wi * 1.0) / hi):
+#         f = (hc * 1.0) / hi
+#     else:
+#         f = (wc * 1.0) / wi
+#     return cv2.resize(img, (0, 0), fx=f, fy=f)
+
+
+# def _show(img):
+#     plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+#     plt.show()
+
+
 def rotate_image(img):
     return cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
-
-
-def _get_rotated_point(point, center, angle):
-    angle = math.radians(angle)
-    ox, oy = center[0], center[1]
-    px, py = point[0], point[1]
-    qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
-    qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
-    return qx, qy
-
-
-def resize_image_to_fit(img, shape):
-    wc, hc = shape.width(), shape.height()
-    wi, hi = len(img[0]), len(img)
-    if ((wc * 1.0) / hc) >= ((wi * 1.0) / hi):
-        f = (hc * 1.0) / hi
-    else:
-        f = (wc * 1.0) / wi
-    return cv2.resize(img, (0, 0), fx=f, fy=f)
-
-
-def show(img):
-    plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-    plt.show()
-
-
-# TODO MERGE WITH GEOMETRIC
-
-def _get_angle(a, b, c):
-    ang = math.degrees(math.atan2(c[1] - b[1], c[0] - b[0]) - math.atan2(a[1] - b[1], a[0] - b[0]))
-    return ang + 360 if ang < 0 else ang
 
 
 def _find_rectangles(img):
@@ -65,7 +52,11 @@ def _is_valid_rectangle(points):
     counter = 0
     last_right = None
     for i in range(4):
-        angle = _get_angle(points[i % 4][0], points[(i + 1) % 4][0], points[(i + 2) % 4][0]) % 180
+        p1 = points[i % 4][0]
+        p2 = points[(i + 1) % 4][0]
+        p3 = points[(i + 2) % 4][0]
+        angle = Geo.get_angle_3p(p1, p2, p3)
+        angle = math.degrees(Geo.pos_angle(angle)) % 180
         if abs(90 - angle) > 2:
             counter += 1
         else:
@@ -108,7 +99,7 @@ def _get_index_of_bottom(corners):
     return index
 
 
-def get_disabled_image(img):
+def _get_disabled_image(img):
     img = np.copy(img)
     c = 25
     w = min(img.shape[1], img.shape[0]) // 8
@@ -117,6 +108,7 @@ def get_disabled_image(img):
     return img
 
 
+# TODO split into subfunctions
 def subimage(image, corners):
     image = image.copy()
     sx = sy = 0
@@ -127,10 +119,10 @@ def subimage(image, corners):
         sx += point[0][0]
         sy += point[0][1]
     c_center = [int(sx / 4.0), int(sy / 4.0)]
-    theta = math.degrees(Geo.get_angle(corners[index][0], corners[(index + 1) % 4][0]))
+    theta = math.degrees(Geo.get_angle_2p(corners[index][0], corners[(index + 1) % 4][0]))
 
     image = cv2.cvtColor(image, cv2.COLOR_RGB2RGBA)
-    rot = get_rotated_image(image, theta)
+    rot = _get_rotated_image(image, theta)
 
     h, w = image.shape[:2]
     oi_center = (w / 2, h / 2)
@@ -157,7 +149,7 @@ def subimage(image, corners):
     return zer
 
 
-def get_rotated_image(image, angle):
+def _get_rotated_image(image, angle):
     height, width = image.shape[:2]
     image_center = (width / 2, height / 2)
     rotation_mat = cv2.getRotationMatrix2D(image_center, angle, 1.)

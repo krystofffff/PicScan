@@ -82,7 +82,7 @@ class SlideAnchor(Anchor):
         p1 = self.a1.get_point()
         p2 = self.a2.get_point()
         p_m = Geo.get_mid_point(p1, p2)
-        angle = Geo.get_angle(p1, p2) + self.dist_vect["angle"]
+        angle = Geo.get_angle_2p(p1, p2) + self.dist_vect["angle"]
         x = p_m[0] + math.cos(angle) * self.dist_vect["dist"]
         y = p_m[1] + math.sin(angle) * self.dist_vect["dist"]
         self.setPos(self._off_pos(x), self._off_pos(y))
@@ -116,7 +116,7 @@ class Line(QGraphicsLineItem):
         self.setPen(pen)
 
     def update_pos(self, p1, p2, p1_is_anchor, p2_is_anchor):
-        angle = Geo.get_angle(p1, p2)
+        angle = Geo.get_angle_2p(p1, p2)
         r = self.a_size / 2
         dx = math.cos(angle) * r
         dy = math.sin(angle) * r

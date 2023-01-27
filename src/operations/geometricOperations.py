@@ -1,6 +1,5 @@
 import math
 import statistics as stat
-
 import numpy as np
 
 
@@ -24,10 +23,19 @@ def get_corners_from_anchors(p1, p2, p3):
     return [p1, p2, p3, p4]
 
 
-def get_angle(p1, p2):
+def get_angle_2p(p1, p2):
     x0, y0 = p1[0], p1[1]
     x1, y1 = p2[0], p2[1]
     return math.atan2(y1 - y0, x1 - x0)
+
+
+def get_angle_3p(a, b, c):
+    ang = get_angle_2p(b, c) - get_angle_2p(b, a)
+    return ang
+
+
+def pos_angle(ang):
+    return ang + math.tau if ang < 0 else ang
 
 
 def get_mid_point(p1, p2):
@@ -44,8 +52,8 @@ def _get_diffs(p1, p2):
 
 def get_vector_projected_on_axis(p1, p2, p_o, p_n):
     diff_x, diff_y = _get_diffs(p_o, p_n)
-    angle1 = get_angle(p1, p2) - math.pi / 2
-    angle2 = get_angle(p_o, p_n)
+    angle1 = get_angle_2p(p1, p2) - math.pi / 2
+    angle2 = get_angle_2p(p_o, p_n)
     angle_fin = angle2 - angle1
     length = math.sqrt(diff_x ** 2 + diff_y ** 2)
     a = math.cos(angle_fin) * length
@@ -55,7 +63,7 @@ def get_vector_projected_on_axis(p1, p2, p_o, p_n):
 def get_angle_and_dist_from_line(p1, p2, p):
     p_p = get_point_on_line(p1, p2, p)
     v = get_vector_between_points(p_p, p)
-    angle = math.atan2(v[1], v[0]) - get_angle(p1, p2)
+    angle = math.atan2(v[1], v[0]) - get_angle_2p(p1, p2)
     dist = math.sqrt(v[0] ** 2 + v[1] ** 2)
     return angle, dist
 

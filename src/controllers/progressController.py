@@ -1,6 +1,5 @@
-import time
 from PyQt5.QtCore import Qt, QObject, pyqtSignal, QThread, pyqtSlot
-from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QPushButton, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout
 import src.managers.dataManager as Dm
 import src.managers.configManager as Cm
 from PyQt5.QtWidgets import QStackedWidget

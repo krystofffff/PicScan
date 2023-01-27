@@ -21,39 +21,12 @@ INPUT_FORMATS = ["bmp", "jpeg", "jpg", "tiff", "png"]
 class Cutout:
     def __init__(self, img, points):
         self.img = img
-        self.disabled_img = Go.get_disabled_image(img)
+        self.disabled_img = Go._get_disabled_image(img)
         if Cm.get_similarity_mode() == 0:
             self.enabled = True
         else:
             self.enabled = not Hm.image_is_similar(img)
         self.points = points
-
-
-def get_file_counter():
-    global _file_counter
-    return _file_counter
-
-
-def get_discarded_cutouts_counter():
-    global _discarded_cutouts_counter
-    return _discarded_cutouts_counter
-
-
-def get_saved_cutouts_counter():
-    global _saved_cutouts_counter
-    return _saved_cutouts_counter
-
-
-def get_cutouts():
-    return _cutouts
-
-
-def get_cutout_points(idx):
-    return _cutouts[idx].points
-
-
-def get_canvas():
-    return _canvas
 
 
 def save_cutouts():
@@ -64,6 +37,7 @@ def save_cutouts():
     for idx, img in _cutouts.items():
         if img.enabled:
             _saved_cutouts_counter += 1
+            # TODO IF OUTPUT FOLDER IS MISSING ? (eg. AFTER BUILD)
             cv2.imwrite(f"{output_folder}/img_{_file_counter}_{idx}{output_format}", img.img)
         else:
             _discarded_cutouts_counter += 1
@@ -186,3 +160,27 @@ def get_file_name():
 def update_cutout(idx, p):
     points = [[x] for x in p]
     get_cutouts()[idx] = Cutout(Go.subimage(get_canvas(), points), points)
+
+
+def get_file_counter():
+    return _file_counter
+
+
+def get_discarded_cutouts_counter():
+    return _discarded_cutouts_counter
+
+
+def get_saved_cutouts_counter():
+    return _saved_cutouts_counter
+
+
+def get_cutouts():
+    return _cutouts
+
+
+def get_cutout_points(idx):
+    return _cutouts[idx].points
+
+
+def get_canvas():
+    return _canvas
