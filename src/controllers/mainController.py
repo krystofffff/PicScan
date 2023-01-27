@@ -1,9 +1,8 @@
-import time
-
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QGridLayout, QPushButton, \
     QSizePolicy, QFrame, QMainWindow
 from PyQt5.QtCore import QSize, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QIcon
+
 from src.managers import dataManager as Dm
 from src.operations import graphicOperations as Go
 from src.controllers.editController import EditUi
@@ -28,6 +27,7 @@ class MainUi(QMainWindow):
         self.v_layout = QVBoxLayout()
         self.main_h_layout.addLayout(self.v_layout, 5)
         self.scroll_area = QScrollArea(widgetResizable=True)
+        self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.v_layout.addWidget(self.scroll_area, 9)
         self.grid_layout = QGridLayout()
         self.scroll_inner_container = QWidget()
