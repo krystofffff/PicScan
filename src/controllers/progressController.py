@@ -1,4 +1,4 @@
-from PyQt5.QtCore import Qt, QObject, pyqtSignal, QThread, pyqtSlot
+from PyQt5.QtCore import Qt, QObject, pyqtSignal, QThread, pyqtSlot, QTimer
 from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout
 import src.managers.dataManager as Dm
 import src.managers.configManager as Cm

@@ -6,12 +6,13 @@ from src.dialogClass import Dialog
 
 
 class Label(QLabel):
+
     def __init__(self, parent, idx):
         QLabel.__init__(self, parent)
         self.idx = idx
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setAlignment(Qt.AlignCenter)
-        self.updatePixMap()
+        self.update_pixmap()
         self.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.setPixmap(self.pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.setAlignment(Qt.AlignCenter)
@@ -21,23 +22,31 @@ class Label(QLabel):
         scaled_size = self.size()
         scaled_size.scale(self.size(), Qt.KeepAspectRatio)
         if not self.pixmap or scaled_size != self.pixmap.size():
-            self.updateLabel()
+            self._update_label()
 
-    def __set_scaled_pixmap(self, pixmap):
+    def _set_scaled_pixmap(self, pixmap):
         self.setPixmap(pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-    def updateLabel(self):
+    def _update_label(self):
         self.setPixmap(self.pixmap.scaled(
             self.size(), Qt.KeepAspectRatio,
             Qt.SmoothTransformation))
 
-    def updatePixMap(self):
+    def rotate_cutout(self):
+        Dm.rotate_cutout(self.idx)
+        self.update_pixmap()
+
+    def toggle_cutout(self):
+        Dm.toggle_cutout(self.idx)
+        self.update_pixmap()
+
+    def update_pixmap(self):
         co = Dm.get_cutouts()[self.idx]
         if co.enabled:
             self.pixmap = Go.get_qpixmap(co.img)
         else:
             self.pixmap = Go.get_qpixmap(co.disabled_img)
-        self.__set_scaled_pixmap(self.pixmap)
+        self._set_scaled_pixmap(self.pixmap)
 
     def mousePressEvent(self, event):
         Dialog(self.idx)

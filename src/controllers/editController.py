@@ -123,7 +123,7 @@ class EditUi(QMainWindow):
     def _accept_selection(self):
         p = Geo.get_corners_from_anchors(*self.scene.selection_box.get_points_from_anchors())
         Dm.update_cutout(self.idx, p)
-        self.label.updatePixMap()
+        self.label.update_pixmap()
         self.sw.removeWidget(self)
         self.sw.setCurrentIndex(2)
 

@@ -99,7 +99,7 @@ def _get_index_of_bottom(corners):
     return index
 
 
-def _get_disabled_image(img):
+def get_disabled_image(img):
     img = np.copy(img)
     c = 25
     w = min(img.shape[1], img.shape[0]) // 8

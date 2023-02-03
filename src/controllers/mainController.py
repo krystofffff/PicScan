@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QGridLayout, QPushButton, \
     QSizePolicy, QFrame, QMainWindow
 from PyQt5.QtCore import QSize, Qt, pyqtSignal, pyqtSlot
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QResizeEvent
 
 from src.managers import dataManager as Dm
 from src.operations import graphicOperations as Go
@@ -74,24 +74,26 @@ class MainUi(QMainWindow):
         self.file_name_label.setText(Dm.get_file_name())
         counter = 0
         # TODO COLUMN_COUNT IN SETTINGS ?
-        COLUMN_COUNT = 2
+        _COLUMN_COUNT = 2
         for key, co in Dm.get_cutouts().items():
             layout = self._build_item(self.scroll_area, counter, key)
-            x, y = counter % COLUMN_COUNT, counter // COLUMN_COUNT
+            x, y = counter % _COLUMN_COUNT, counter // _COLUMN_COUNT
             counter += 1
             self.grid_layout.addLayout(layout, y, x)
+        # TODO is there need for self.pixmap ?
         self.pixmap = Go.get_qpixmap(Dm.get_canvas())
         self.canvas.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.canvas.setAlignment(Qt.AlignCenter)
         self.update_label()
 
-    def resizeEvent(self, event):
+    def resizeEvent(self, event: QResizeEvent):
         scaled_size = self.canvas.size()
         scaled_size.scale(self.canvas.size(), Qt.KeepAspectRatio)
-        if not self.canvas.pixmap() or scaled_size != self.canvas.pixmap().size():
-            self.update_label()
+        self.update_label(event)
+        # if not self.canvas.pixmap() or scaled_size != self.canvas.pixmap().size():
+        #     self.update_label()
 
-    def update_label(self):
+    def update_label(self, event=None):
         self.canvas.setPixmap(self.pixmap.scaled(self.canvas.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
     def _build_item(self, parent, idx, key):
@@ -119,12 +121,12 @@ class MainUi(QMainWindow):
 
     def _build_remove_button(self, size, parent, key, label):
         button = self._build_button(size, parent, "rem")
-        button.clicked.connect(lambda: self._toggle_cutout(key, label))
+        button.clicked.connect(lambda: label.toggle_cutout())
         return button
 
     def _build_rotate_button(self, size, parent, idx, label):
         button = self._build_button(size, parent, "rot")
-        button.clicked.connect(lambda: self._rotate_cutout(idx, label))
+        button.clicked.connect(lambda: label.rotate_cutout())
         return button
 
     def _build_edit_button(self, size, parent, idx, label):
@@ -135,14 +137,6 @@ class MainUi(QMainWindow):
     def _open_edit(self, idx, label):
         # TODO should be persistent ? (+ sw indexing ?)
         EditUi(self.sw, idx, label, Dm.get_canvas())
-
-    def _rotate_cutout(self, idx, label):
-        Dm.rotate_cutout(idx)
-        label.updatePixMap()
-
-    def _toggle_cutout(self, key, label):
-        Dm.toggle_cutout(key)
-        label.updatePixMap()
 
     def _switch_to_drop(self):
         Dm.clear_data()

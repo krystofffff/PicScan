@@ -1,5 +1,5 @@
 /venv
-/output
+/output/*
 /dist
 /build
-/src/data/hashes.hdf5
+/data/hashes.hdf5

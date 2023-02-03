@@ -1,5 +1,4 @@
 import os.path
-
 import cv2
 import numpy as np
 from src.operations import graphicOperations as Go
@@ -21,7 +20,7 @@ INPUT_FORMATS = ["bmp", "jpeg", "jpg", "tiff", "png"]
 class Cutout:
     def __init__(self, img, points):
         self.img = img
-        self.disabled_img = Go._get_disabled_image(img)
+        self.disabled_img = Go.get_disabled_image(img)
         if Cm.get_similarity_mode() == 0:
             self.enabled = True
         else:
@@ -60,6 +59,7 @@ def generate_canvas():
 def generate_cutouts():
     global _cutouts
     cts, points = Go.get_cut_out_images(_canvas)
+    # TODO DICT TO ARRAY (DICT NOT NEEDED ANYMORE - no removing)
     _cutouts = {i: Cutout(img, points[i]) for i, img in enumerate(cts)}
 
 
@@ -147,8 +147,8 @@ def rotate_cutout(idx):
     _cutouts[idx].disabled_img = Go.rotate_image(_cutouts[idx].disabled_img)
 
 
-def toggle_cutout(key):
-    _cutouts.get(key).enabled = not _cutouts.get(key).enabled
+def toggle_cutout(idx):
+    _cutouts[idx].enabled = not _cutouts[idx].enabled
 
 
 def get_file_name():
