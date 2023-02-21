@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget
 
 from src.controllers.dropController import DropUi
-from src.controllers.mainController import MainUi
+from src.controllers.main.mainController import MainUi
 
 
 class MyTestCase(unittest.TestCase):

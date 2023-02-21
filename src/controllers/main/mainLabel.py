@@ -2,10 +2,10 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QSizePolicy
 from src.operations import graphicOperations as Go
 import src.managers.dataManager as Dm
-from src.dialogClass import Dialog
+from src.controllers.imageDialogController import ImageDialog
 
 
-class Label(QLabel):
+class MainLabel(QLabel):
 
     def __init__(self, parent, idx):
         QLabel.__init__(self, parent)
@@ -49,4 +49,4 @@ class Label(QLabel):
         self._set_scaled_pixmap(self.pixmap)
 
     def mousePressEvent(self, event):
-        Dialog(self.idx)
+        ImageDialog(self.idx)

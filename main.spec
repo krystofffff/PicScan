@@ -10,7 +10,7 @@ a = Analysis(
     binaries=[],
     datas=[("./assets/*.png", "./assets"),
         ("./css/*.css", "./css"),
-        ("./src/data/*", "./src/data")],
+        ("./data/*", "./data")],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

@@ -5,8 +5,8 @@ from PyQt5.QtGui import QIcon, QResizeEvent
 
 from src.managers import dataManager as Dm
 from src.operations import graphicOperations as Go
-from src.controllers.editController import EditUi
-from src.labelClass import Label
+from src.controllers.edit.editController import EditUi
+from src.controllers.main.mainLabel import MainLabel
 
 
 class MainUi(QMainWindow):
@@ -101,10 +101,10 @@ class MainUi(QMainWindow):
         frame = QFrame()
         v_layout = QVBoxLayout(frame)
         v_layout.setContentsMargins(0, 0, 0, 0)
-        label = Label(parent, idx)
+        label = MainLabel(parent, idx)
         rot_button = self._build_rotate_button(25, frame, idx, label)
         edi_button = self._build_edit_button(25, frame, idx, label)
-        rem_button = self._build_remove_button(25, frame, key, label)
+        rem_button = self._build_remove_button(25, frame, label)
         for i in [rot_button, edi_button, rem_button]:
             v_layout.addWidget(i)
         h_layout.addWidget(label, 9)
@@ -119,7 +119,7 @@ class MainUi(QMainWindow):
         button.setIconSize(QSize(icon_size, icon_size))
         return button
 
-    def _build_remove_button(self, size, parent, key, label):
+    def _build_remove_button(self, size, parent, label):
         button = self._build_button(size, parent, "rem")
         button.clicked.connect(lambda: label.toggle_cutout())
         return button

@@ -3,7 +3,7 @@ import src.managers.hashManager as Hm
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QRadioButton, QPushButton, QHBoxLayout, QFileDialog
 
 
-class SettingsDialog(QDialog):
+class ConfigDialog(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Settings")
@@ -41,15 +41,20 @@ class SettingsDialog(QDialog):
             self.layout_output_format.addWidget(i)
         self.layout.addWidget(self.frame_o_format)
 
+    # TODO save button ? or save on change
     def _build_save_button(self):
         self.button_save = QPushButton("Save")
         self.button_save.setMinimumSize(80, 40)
         self.button_save.setMaximumSize(160, 40)
-        self.button_save.clicked.connect(lambda: Cm.save_config())
+        self.button_save.clicked.connect(lambda: self._save_and_close())
         self.layout_buttons = QHBoxLayout()
 
         self.layout_buttons.addWidget(self.button_save)
         self.layout.addLayout(self.layout_buttons)
+
+    def _save_and_close(self):
+        Cm.save_config()
+        self.close()
 
     def load_config(self):
         Cm.create_temp_config()

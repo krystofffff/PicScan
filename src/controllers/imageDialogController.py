@@ -2,10 +2,10 @@ from PyQt5.QtWidgets import QDialog, QVBoxLayout, QGraphicsScene, \
     QGraphicsPixmapItem
 from src.operations import graphicOperations as Go
 import src.managers.dataManager as Dm
-from src.controllers.editController import MainView
+from src.controllers.edit.editController import EditView
 
 
-class Dialog(QDialog):
+class ImageDialog(QDialog):
     def __init__(self, idx):
         super().__init__()
         self.idx = idx
@@ -17,7 +17,7 @@ class Dialog(QDialog):
 
         self.scene = QGraphicsScene()
         self.scene.addItem(pic)
-        self.graphicsView = MainView(self.scene)
+        self.graphicsView = EditView(self.scene)
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.graphicsView)

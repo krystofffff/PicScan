@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QPushButton
 from PyQt5.QtCore import QUrl, Qt, pyqtSignal
 from PyQt5.QtWidgets import QFileDialog
 import src.managers.dataManager as Dm
-import src.controllers.settingsController as Sc
+import src.controllers.configController as Sc
 
 
 class DropUi(QMainWindow):
@@ -33,7 +33,7 @@ class DropUi(QMainWindow):
         self.browser_button.setObjectName("browserButton")
 
         self.settings_button = QPushButton("Settings")
-        self.settings_button.clicked.connect(lambda: Sc.SettingsDialog())
+        self.settings_button.clicked.connect(lambda: Sc.ConfigDialog())
 
         for i in [self.label_1, self.label_2, self.browser_button, self.settings_button]:
             self.layout.addWidget(i)

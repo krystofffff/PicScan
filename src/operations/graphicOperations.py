@@ -111,6 +111,7 @@ def get_disabled_image(img):
 # TODO split into subfunctions
 def subimage(image, corners):
     image = image.copy()
+
     sx = sy = 0
     index = _get_index_of_bottom(corners)
     width = int(Geo.get_distance(corners[index][0], corners[(index + 1) % 4][0]))

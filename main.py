@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QStackedWidget
 
 from src.controllers.dropController import DropUi
-from src.controllers.mainController import MainUi
+from src.controllers.main.mainController import MainUi
 from src.controllers.progressController import ProgressUi
 import src.managers.configManager as Cm
 import src.managers.hashManager as Hm
