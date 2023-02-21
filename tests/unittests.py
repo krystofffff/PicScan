@@ -13,7 +13,7 @@ class MyTestCase(unittest.TestCase):
     sw = QWidget()
     sw.setWindowTitle("PicScan beta")
     main = MainUi(sw)
-    drop = DropUi(sw, main)
+    drop = DropUi(sw)
 
     def test_labelDropUi(self):
         labelDragDrop = self.drop.label_1.text()
@@ -28,18 +28,18 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(self.main.center.layout(), self.main.main_h_layout)
 
     def test_labelMainUi(self):
-        save = self.main.save_button.text()
+        auto = self.main.auto_button.text()
         next = self.main.next_button.text()
         end = self.main.quit_button.text()
-        self.assertEqual(save, "SAVE")
+        self.assertEqual(auto, "AUTO")
         self.assertEqual(next, "NEXT")
         self.assertEqual(end, "QUIT")
 
     def test_layoutContainsWidgets(self):
         layout = self.drop.layout.layout()
         count = self.drop.layout.count()
-        self.assertEqual(count, 3)
-        for i in [self.drop.label_1, self.drop.label_2, self.drop.browser_button]:
+        self.assertEqual(count, 4)
+        for i in [self.drop.label_1, self.drop.label_2, self.drop.browser_button, self.drop.settings_button]:
             self.drop.layout.removeWidget(i)
         countUpdate = self.drop.layout.count()
         self.assertEqual(countUpdate, 0)
@@ -76,6 +76,7 @@ class MyTestCase(unittest.TestCase):
     #     parent = self.main.scrollArea
     #     label = Label(parent, img, idx)
     #     frame = QFrame()
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -7,6 +7,7 @@ from src.managers import dataManager as Dm
 from src.operations import graphicOperations as Go
 from src.controllers.edit.editController import EditUi
 from src.controllers.main.mainLabel import MainLabel
+from definitions import ROOT_DIR
 
 
 class MainUi(QMainWindow):
@@ -50,9 +51,9 @@ class MainUi(QMainWindow):
             i.setMaximumSize(160, 40)
             self.buttons_h_layout.addWidget(i)
 
-        self.icons = {x: QIcon(f"assets/{x}.png") for x in ["rem", "rot", "edit"]}
+        self.icons = {x: QIcon(ROOT_DIR + f"/assets/{x}.png") for x in ["rem", "rot", "edit"]}
 
-        self.setStyleSheet(open('css/main.css').read())
+        self.setStyleSheet(open(ROOT_DIR + '/css/main.css').read())
 
     def _clear_scroll_area(self):
         # TODO CHECK DELETION (QFrame content?)

@@ -1,13 +1,14 @@
 import src.managers.configManager as Cm
 import src.managers.hashManager as Hm
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QRadioButton, QPushButton, QHBoxLayout, QFileDialog
+from definitions import ROOT_DIR
 
 
 class ConfigDialog(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Settings")
-        self.setStyleSheet(open('css/settings.css').read())
+        self.setStyleSheet(open(ROOT_DIR + 'css/settings.css').read())
 
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(25, 25, 25, 25)
