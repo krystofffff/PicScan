@@ -84,21 +84,6 @@ def get_cut_out_images(image):
     return images, points
 
 
-def _get_index_of_bottom(corners):
-    maximal = corners[0][0][1]
-    index = 0
-    for idx, i in enumerate(corners):
-        temp = max(i[0][1], maximal)
-        if temp > maximal:
-            index = idx
-            maximal = temp
-        elif temp == maximal:
-            if i[0][0] > corners[index][0][0]:
-                index = idx
-                maximal = temp
-    return index
-
-
 def get_disabled_image(img):
     img = np.copy(img)
     c = 25
@@ -108,19 +93,10 @@ def get_disabled_image(img):
     return img
 
 
-# TODO split into subfunctions
 def subimage(image, corners):
     image = image.copy()
 
-    sx = sy = 0
-    index = _get_index_of_bottom(corners)
-    width = int(Geo.get_distance(corners[index][0], corners[(index + 1) % 4][0]))
-    height = int(Geo.get_distance(corners[index][0], corners[(index + 3) % 4][0]))
-    for point in corners:
-        sx += point[0][0]
-        sy += point[0][1]
-    c_center = [int(sx / 4.0), int(sy / 4.0)]
-    theta = math.degrees(Geo.get_angle_2p(corners[index][0], corners[(index + 1) % 4][0]))
+    c_width, c_height, c_center, theta = Geo.get_specs_from_corners(corners)
 
     image = cv2.cvtColor(image, cv2.COLOR_RGB2RGBA)
     rot = _get_rotated_image(image, theta)
@@ -133,19 +109,24 @@ def subimage(image, corners):
     vv = Geo.get_point_rotated_around_point([0, 0], v, -theta)
     p = Geo.get_point_moved_by_vector(ni_center, vv)
     p = [int(p[0]), int(p[1])]
-    p = Geo.get_point_moved_by_vector(p, [-width // 2, -height // 2])
+    p = Geo.get_point_moved_by_vector(p, [-c_width // 2, -c_height // 2])
 
-    x, y = p[0], p[1]
+    cutout = _cutout_image(rot, p, c_width, c_height, h, w)
 
-    zer = np.zeros((height, width, 4), np.uint8)
+    return cutout
 
-    h_max = min(h, y + height)
-    w_max = min(w, x + width)
+
+def _cutout_image(img, corner, c_width, c_height, i_h, i_w):
+    zer = np.zeros((c_height, c_width, 4), np.uint8)
+
+    x, y = corner[0], corner[1]
+    h_max = min(i_h, y + c_height)
+    w_max = min(i_w, x + c_width)
     x_min = max(0, x)
     y_min = max(0, y)
 
     if h_max >= 0 and w_max >= 0:
-        zer[y_min - y:h_max - y, x_min - x:w_max - x] = rot[y_min:h_max, x_min:w_max]
+        zer[y_min - y:h_max - y, x_min - x:w_max - x] = img[y_min:h_max, x_min:w_max]
 
     return zer
 

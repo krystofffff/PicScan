@@ -8,7 +8,7 @@ class ConfigDialog(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Settings")
-        self.setStyleSheet(open(ROOT_DIR + 'css/settings.css').read())
+        self.setStyleSheet(open(ROOT_DIR + '/css/settings.css').read())
 
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(25, 25, 25, 25)

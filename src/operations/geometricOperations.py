@@ -23,6 +23,35 @@ def get_corners_from_anchors(p1, p2, p3):
     return [p1, p2, p3, p4]
 
 
+def _get_index_of_bottom(corners):
+    maximal = corners[0][0][1]
+    index = 0
+    for idx, i in enumerate(corners):
+        temp = max(i[0][1], maximal)
+        if temp > maximal:
+            index = idx
+            maximal = temp
+        elif temp == maximal:
+            if i[0][0] > corners[index][0][0]:
+                index = idx
+                maximal = temp
+    return index
+
+
+def get_specs_from_corners(corners):
+    index = _get_index_of_bottom(corners)
+    width = int(get_distance(corners[index][0], corners[(index + 1) % 4][0]))
+    height = int(get_distance(corners[index][0], corners[(index + 3) % 4][0]))
+    sx = sy = 0
+    for point in corners:
+        sx += point[0][0]
+        sy += point[0][1]
+    c_center = [int(sx / 4.0), int(sy / 4.0)]
+    theta = math.degrees(get_angle_2p(corners[index][0], corners[(index + 1) % 4][0]))
+
+    return width, height, c_center, theta
+
+
 def get_angle_2p(p1, p2):
     x0, y0 = p1[0], p1[1]
     x1, y1 = p2[0], p2[1]
