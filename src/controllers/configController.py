@@ -42,7 +42,6 @@ class ConfigDialog(QDialog):
             self.layout_output_format.addWidget(i)
         self.layout.addWidget(self.frame_o_format)
 
-    # TODO save button ? or save on change
     def _build_save_button(self):
         self.button_save = QPushButton("Save")
         self.button_save.setMinimumSize(80, 40)

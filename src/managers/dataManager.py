@@ -7,7 +7,7 @@ import src.managers.hashManager as Hm
 
 
 _files = []
-_cutouts = {}
+_cutouts = []
 _canvas = None
 _current_file = ""
 _file_counter = 0
@@ -29,15 +29,15 @@ class Cutout:
 
 
 def save_cutouts():
-    global OUTPUT_FORMATS, _file_counter, _saved_cutouts_counter, _discarded_cutouts_counter
+    global OUTPUT_FORMATS, _file_counter, _cutouts, _saved_cutouts_counter, _discarded_cutouts_counter
     Hm.save_hashes()
     output_format = OUTPUT_FORMATS[Cm.get_output_format()]
     output_folder = Cm.get_output_folder()
-    for idx, img in _cutouts.items():
-        if img.enabled:
+    for idx, co in enumerate(_cutouts):
+        if co.enabled:
             _saved_cutouts_counter += 1
             # TODO IF OUTPUT FOLDER IS MISSING ? (eg. AFTER BUILD)
-            cv2.imwrite(f"{output_folder}/img_{_file_counter}_{idx}{output_format}", img.img)
+            cv2.imwrite(f"{output_folder}/img_{_file_counter}_{idx}{output_format}", co.img)
         else:
             _discarded_cutouts_counter += 1
 
@@ -59,13 +59,12 @@ def generate_canvas():
 def generate_cutouts():
     global _cutouts
     cts, points = Gra.get_cut_out_images(_canvas)
-    # TODO DICT TO ARRAY (DICT NOT NEEDED ANYMORE - no removing)
-    _cutouts = {i: Cutout(img, points[i]) for i, img in enumerate(cts)}
+    _cutouts = [Cutout(img, points[i]) for i, img in enumerate(cts)]
 
 
 def any_disabled_cutouts():
     global _cutouts
-    for i in _cutouts.values():
+    for i in _cutouts:
         if not i.enabled:
             return True
     return False
@@ -83,7 +82,7 @@ def clear_data():
     global _files, _cutouts, _canvas, _file_counter, _saved_cutouts_counter, _discarded_cutouts_counter
     _file_counter = 0
     _files = []
-    _cutouts = {}
+    _cutouts = []
     _canvas = None
     _saved_cutouts_counter = 0
     _discarded_cutouts_counter = 0
@@ -143,6 +142,7 @@ def _get_next_file():
 
 
 def rotate_cutout(idx):
+    global _cutouts
     _cutouts[idx].img = Gra.rotate_image(_cutouts[idx].img)
     _cutouts[idx].disabled_img = Gra.rotate_image(_cutouts[idx].disabled_img)
 

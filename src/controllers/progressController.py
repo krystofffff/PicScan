@@ -1,8 +1,9 @@
-from PyQt5.QtCore import Qt, QObject, pyqtSignal, QThread, pyqtSlot, QTimer
+from PyQt5.QtCore import Qt, QObject, pyqtSignal, QThread, pyqtSlot
 from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout
 import src.managers.dataManager as Dm
 import src.managers.configManager as Cm
 from PyQt5.QtWidgets import QStackedWidget
+from definitions import ROOT_DIR
 
 
 class Worker(QObject):
@@ -32,7 +33,7 @@ class ProgressUi(QMainWindow):
 
         self.center.setLayout(self.layout)
 
-        self.setStyleSheet(open('css/drop.css').read())
+        self.setStyleSheet(open(ROOT_DIR + '/css/drop.css').read())
 
     @pyqtSlot(bool)
     def process(self, in_auto_mode):

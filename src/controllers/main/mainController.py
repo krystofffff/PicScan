@@ -76,8 +76,8 @@ class MainUi(QMainWindow):
         counter = 0
         # TODO COLUMN_COUNT IN SETTINGS ?
         _COLUMN_COUNT = 2
-        for key, co in Dm.get_cutouts().items():
-            layout = self._build_item(self.scroll_area, counter, key)
+        for idx, co in enumerate(Dm.get_cutouts()):
+            layout = self._build_item(self.scroll_area, counter, idx)
             x, y = counter % _COLUMN_COUNT, counter // _COLUMN_COUNT
             counter += 1
             self.grid_layout.addLayout(layout, y, x)
