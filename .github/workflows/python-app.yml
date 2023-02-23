@@ -9,10 +9,9 @@ on:
   pull_request:
     branches: [ "main" ]
 
-permissions:
-  contents: write-all
-
 jobs:
+ permissions: write-all
+
   build:
 
     runs-on: ubuntu-latest
