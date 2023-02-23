@@ -14,7 +14,6 @@ permissions: write-all
 jobs:
 
   build:
-
     runs-on: windows-latest
 
     steps:
@@ -37,7 +36,7 @@ jobs:
     - name: Build
       run: |
         pyinstaller main.spec
-     - name: tonybogdanov-zip
+    - name: tonybogdanov-zip
       uses: TonyBogdanov/zip@1.0
       with:
           args: zip -qq -r dist/PicScan.zip dist/main
