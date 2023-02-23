@@ -15,7 +15,7 @@ jobs:
 
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -37,8 +37,8 @@ jobs:
     - name: Build
       run: |
         pyinstaller main.spec
-    - name: action-zip
-      uses: montudor/action-zip@v1.0.0
+     - name: tonybogdanov-zip
+      uses: TonyBogdanov/zip@1.0
       with:
           args: zip -qq -r dist/PicScan.zip dist/main
     - name: Automatic Releases
