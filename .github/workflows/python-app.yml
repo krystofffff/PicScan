@@ -29,10 +29,12 @@ jobs:
     - name: Build
       run: |
         pyinstaller main.spec
-    - name: tonybogdanov-zip
-      uses: TonyBogdanov/zip@1.0
+    - name: Archive Release
+      uses: thedoctor0/zip-release@0.7.1
       with:
-          args: zip -qq -r dist/PicScan.zip dist/main
+          type: 'zip'
+          filename: 'dist/PicScan.zip'
+          directory: 'dist/main'
     - name: Automatic Releases
       uses: marvinpinto/action-automatic-releases@v1.2.1
       with:
