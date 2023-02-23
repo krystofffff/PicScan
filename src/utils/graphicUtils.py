@@ -3,7 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5.QtGui import QImage, QPixmap
-import src.operations.geometricOperations as Geo
+import src.utils.geometricUtils as Geo
 
 
 # TODO DELETE ?
@@ -143,7 +143,6 @@ def _get_rotated_image(image, angle):
     rotation_mat[1, 2] += bound_h / 2 - image_center[1]
     rotated_mat = cv2.warpAffine(image, rotation_mat, (bound_w, bound_h), borderMode=cv2.BORDER_CONSTANT,
                                  borderValue=(0, 0, 0, 0))
-    # rotated_mat = cv2.warpAffine(image, rotation_mat, (bound_w, bound_h))
     return rotated_mat
 
 

@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, \
 import src.managers.dataManager as Dm
 from src.controllers.edit.editScene import MainScene
 from src.controllers.edit.editView import EditView
-from src.operations import geometricOperations as Geo
+from src.utils import geometricUtils as Geo
 
 
 class EditUi(QMainWindow):

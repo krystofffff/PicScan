@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPen, QCursor
 from PyQt5.QtWidgets import QGraphicsEllipseItem, QGraphicsLineItem
 
-from src.operations import geometricOperations as Geo
+from src.utils import geometricUtils as Geo
 
 
 def qpoint_to_point(p):

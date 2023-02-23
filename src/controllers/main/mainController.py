@@ -4,7 +4,7 @@ from PyQt5.QtCore import QSize, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QIcon, QResizeEvent
 
 from src.managers import dataManager as Dm
-from src.operations import graphicOperations as Go
+from src.utils import graphicUtils as Gra
 from src.controllers.edit.editController import EditUi
 from src.controllers.main.mainLabel import MainLabel
 from definitions import ROOT_DIR
@@ -82,7 +82,7 @@ class MainUi(QMainWindow):
             counter += 1
             self.grid_layout.addLayout(layout, y, x)
         # TODO is there need for self.pixmap ?
-        self.pixmap = Go.get_qpixmap(Dm.get_canvas())
+        self.pixmap = Gra.get_qpixmap(Dm.get_canvas())
         self.canvas.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.canvas.setAlignment(Qt.AlignCenter)
         self.update_label()
@@ -114,6 +114,7 @@ class MainUi(QMainWindow):
 
     def _build_button(self, size, parent, icon_path):
         button = QPushButton(parent=parent)
+        # TODO parent = frame ???
         button.setFixedSize(size, size)
         button.setIcon(self.icons[icon_path])
         icon_size = size - 5

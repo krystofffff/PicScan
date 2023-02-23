@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QSizePolicy
-from src.operations import graphicOperations as Go
+from src.utils import graphicUtils as Gra
 import src.managers.dataManager as Dm
 from src.controllers.imageDialogController import ImageDialog
 
@@ -43,9 +43,9 @@ class MainLabel(QLabel):
     def update_pixmap(self):
         co = Dm.get_cutouts()[self.idx]
         if co.enabled:
-            self.pixmap = Go.get_qpixmap(co.img)
+            self.pixmap = Gra.get_qpixmap(co.img)
         else:
-            self.pixmap = Go.get_qpixmap(co.disabled_img)
+            self.pixmap = Gra.get_qpixmap(co.disabled_img)
         self._set_scaled_pixmap(self.pixmap)
 
     def mousePressEvent(self, event):

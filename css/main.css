@@ -16,12 +16,16 @@
     color: lightgray;
 }
 
-.QScrollArea, .QLabel {
+.QScrollArea {
     border: 3px solid lightgray;
 }
 
-.Label {
+.MainLabel {
     border: 1px solid lightgray;
+}
+
+.QLabel {
+    border: 3px solid lightgray;
 }
 
 .QLabel {

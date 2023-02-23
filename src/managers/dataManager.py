@@ -1,7 +1,7 @@
 import os.path
 import cv2
 import numpy as np
-from src.operations import graphicOperations as Go
+from src.utils import graphicUtils as Gra
 import src.managers.configManager as Cm
 import src.managers.hashManager as Hm
 
@@ -20,7 +20,7 @@ INPUT_FORMATS = ["bmp", "jpeg", "jpg", "tiff", "png"]
 class Cutout:
     def __init__(self, img, points):
         self.img = img
-        self.disabled_img = Go.get_disabled_image(img)
+        self.disabled_img = Gra.get_disabled_image(img)
         if Cm.get_similarity_mode() == 0:
             self.enabled = True
         else:
@@ -58,7 +58,7 @@ def generate_canvas():
 
 def generate_cutouts():
     global _cutouts
-    cts, points = Go.get_cut_out_images(_canvas)
+    cts, points = Gra.get_cut_out_images(_canvas)
     # TODO DICT TO ARRAY (DICT NOT NEEDED ANYMORE - no removing)
     _cutouts = {i: Cutout(img, points[i]) for i, img in enumerate(cts)}
 
@@ -143,8 +143,8 @@ def _get_next_file():
 
 
 def rotate_cutout(idx):
-    _cutouts[idx].img = Go.rotate_image(_cutouts[idx].img)
-    _cutouts[idx].disabled_img = Go.rotate_image(_cutouts[idx].disabled_img)
+    _cutouts[idx].img = Gra.rotate_image(_cutouts[idx].img)
+    _cutouts[idx].disabled_img = Gra.rotate_image(_cutouts[idx].disabled_img)
 
 
 def toggle_cutout(idx):
@@ -159,7 +159,7 @@ def get_file_name():
 
 def update_cutout(idx, p):
     points = [[x] for x in p]
-    get_cutouts()[idx] = Cutout(Go.subimage(get_canvas(), points), points)
+    get_cutouts()[idx] = Cutout(Gra.subimage(get_canvas(), points), points)
 
 
 def get_file_counter():
