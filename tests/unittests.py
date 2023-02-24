@@ -67,7 +67,7 @@ class MyTestCase(unittest.TestCase):
             bool = True
         else:
             bool = False
-        self.assertEqual(bool,True)
+        self.assertEqual(bool, True)
 
     def test_isEmpty(self):
         global files

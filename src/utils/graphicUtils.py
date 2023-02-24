@@ -5,20 +5,6 @@ import numpy as np
 from PyQt5.QtGui import QImage, QPixmap
 import src.utils.geometricUtils as Geo
 
-
-# TODO DELETE ?
-# def resize_image_to_fit(img, shape):
-#     wc, hc = shape.width(), shape.height()
-#     wi, hi = len(img[0]), len(img)
-#     print(wi, hi)
-#     print(img.shape())
-#     if ((wc * 1.0) / hc) >= ((wi * 1.0) / hi):
-#         f = (hc * 1.0) / hi
-#     else:
-#         f = (wc * 1.0) / wi
-#     return cv2.resize(img, (0, 0), fx=f, fy=f)
-
-
 # def _show(img):
 #     plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 #     plt.show()
