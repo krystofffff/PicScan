@@ -7,6 +7,7 @@ from src.managers import dataManager as Dm
 from src.utils import graphicUtils as Gra
 from src.controllers.edit.editController import EditUi
 from src.controllers.main.mainLabel import MainLabel
+from src.controllers.main.autoDialog import AutoDialog
 from definitions import ROOT_DIR
 
 
@@ -69,9 +70,10 @@ class MainUi(QMainWindow):
             item.setParent(None)
 
     def switch_to_progress(self, in_auto_mode):
-        Dm.save_cutouts()
-        self.progress.emit(in_auto_mode)
-        self.sw.setCurrentIndex(1)
+        if AutoDialog().exec_():
+            Dm.save_cutouts()
+            self.progress.emit(in_auto_mode)
+            self.sw.setCurrentIndex(1)
 
     @pyqtSlot()
     def load_new_image(self):

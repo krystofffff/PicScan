@@ -1,4 +1,6 @@
 import os.path
+import time
+
 import cv2
 import numpy as np
 from src.utils import graphicUtils as Gra
@@ -11,6 +13,8 @@ _cutouts = []
 _canvas = None
 _current_file = ""
 _file_counter = 0
+_file_count = 0
+_process_timer = 0
 _saved_cutouts_counter = 0
 _discarded_cutouts_counter = 0
 OUTPUT_FORMATS = [".jpg", ".png"]
@@ -42,12 +46,27 @@ def save_cutouts():
             _discarded_cutouts_counter += 1
 
 
+def set_file_count(paths):
+    global _file_count
+    _file_count = 0
+    stack = paths.copy()
+    while not len(stack) == 0:
+        f = stack.pop(-1)
+        if _is_folder(f):
+            stack += [(f + "/" + x) for x in os.listdir(f)]
+        elif _is_image(f):
+            _file_count += 1
+
+
 def process_next_image():
-    global _file_counter
+    global _file_counter, _process_timer
     if not is_empty():
+        t = time.perf_counter()
         _file_counter += 1
         generate_canvas()
         generate_cutouts()
+        time.sleep(1)
+        _process_timer += time.perf_counter() - t
 
 
 def generate_canvas():
@@ -91,11 +110,10 @@ def clear_data():
 def add_file(path):
     global _files
     for i in path:
-        url = i.path()[1:]
-        if _is_folder(url):
-            _add_dir_content(url)
+        if _is_folder(i):
+            _add_dir_content(i)
         else:
-            _files.append(url)
+            _files.append(i)
 
 
 def _is_image(path):
@@ -184,3 +202,11 @@ def get_cutout_points(idx):
 
 def get_canvas():
     return _canvas
+
+
+def get_file_count():
+    return _file_count
+
+
+def get_process_timer():
+    return _process_timer

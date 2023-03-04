@@ -50,20 +50,22 @@ class DropUi(QMainWindow):
     def dropEvent(self, event):
         event.setDropAction(Qt.CopyAction)
         urls = event.mimeData().urls()
-        Dm.add_file(urls)
+        urls_clean = []
+        for i in urls:
+            urls_clean.append(i.path()[1:])
+        Dm.set_file_count(urls_clean)
+        Dm.add_file(urls_clean)
         self.progress.emit(False)
         self.sw.setCurrentIndex(1)
         self.label_1.setText("Drag & Drop")
         event.accept()
 
     def open_file_explorer(self):
-        file_name = QFileDialog.getOpenFileNames(self, 'Open file')
-        arrUrls = []
-        for url in file_name[0]:
-            arrUrls.append(QUrl('file:///' + url))
-        if file_name == ([], ''):
+        file_name = QFileDialog.getOpenFileNames(self, 'Open file')[0]
+        if not file_name:
             return
-        Dm.add_file(arrUrls)
+        Dm.set_file_count(file_name)
+        Dm.add_file(file_name)
         self.sw.setCurrentIndex(1)
         self.progress.emit(False)
         self.label_1.setText("Drag & Drop")
