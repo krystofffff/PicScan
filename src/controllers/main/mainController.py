@@ -8,7 +8,7 @@ from src.utils import graphicUtils as Gra
 from src.controllers.edit.editController import EditUi
 from src.controllers.main.mainLabel import MainLabel
 from src.controllers.main.autoDialog import AutoDialog
-from definitions import ROOT_DIR
+from definitions import ROOT_DIR, CSS_DIR
 
 
 class MainUi(QMainWindow):
@@ -54,7 +54,9 @@ class MainUi(QMainWindow):
 
         self.icons = {x: QIcon(ROOT_DIR + f"/assets/{x}.png") for x in ["rem", "rot", "edit"]}
 
-        self.setStyleSheet(open(ROOT_DIR + '/css/main.css').read())
+        css = ["main.css", "buttons.css"]
+        t = [open(CSS_DIR + x).read() for x in css]
+        self.setStyleSheet("".join(t))
 
     def _clear_scroll_area(self):
         for i in range(self.grid_layout.count()):

@@ -14,7 +14,6 @@ import src.managers.hashManager as Hm
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     app.setAttribute(Qt.AA_DisableWindowContextHelpButton)
-
     Cm.load_config()
     Hm.load_hashes()
 

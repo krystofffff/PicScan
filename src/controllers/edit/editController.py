@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, \
     QMainWindow, QVBoxLayout, QPushButton, QSpacerItem, QSizePolicy
 
 import src.managers.dataManager as Dm
+from definitions import ROOT_DIR, CSS_DIR
 from src.controllers.edit.editScene import MainScene
 from src.controllers.edit.editView import EditView
 from src.utils import geometricUtils as Geo
@@ -54,7 +55,9 @@ class EditUi(QMainWindow):
         self.sw.addWidget(self)
         self.sw.setCurrentIndex(3)
 
-        self.setStyleSheet(open('css/edit.css').read())
+        css = ["edit.css", "buttons.css"]
+        t = [open(CSS_DIR + x).read() for x in css]
+        self.setStyleSheet("".join(t))
 
     def _accept_selection(self):
         p = Geo.get_corners_from_anchors(*self.scene.selection_box.get_points_from_anchors())

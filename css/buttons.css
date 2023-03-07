@@ -4,12 +4,6 @@
     background-color: #B3BBBC;
     color: #353B3C;
     font-size: 20px;
-    padding: 10px;
-}
-
-.QPushButton#smaller {
-    font-size: 14px;
-    padding: 5px;
 }
 
 .QPushButton:disabled {
@@ -20,12 +14,4 @@
 .QPushButton:hover {
     background-color: #353B3C;
     color: lightgray;
-}
-
-.QLabel {
-    font-size: 16px;
-}
-
-.QVBoxLayout#block {
-    padding: 25px;
 }

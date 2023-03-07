@@ -3,7 +3,7 @@ from PyQt5.QtCore import QUrl, Qt, pyqtSignal
 from PyQt5.QtWidgets import QFileDialog
 import src.managers.dataManager as Dm
 import src.controllers.configController as Sc
-from definitions import ROOT_DIR
+from definitions import ROOT_DIR, CSS_DIR
 
 
 class DropUi(QMainWindow):
@@ -37,7 +37,9 @@ class DropUi(QMainWindow):
         for i in [self.label_1, self.label_2, self.browser_button, self.settings_button]:
             self.layout.addWidget(i)
 
-        self.setStyleSheet(open(ROOT_DIR + '/css/drop.css').read())
+        css = ["drop.css", "buttons.css"]
+        t = [open(CSS_DIR + x).read() for x in css]
+        self.setStyleSheet("".join(t))
 
     def dragEnterEvent(self, event):
         self.label_1.setText("Drop it here")

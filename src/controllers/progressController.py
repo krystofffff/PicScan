@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QProgressBar, QHBo
 import src.managers.dataManager as Dm
 import src.managers.configManager as Cm
 from PyQt5.QtWidgets import QStackedWidget
-from definitions import ROOT_DIR
+from definitions import ROOT_DIR, CSS_DIR
 import datetime
 
 
@@ -57,8 +57,9 @@ class ProgressUi(QMainWindow):
 
         self.update_processed()
 
-        self.setStyleSheet(open(ROOT_DIR + '/css/drop.css').read())
-        self.setStyleSheet(open(ROOT_DIR + '/css/progress.css').read())
+        css = ["progress.css"]
+        t = [open(CSS_DIR + x).read() for x in css]
+        self.setStyleSheet("".join(t))
 
     @pyqtSlot(bool)
     def process(self, in_auto_mode):

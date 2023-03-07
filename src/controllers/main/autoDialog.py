@@ -1,8 +1,7 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QHBoxLayout, QPushButton
 
-from definitions import ROOT_DIR
+from definitions import ROOT_DIR, CSS_DIR
 
 
 class AutoDialog(QDialog):
@@ -14,7 +13,6 @@ class AutoDialog(QDialog):
         self.layout.setAlignment(Qt.AlignCenter)
 
         self.label = QLabel("Start auto mode ?")
-        self.label.setObjectName("aaa")
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setMinimumSize(250, 100)
         self.layout.addWidget(self.label)
@@ -38,8 +36,9 @@ class AutoDialog(QDialog):
 
         self.setFixedSize(360, 240)
 
-        self.setStyleSheet(open(ROOT_DIR + '/css/drop.css').read())
-        self.setStyleSheet(open(ROOT_DIR + '/css/autoDialog.css').read())
+        css = ["autoDialog.css", "buttons.css"]
+        t = [open(CSS_DIR + x).read() for x in css]
+        self.setStyleSheet("".join(t))
 
     def selection(self, val):
         if val:

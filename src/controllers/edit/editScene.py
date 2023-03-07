@@ -1,7 +1,7 @@
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QGraphicsScene, QGraphicsPixmapItem
 import src.utils.graphicUtils as Gra
-from src.controllers.edit.selectionBoxClass import SelectionBox
+from src.controllers.edit.selectionBox import SelectionBox
 
 
 class MainScene(QGraphicsScene):
