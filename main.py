@@ -1,4 +1,6 @@
 import sys
+import time
+
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QStackedWidget
@@ -9,15 +11,20 @@ from src.controllers.main.mainController import MainUi
 from src.controllers.progressController import ProgressUi
 import src.managers.configManager as Cm
 import src.managers.hashManager as Hm
-
+import src.managers.nnRotManager as Nm
+from src.controllers.stackedWidget import StackedWidget
 
 if __name__ == "__main__":
+    loader = Nm.Loader()
+    loader.run_thread()
+
     app = QtWidgets.QApplication(sys.argv)
     app.setAttribute(Qt.AA_DisableWindowContextHelpButton)
+
     Cm.load_config()
     Hm.load_hashes()
 
-    sw = QStackedWidget()
+    sw = StackedWidget()
     sw.setWindowTitle("PicScan beta")
     main = MainUi(sw)
     progress = ProgressUi(sw)

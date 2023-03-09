@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5.QtGui import QImage, QPixmap
 import src.utils.geometricUtils as Geo
+import src.managers.nnRotManager as Nm
 
 # def _show(img):
 #     plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
@@ -66,7 +67,12 @@ def get_cut_out_images(image):
     img, points = _find_rectangles(image)
     images = []
     for i in points:
-        images.append(subimage(img, i))
+        s = subimage(img, i)
+        images.append(s)
+    preds = Nm.get_predictions(images)
+    for idx, pred in enumerate(preds):
+        if not pred == 3:
+            images[idx] = rotate_image(images[idx], pred)
     return images, points
 
 
