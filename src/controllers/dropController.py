@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QPushButton, QCheckBox, QMessageBox
 from PyQt5.QtCore import QUrl, Qt, pyqtSignal
 from PyQt5.QtWidgets import QFileDialog
 import src.managers.dataManager as Dm
@@ -34,7 +34,9 @@ class DropUi(QMainWindow):
         self.settings_button = QPushButton("Settings")
         self.settings_button.clicked.connect(lambda: Sc.ConfigDialog())
 
-        for i in [self.label_1, self.label_2, self.browser_button, self.settings_button]:
+        self.checkbox = QCheckBox("Start in Auto mode")
+
+        for i in [self.label_1, self.label_2, self.browser_button, self.settings_button, self.checkbox]:
             self.layout.addWidget(i)
 
         css = ["drop.css", "buttons.css"]
@@ -57,7 +59,7 @@ class DropUi(QMainWindow):
             urls_clean.append(i.path()[1:])
         Dm.set_file_count(urls_clean)
         Dm.add_file(urls_clean)
-        self.progress.emit(False)
+        self.progress.emit(self.checkbox.isChecked())
         self.sw.setCurrentIndex(1)
         self.label_1.setText("Drag & Drop")
         event.accept()
@@ -69,5 +71,5 @@ class DropUi(QMainWindow):
         Dm.set_file_count(file_name)
         Dm.add_file(file_name)
         self.sw.setCurrentIndex(1)
-        self.progress.emit(False)
+        self.progress.emit(self.checkbox.isChecked())
         self.label_1.setText("Drag & Drop")

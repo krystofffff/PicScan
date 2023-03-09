@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QGridLayout, QPushButton, \
-    QSizePolicy, QFrame, QMainWindow
+    QSizePolicy, QFrame, QMainWindow, QMessageBox
 from PyQt5.QtCore import QSize, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QIcon, QResizeEvent
 

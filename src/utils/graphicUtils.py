@@ -10,8 +10,8 @@ import src.utils.geometricUtils as Geo
 #     plt.show()
 
 
-def rotate_image(img):
-    return cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
+def rotate_image(img, n=0):
+    return cv2.rotate(img, n)
 
 
 def _find_rectangles(img):

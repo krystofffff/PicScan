@@ -63,6 +63,7 @@ class ProgressUi(QMainWindow):
 
     @pyqtSlot(bool)
     def process(self, in_auto_mode):
+        self.update_processed()
         if Dm.is_empty():
             self.update_processed()
             self.label.setText(f"FINISHED!")
@@ -96,17 +97,14 @@ class ProgressUi(QMainWindow):
         self.sw.setCurrentIndex(2)
 
     def update_processed(self):
-        # saved = Dm.get_saved_cutouts_counter()
-        # discarded = Dm.get_discarded_cutouts_counter()
         fc = Dm.get_file_count()
         fcr = Dm.get_file_counter()
         t = Dm.get_process_timer()
         fc = 1 if fc == 0 else fc
         if not fcr == 0:
             remaining_t = int((fc - fcr) * (t / fcr))
+            self.label_time.setText(f"Time remaining: {datetime.timedelta(seconds=remaining_t)}")
         else:
-            remaining_t = 0
+            self.label_time.setText(f"Time remaining: ...")
         self.progress_bar.setValue(int(fcr * 1.0 / fc * 100))
-        self.label_time.setText(f"Time remaining: {datetime.timedelta(seconds=remaining_t)}")
         self.label_files.setText(f"Files processed: {fcr}/{fc}")
-        # self.label.setText(f"Saved / Checked: {saved} / {saved + discarded}")

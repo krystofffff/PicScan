@@ -1,15 +1,15 @@
 import h5py
 import numpy as np
 import cv2
+from definitions import HASHES_PATH
 
 _hashes = []
 
 SIMILARITY_THRESHOLD = 0.9
-HASHES_PATH = "data/hashes.hdf5"
 
 
 def load_hashes():
-    global HASHES_PATH, _hashes
+    global _hashes
     try:
         with h5py.File(HASHES_PATH, "r") as f:
             a_group_key = list(f.keys())[0]
@@ -19,7 +19,7 @@ def load_hashes():
 
 
 def save_hashes():
-    global HASHES_PATH, _hashes
+    global _hashes
     with h5py.File(HASHES_PATH, "w") as data_file:
         data_file.create_dataset("data", data=_hashes)
 

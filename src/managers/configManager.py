@@ -1,9 +1,10 @@
 import json
 import copy
 
+from definitions import CONFIG_PATH
+
 _config = {}
 _temp_config = {}
-CONFIG_PATH = "data/config.json"
 
 
 def load_config():
