@@ -1,8 +1,7 @@
 import numpy as np
 import tensorflow as tf
-from PyQt5.QtCore import QObject, pyqtSignal, QThread
+from PyQt5.QtCore import QObject, pyqtSignal, QThread, QTimer
 import albumentations as A
-from matplotlib import pyplot as plt
 
 from definitions import MODEL_PATH
 import cv2
@@ -63,7 +62,8 @@ def get_predictions(imgs):
     return res
 
 
-class Loader:
+class Loader(QObject):
+    is_loaded = pyqtSignal()
 
     def run_thread(self):
         self.thread = QThread()
@@ -72,9 +72,12 @@ class Loader:
         self.thread.started.connect(self.worker.run)
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(lambda: self.ee())
         self.thread.finished.connect(self.thread.deleteLater)
         self.thread.start()
-        self.thread.finished.connect(lambda: print("DONE"))
+
+    def ee(self):
+        self.is_loaded.emit()
 
 
 class Worker(QObject):
