@@ -6,12 +6,14 @@ from PyQt5.QtWidgets import QWidget
 
 from src.controllers.dropController import DropUi
 from src.controllers.main.mainController import MainUi
+import src.managers.configManager as Cm
 
 
 class MyTestCase(unittest.TestCase):
     app = QtWidgets.QApplication(sys.argv)
     sw = QWidget()
     sw.setWindowTitle("PicScan beta")
+    Cm.load_config()
     main = MainUi(sw)
     drop = DropUi(sw)
 

@@ -9,6 +9,14 @@ import cv2
 _model = None
 
 
+def is_model_loaded():
+    return _model is not None
+
+
+def load_model_async():
+    loader.run_thread()
+
+
 def _augment(img):
     t = A.Compose(
         [
@@ -64,7 +72,7 @@ def get_predictions(imgs):
 
 
 class Loader(QObject):
-    is_loaded = pyqtSignal()
+    is_loaded = pyqtSignal(bool)
 
     def run_thread(self):
         self.thread = QThread()
@@ -78,7 +86,7 @@ class Loader(QObject):
         self.thread.start()
 
     def ee(self):
-        self.is_loaded.emit()
+        self.is_loaded.emit(True)
 
 
 class Worker(QObject):
@@ -87,3 +95,6 @@ class Worker(QObject):
     def run(self):
         _load_model()
         self.finished.emit()
+
+
+loader = Loader()

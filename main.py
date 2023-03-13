@@ -19,21 +19,21 @@ if __name__ == "__main__":
 
     Cm.load_config()
 
+    sw = StackedWidget()
+    sw.setWindowTitle("PicScan beta")
+    drop = DropUi(sw)
+
+    nn_loader = Nm.loader
+    nn_loader.is_loaded.connect(drop.stop_nn_loading)
     if Cm.get_nn_loading():
-        loader = Nm.Loader()
-        loader.run_thread()
+        Nm.load_model_async()
 
     Hm.load_hashes()
 
-    sw = StackedWidget()
-    sw.setWindowTitle("PicScan beta")
     main = MainUi(sw)
     progress = ProgressUi(sw)
-    drop = DropUi(sw)
     main.progress.connect(progress.process)
     drop.progress.connect(progress.process)
-    if Cm.get_nn_loading():
-        loader.is_loaded.connect(drop.stop_loading_anim)
 
     # sim = SimUI(sw)
     # sw.addWidget(sim)

@@ -36,23 +36,19 @@ class DropUi(QMainWindow):
         self.browser_button.clicked.connect(lambda: self.open_file_explorer())
         self.browser_button.setObjectName("browserButton")
         self.settings_button = QPushButton("Settings")
-        self.settings_button.clicked.connect(lambda: Sc.ConfigDialog())
+        self.settings_button.clicked.connect(lambda: Sc.ConfigDialog(self))
 
         self.checkbox = QCheckBox("Start in Auto mode")
 
         for i in [self.label_1, self.label_2, self.browser_button, self.settings_button, self.checkbox]:
             self.layout.addWidget(i)
 
-        self._nn_is_loading(Cm.get_nn_loading())
+        self._build_loading()
+        self.stop_nn_loading(not Cm.get_nn_loading())
 
         css = ["drop.css", "buttons.css"]
         t = [open(CSS_DIR + x).read() for x in css]
         self.setStyleSheet("".join(t))
-
-    def _nn_is_loading(self, val):
-        if val:
-            self._build_loading()
-        self._set_input_enabled(not val)
 
     def _build_loading(self):
         self.loading_container = QFrame(self)
@@ -60,7 +56,6 @@ class DropUi(QMainWindow):
         layout_loading = QHBoxLayout(self.loading_container)
         layout_loading.setContentsMargins(0, 0, 0, 0)
         self.movie = QMovie("assets/spinner.gif")
-        self.movie.start()
         loading = QLabel()
         loading.setStyleSheet("font-size:14px;")
         loading.setFixedSize(50, 50)
@@ -77,11 +72,14 @@ class DropUi(QMainWindow):
         self.browser_button.setToolTip(message)
         self.setAcceptDrops(val)
 
-    @pyqtSlot()
-    def stop_loading_anim(self):
-        self.movie.stop()
-        self.loading_container.hide()
-        self._set_input_enabled(True)
+    @pyqtSlot(bool)
+    def stop_nn_loading(self, val):
+        if val:
+            self.movie.stop()
+        else:
+            self.movie.start()
+        self.loading_container.setVisible(not val)
+        self._set_input_enabled(val)
 
     def dragEnterEvent(self, event):
         self.label_1.setText("Drop it here")
