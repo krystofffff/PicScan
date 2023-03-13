@@ -21,6 +21,7 @@ def _augment(img):
 def _load_model():
     global _model
     _model = tf.keras.models.load_model(MODEL_PATH)
+    print("LOADED")
 
 
 def gen_full(imgs):

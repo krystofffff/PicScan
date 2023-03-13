@@ -1,3 +1,5 @@
+import os
+
 import h5py
 import numpy as np
 import cv2
@@ -16,6 +18,13 @@ def load_hashes():
             _hashes = list(f[a_group_key][()])
     except FileNotFoundError:
         pass
+
+
+def load_imgs_for_simui_beta():
+    f = "C:/Users/Dumar/PycharmProjects/Annual-project-1/test/testingImages/sim_ims"
+    stack = [(f + "/" + x) for x in os.listdir(f)]
+    imgs = [cv2.imread(x) for x in stack]
+    return imgs
 
 
 def save_hashes():
@@ -70,4 +79,3 @@ def clear_hashes():
     global _hashes
     _hashes = []
     save_hashes()
-

@@ -50,3 +50,12 @@ def get_similarity_mode():
 def set_similarity_mode(val):
     global _temp_config
     _temp_config["similarity_mode"] = val
+
+
+def get_nn_loading():
+    return _config["nn_loading"]
+
+
+def set_nn_loading(val):
+    global _temp_config
+    _temp_config["nn_loading"] = val

@@ -5,6 +5,7 @@ import numpy as np
 from PyQt5.QtGui import QImage, QPixmap
 import src.utils.geometricUtils as Geo
 import src.managers.nnRotManager as Nm
+import src.managers.configManager as Cm
 
 # def _show(img):
 #     plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
@@ -69,11 +70,17 @@ def get_cut_out_images(image):
     for i in points:
         s = subimage(img, i)
         images.append(s)
+    if Cm.get_nn_loading():
+        images = _fix_rotation(images)
+    return images, points
+
+
+def _fix_rotation(images):
     preds = Nm.get_predictions(images)
     for idx, pred in enumerate(preds):
         if not pred == 3:
             images[idx] = rotate_image(images[idx], pred)
-    return images, points
+    return images
 
 
 def get_disabled_image(img):

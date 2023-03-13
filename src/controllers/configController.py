@@ -1,9 +1,10 @@
 import src.managers.configManager as Cm
 import src.managers.hashManager as Hm
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QRadioButton, QPushButton, QHBoxLayout, QFileDialog
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QRadioButton, QPushButton, QHBoxLayout, QFileDialog, \
+    QCheckBox
 from definitions import ROOT_DIR, CSS_DIR
 
-
+# TODO add check box for NN loading
 class ConfigDialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -19,6 +20,8 @@ class ConfigDialog(QDialog):
         self._build_output_folder_settings()
         self._build_similar_settings()
 
+        self._build_nn_loading_settings()
+
         self.layout.addStretch()
         self._build_save_button()
 
@@ -29,6 +32,18 @@ class ConfigDialog(QDialog):
         self.setStyleSheet("".join(t))
 
         self.exec_()
+
+    def _build_nn_loading_settings(self):
+        self.frame_nn_loading = QFrame()
+        self.layout_nn_loading = QVBoxLayout()
+        self.frame_nn_loading.setLayout(self.layout_nn_loading)
+        self.label_nn_title = QLabel("Fix img rotation using NN: (restart app after change)")
+        self.checkbox_nn_loading = QCheckBox("Enabled")
+        self.checkbox_nn_loading.setChecked(Cm.get_nn_loading())
+        self.checkbox_nn_loading.clicked.connect(lambda: Cm.set_nn_loading(self.checkbox_nn_loading.isChecked()))
+        self.layout_nn_loading.addWidget(self.label_nn_title)
+        self.layout_nn_loading.addWidget(self.checkbox_nn_loading)
+        self.layout.addWidget(self.frame_nn_loading)
 
     def _build_output_format_settings(self):
         self.frame_o_format = QFrame()
