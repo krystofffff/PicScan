@@ -5,11 +5,12 @@ import src.managers.dataManager as Dm
 from src.controllers.main.imageDialog import ImageDialog
 
 
-class MainLabel(QLabel):
+class SimLabel(QLabel):
 
-    def __init__(self, parent, idx):
+    def __init__(self, parent, idx, img):
         QLabel.__init__(self, parent)
         self.idx = idx
+        self.img = img
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setAlignment(Qt.AlignCenter)
         self.update_pixmap()
@@ -41,11 +42,7 @@ class MainLabel(QLabel):
         self.update_pixmap()
 
     def update_pixmap(self):
-        co = Dm.get_cutouts()[self.idx]
-        if co.enabled:
-            self.pixmap = Gra.get_qpixmap(co.img)
-        else:
-            self.pixmap = Gra.get_qpixmap(co.disabled_img)
+        self.pixmap = Gra.get_qpixmap(self.img)
         self._set_scaled_pixmap(self.pixmap)
 
     def mousePressEvent(self, event):

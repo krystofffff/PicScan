@@ -61,14 +61,14 @@ class DropUi(QMainWindow):
         loading.setFixedSize(50, 50)
         loading.setScaledContents(True)
         loading.setMovie(self.movie)
-        loading_message = QLabel("NN is loading")
+        loading_message = QLabel("AI is loading")
         layout_loading.addWidget(loading)
         layout_loading.addWidget(loading_message)
         self.loading_container.move(50, 50)
 
     def _set_input_enabled(self, val):
         self.browser_button.setEnabled(val)
-        message = None if val else "NN is loading"
+        message = None if val else "AI is loading"
         self.browser_button.setToolTip(message)
         self.setAcceptDrops(val)
 

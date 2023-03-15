@@ -35,12 +35,12 @@ if __name__ == "__main__":
     main.progress.connect(progress.process)
     drop.progress.connect(progress.process)
 
-    # sim = SimUI(sw)
-    # sw.addWidget(sim)
+    sim = SimUI(sw)
+    sw.addWidget(sim)
 
-    progress.main_update.connect(main.load_new_image)
-    for i in [drop, progress, main]:
-        sw.addWidget(i)
+    # progress.main_update.connect(main.load_new_image)
+    # for i in [drop, progress, main]:
+    #     sw.addWidget(i)
     sw.setCurrentIndex(0)
     sw.show()
 

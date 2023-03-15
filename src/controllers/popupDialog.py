@@ -14,8 +14,7 @@ class PopupDialog(QDialog):
 
         self.label = QLabel(message)
         self.label.setAlignment(Qt.AlignCenter)
-        self.label.setMinimumSize(250, 80)
-        self.layout.addWidget(self.label)
+        self.label.setMinimumSize(150, 50)
 
         self.h_layout = QHBoxLayout()
         self.button_accept = QPushButton("Yes")
@@ -30,11 +29,14 @@ class PopupDialog(QDialog):
         self.h_layout.addWidget(self.button_decline)
         self.h_layout.addStretch()
 
+        self.layout.addStretch()
+        self.layout.addWidget(self.label)
+        self.layout.addStretch()
         self.layout.addLayout(self.h_layout)
 
         self.setLayout(self.layout)
 
-        self.setFixedSize(360, 200)
+        self.setFixedSize(360, 160)
 
         css = ["autoDialog.css", "buttons.css"]
         t = [open(CSS_DIR + x).read() for x in css]

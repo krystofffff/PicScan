@@ -29,7 +29,6 @@ def _augment(img):
 def _load_model():
     global _model
     _model = tf.keras.models.load_model(MODEL_PATH)
-    print("LOADED")
 
 
 def gen_full(imgs):
@@ -81,12 +80,9 @@ class Loader(QObject):
         self.thread.started.connect(self.worker.run)
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
-        self.thread.finished.connect(lambda: self.ee())
+        self.thread.finished.connect(lambda: self.is_loaded.emit(True))
         self.thread.finished.connect(self.thread.deleteLater)
         self.thread.start()
-
-    def ee(self):
-        self.is_loaded.emit(True)
 
 
 class Worker(QObject):

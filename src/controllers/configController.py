@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QRadioButton, 
     QCheckBox
 from definitions import ROOT_DIR, CSS_DIR
 
-# TODO add check box for NN loading
+
 class ConfigDialog(QDialog):
     start_loading = pyqtSignal(bool)
 

@@ -6,13 +6,12 @@ from src.controllers.edit.editController import EditView
 
 
 class ImageDialog(QDialog):
-    def __init__(self, idx):
+    def __init__(self, image):
         super().__init__()
-        self.idx = idx
         self.setWindowTitle("image")
 
         pic = QGraphicsPixmapItem()
-        pixmap = Gra.get_qpixmap(Dm.get_cutouts()[self.idx].img)
+        pixmap = Gra.get_qpixmap(image)
         pic.setPixmap(pixmap)
 
         self.scene = QGraphicsScene()
