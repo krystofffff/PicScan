@@ -30,6 +30,7 @@ class MyTestCase(unittest.TestCase):
     def test_not_loaded(self):
         self.assertRaises(Exception, lambda x: Nm.get_predictions(self.imgs))
 
+    # TODO Change wait to signal
     def test_model_predictions(self):
         loader = Loader()
         loader.run_thread()

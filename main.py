@@ -4,7 +4,6 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 
 from src.controllers.dropController import DropUi
-# from src.controllers.main.autoDialog import AutoDialog
 from src.controllers.main.mainController import MainUi
 from src.controllers.progressController import ProgressUi
 import src.managers.configManager as Cm

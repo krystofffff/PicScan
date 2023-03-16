@@ -72,9 +72,13 @@ class MainUi(QMainWindow):
             item.setParent(None)
 
     def switch_to_progress(self, in_auto_mode):
-        if PopupDialog("Start auto mode ?").exec_():
-            Dm.save_cutouts()
-            self.progress.emit(in_auto_mode)
+        if in_auto_mode:
+            if PopupDialog("Start auto mode ?").exec_():
+                Dm.save_cutouts()
+                self.progress.emit(True)
+                self.sw.setCurrentIndex(1)
+        else:
+            self.progress.emit(False)
             self.sw.setCurrentIndex(1)
 
     @pyqtSlot()
