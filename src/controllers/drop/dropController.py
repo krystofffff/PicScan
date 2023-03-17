@@ -1,4 +1,4 @@
-from PyQt5.QtGui import QMovie
+from PyQt5.QtGui import QMovie, QPen, QBrush, QColor, QPaintEvent, QPainter, QFont
 from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QPushButton, QCheckBox, QMessageBox, QHBoxLayout, QWidget, \
     QFrame
 from PyQt5.QtCore import QUrl, Qt, pyqtSignal, pyqtSlot
@@ -7,6 +7,7 @@ import src.managers.dataManager as Dm
 import src.managers.configManager as Cm
 import src.controllers.configController as Sc
 from definitions import ROOT_DIR, CSS_DIR
+from src.controllers.drop.toggleClass import ToggleSwitch
 
 
 class DropUi(QMainWindow):
@@ -16,32 +17,47 @@ class DropUi(QMainWindow):
         super(DropUi, self).__init__()
 
         self.sw = sw
-        self.center = QLabel()
-        self.center.setObjectName("outer")
-        self.center.setMinimumSize(960, 480)
-        self.setCentralWidget(self.center)
+        center = QLabel()
+        center.setObjectName("outer")
+        center.setMinimumSize(960, 480)
+        self.setCentralWidget(center)
         self.setAcceptDrops(True)
+
+        lay_h = QHBoxLayout()
+        center.setLayout(lay_h)
+        fr = QFrame()
+        lay_h.addStretch()
+        lay_h.addWidget(fr)
+        lay_h.addStretch()
+
         self.label_1 = QLabel("Drag & Drop")
         self.label_1.setObjectName("big")
         self.label_1.setAlignment(Qt.AlignCenter)
-        self.label_1.setFixedSize(200, 50)
         self.label_2 = QLabel("or")
         self.label_2.setObjectName("big")
         self.label_2.setAlignment(Qt.AlignCenter)
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignCenter)
-        self.center.setLayout(self.layout)
+        fr.setLayout(self.layout)
 
         self.browser_button = QPushButton("Choose file")
         self.browser_button.clicked.connect(lambda: self.open_file_explorer())
         self.browser_button.setObjectName("browserButton")
         self.settings_button = QPushButton("Settings")
+        self.settings_button.setMinimumSize(300, 0)
         self.settings_button.clicked.connect(lambda: Sc.ConfigDialog(self))
 
-        self.checkbox = QCheckBox("Start in Auto mode")
+        self.ll = QHBoxLayout()
+        self.checkbox = ToggleSwitch()
+        self.checkbox.setFixedSize(100, 60)
+        self.ll.addWidget(self.settings_button)
+        self.ll.addWidget(self.checkbox)
 
-        for i in [self.label_1, self.label_2, self.browser_button, self.settings_button, self.checkbox]:
-            self.layout.addWidget(i)
+        self.layout.addWidget(self.label_1)
+        self.layout.addWidget(self.label_2)
+        self.layout.addWidget(self.browser_button)
+        self.layout.addLayout(self.ll)
+
 
         self._build_loading()
         self.stop_nn_loading(not Cm.get_nn_loading())

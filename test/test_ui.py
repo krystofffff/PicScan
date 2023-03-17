@@ -4,7 +4,7 @@ import unittest
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget
 
-from src.controllers.dropController import DropUi
+from src.controllers.drop.dropController import DropUi
 from src.controllers.main.mainController import MainUi
 import src.managers.configManager as Cm
 

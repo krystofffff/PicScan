@@ -1,5 +1,3 @@
-import time
-
 from PyQt5.QtCore import Qt, QObject, pyqtSignal, QThread, pyqtSlot
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QProgressBar, QHBoxLayout, QFrame
@@ -84,11 +82,8 @@ class ProgressUi(QMainWindow):
     def next_step(self, in_auto_mode):
         self.update_processed()
         if in_auto_mode:
-            if Cm.get_similarity_mode() == 2 and Dm.any_disabled_cutouts():
-                self.switch_to_main_controller()
-            else:
-                Dm.save_cutouts()
-                self.process(in_auto_mode)
+            Dm.save_cutouts()
+            self.process(in_auto_mode)
         else:
             self.switch_to_main_controller()
 
