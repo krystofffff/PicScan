@@ -43,13 +43,13 @@ def set_output_folder(val):
     _temp_config["output_folder"] = val
 
 
-def get_similarity_mode():
-    return _config["similarity_mode"]
+def get_duplicity_mode():
+    return _config["duplicity_mode"]
 
 
-def set_similarity_mode(val):
+def set_duplicity_mode(val):
     global _temp_config
-    _temp_config["similarity_mode"] = val
+    _temp_config["duplicity_mode"] = val
 
 
 def get_nn_loading():

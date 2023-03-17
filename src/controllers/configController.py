@@ -1,7 +1,6 @@
 from PyQt5.QtCore import pyqtSignal
 
 import src.managers.configManager as Cm
-import src.managers.hashManager as Hm
 import src.managers.nnRotManager as Nm
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QRadioButton, QPushButton, QHBoxLayout, QFileDialog, \
     QCheckBox
@@ -24,7 +23,7 @@ class ConfigDialog(QDialog):
 
         self._build_output_format_settings()
         self._build_output_folder_settings()
-        self._build_similar_settings()
+        self._build_duplicity_settings()
 
         self._build_nn_loading_settings()
 
@@ -87,7 +86,6 @@ class ConfigDialog(QDialog):
         Cm.create_temp_config()
         self.format_radio_buttons[Cm.get_output_format()].toggle()
         self.label_o_folder.setText(Cm.get_output_folder())
-        self.s_radio_buttons[Cm.get_similarity_mode()].toggle()
 
     def _build_output_folder_settings(self):
         self.frame_o_folder = QFrame()
@@ -115,37 +113,15 @@ class ConfigDialog(QDialog):
         Cm.set_output_folder(folder)
         self.label_o_folder.setText(folder)
 
-    def _build_similar_settings(self):
-        self.frame_s = QFrame()
-        self.layout_s_outer = QHBoxLayout()
-        self.frame_s.setLayout(self.layout_s_outer)
-
-        self.layout_s_radios = QVBoxLayout()
-        self.label_s = QLabel("Similarity check mode:")
-        self.radio_button_s_disable = QRadioButton("Disabled")
-        self.radio_button_s_disable.clicked.connect(lambda: Cm.set_similarity_mode(0))
-        self.radio_button_s_skip = QRadioButton("Skip similar in AUTO")
-        self.radio_button_s_skip.clicked.connect(lambda: Cm.set_similarity_mode(1))
-        self.radio_button_s_stop = QRadioButton("Stop on similar in AUTO")
-        self.radio_button_s_stop.clicked.connect(lambda: Cm.set_similarity_mode(2))
-        self.s_radio_buttons = [self.radio_button_s_disable, self.radio_button_s_skip, self.radio_button_s_stop]
-        for i in [self.label_s, *self.s_radio_buttons]:
-            self.layout_s_radios.addWidget(i)
-
-        self.layout_hash_records = QHBoxLayout()
-        self.label_s_count = QLabel(f"Records: {Hm.get_hash_count()//4}")
-        self.button_s_clear_records = QPushButton("Clear records")
-        self.button_s_clear_records.setObjectName("smaller")
-        self.button_s_clear_records.clicked.connect(lambda: self.clear_hashes())
-        for i in [self.label_s_count, self.button_s_clear_records]:
-            self.layout_hash_records.addWidget(i)
-
-        self.layout_s_outer.addLayout(self.layout_s_radios)
-        self.layout_s_outer.addStretch()
-        self.layout_s_outer.addLayout(self.layout_hash_records)
-
-        self.layout.addWidget(self.frame_s)
-
-    def clear_hashes(self):
-        Hm.clear_hashes()
-        self.label_s_count.setText(f"Records: {Hm.get_hash_count()//4}")
+    def _build_duplicity_settings(self):
+        frame_duplicity = QFrame()
+        layout_duplicity = QVBoxLayout()
+        frame_duplicity.setLayout(layout_duplicity)
+        label_duplicity = QLabel("Detect duplicity:")
+        checkbox_duplicity = QCheckBox("Enabled")
+        checkbox_duplicity.setChecked(Cm.get_nn_loading())
+        checkbox_duplicity.clicked.connect(lambda: Cm.set_duplicity_mode(checkbox_duplicity.isChecked()))
+        layout_duplicity.addWidget(label_duplicity)
+        layout_duplicity.addWidget(checkbox_duplicity)
+        self.layout.addWidget(frame_duplicity)
+        checkbox_duplicity.setChecked(Cm.get_duplicity_mode())

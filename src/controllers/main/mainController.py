@@ -9,6 +9,7 @@ from src.controllers.mainLabel import MainLabel
 from src.controllers.popupDialog import PopupDialog
 from src.managers import dataManager as Dm
 from src.utils import graphicUtils as Gra
+import src.managers.hashManager as Hm
 
 
 class MainUi(QMainWindow):
@@ -149,5 +150,6 @@ class MainUi(QMainWindow):
 
     def _switch_to_drop(self):
         Dm.clear_data()
+        Hm.clear_hashes()
         self.sw.setCurrentIndex(0)
         self._clear_scroll_area()

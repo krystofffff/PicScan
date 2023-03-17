@@ -25,23 +25,21 @@ class Cutout:
     def __init__(self, img, points):
         self.img = img
         self.disabled_img = Gra.get_disabled_image(img)
-        if Cm.get_similarity_mode() == 0:
-            self.enabled = True
-        else:
-            self.enabled = not Hm.image_is_similar(img)
+        self.enabled = True
         self.points = points
 
 
 def save_cutouts():
     global OUTPUT_FORMATS, _file_counter, _cutouts, _saved_cutouts_counter, _discarded_cutouts_counter
-    Hm.save_hashes()
     output_format = OUTPUT_FORMATS[Cm.get_output_format()]
     output_folder = Cm.get_output_folder()
     for idx, co in enumerate(_cutouts):
         if co.enabled:
             _saved_cutouts_counter += 1
             # TODO IF OUTPUT FOLDER IS MISSING ? (eg. AFTER BUILD)
-            cv2.imwrite(f"{output_folder}/img_{_file_counter}_{idx}{output_format}", co.img)
+            path = f"{output_folder}/img_{_file_counter}_{idx}{output_format}"
+            Hm.add_to_hashes(co.img, path)
+            cv2.imwrite(path, co.img)
         else:
             _discarded_cutouts_counter += 1
 

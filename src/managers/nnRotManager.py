@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from PyQt5.QtCore import QObject, pyqtSignal, QThread, QTimer
-import albumentations as A
+import src.utils.graphicUtils as Gra
 
 from definitions import MODEL_PATH
 import cv2
@@ -15,15 +15,6 @@ def is_model_loaded():
 
 def load_model_async():
     loader.run_thread()
-
-
-def _augment(img):
-    t = A.Compose(
-        [
-            A.Normalize(mean=0.0, std=1.0)
-        ]
-    )
-    return t(image=img)["image"]
 
 
 def _load_model():
@@ -57,7 +48,7 @@ def get_predictions(imgs):
         img = cv2.resize(img, (128, 128))
         temp_imgs.append(img)
     gens, _ = gen_full(temp_imgs)
-    augs = [_augment(x) for x in gens]
+    augs = [Gra.augment(x) for x in gens]
     preds = _model.predict(x=np.array(augs))
     res = []
     for i in range(0, len(preds), 4):

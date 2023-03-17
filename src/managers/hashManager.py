@@ -1,23 +1,27 @@
 import os
-
-import h5py
-import numpy as np
 import cv2
+import numpy as np
+
 from definitions import HASHES_PATH
+import src.utils.graphicUtils as Gra
 
 _hashes = []
+_hasher = cv2.img_hash.PHash_create()
 
-SIMILARITY_THRESHOLD = 0.9
+SIMILARITY_THRESHOLD = 0.75
 
 
-def load_hashes():
+class HashImage:
+    def __init__(self, img, h):
+        self.h = h
+        self.img = img
+        self.disabled_img = Gra.get_disabled_image(img)
+        self.enabled = True
+
+
+def clear_hashes():
     global _hashes
-    try:
-        with h5py.File(HASHES_PATH, "r") as f:
-            a_group_key = list(f.keys())[0]
-            _hashes = list(f[a_group_key][()])
-    except FileNotFoundError:
-        pass
+    _hashes = []
 
 
 def load_imgs_for_simui_beta():
@@ -27,55 +31,48 @@ def load_imgs_for_simui_beta():
     return imgs
 
 
-def save_hashes():
-    global _hashes
-    with h5py.File(HASHES_PATH, "w") as data_file:
-        data_file.create_dataset("data", data=_hashes)
-
-
-def image_is_similar(img):
-    hs = get_hashes(img)
-    for h in hs:
-        if _hash_is_similar(h):
-            return True
-    _add_hashes(hs)
-    return False
-
-
-def get_hashes(img):
-    hsh = cv2.img_hash.PHash_create()
-    res = []
-    for i in range(4):
-        rot = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
-        res.append(hsh.compute(rot)[0])
-    return res
-
-
-def _add_hashes(hs):
-    _hashes.extend(hs)
-
-
-def _hash_is_similar(h):
-    global SIMILARITY_THRESHOLD
-    for i in _hashes:
-        if _get_similarity(i, h) >= SIMILARITY_THRESHOLD:
-            return True
-    return False
+def _get_hash(img):
+    return _hasher.compute(img)
 
 
 def _get_similarity(h1, h2):
-    k = np.bitwise_xor(h1, h2)
-    s = 0
-    for i in k:
-        s += bin(i).count("1")
+    s = _hasher.compare(h1, h2)
     return 1 - (s / 64.0)
 
 
-def get_hash_count():
-    return len(_hashes)
+def _is_similar(h1, h2):
+    return _get_similarity(h1, h2) >= SIMILARITY_THRESHOLD
 
 
-def clear_hashes():
+def add_to_hashes(img, path):
     global _hashes
-    _hashes = []
-    save_hashes()
+    h = {"hash": _get_hash(img), "path": path, "sims": []}
+    for i in _hashes:
+        if _is_similar(i["hash"], h["hash"]):
+            h["sims"].append(i)
+            i["sims"].append(h)
+    _hashes.append(h)
+
+
+def remove_non_similar():
+    global _hashes
+    for i in reversed(_hashes):
+        if len(i["sims"]) == 0:
+            _hashes.remove(i)
+
+
+# TODO move to file utils ?
+def _load_image(url):
+    stream = open(url, "rb")
+    bts = bytearray(stream.read())
+    nparray = np.asarray(bts, dtype=np.uint8)
+    bgr_image = cv2.imdecode(nparray, cv2.IMREAD_UNCHANGED)
+    return bgr_image
+
+
+def _get_hashimages(h):
+    res = []
+    for i in h["sims"]:
+        img = _load_image(i["path"])
+        res.append(HashImage(img, i))
+    return res

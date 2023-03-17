@@ -27,8 +27,6 @@ if __name__ == "__main__":
     if Cm.get_nn_loading():
         Nm.load_model_async()
 
-    Hm.load_hashes()
-
     main = MainUi(sw)
     progress = ProgressUi(sw)
     main.progress.connect(progress.process)
