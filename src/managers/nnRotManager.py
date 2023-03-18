@@ -19,6 +19,7 @@ def load_model_async():
 
 def _load_model():
     global _model
+    _model = True
     _model = tf.keras.models.load_model(MODEL_PATH)
 
 

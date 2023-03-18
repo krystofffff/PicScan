@@ -6,7 +6,7 @@ from src.controllers.popupDialog import PopupDialog
 class StackedWidget(QStackedWidget):
 
     def closeEvent(self, event) -> None:
-        if PopupDialog("Exit ?").exec_():
+        if PopupDialog("Close this app ?").exec_():
             event.accept()
         else:
             event.ignore()

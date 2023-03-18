@@ -38,7 +38,8 @@ def save_cutouts():
             _saved_cutouts_counter += 1
             # TODO IF OUTPUT FOLDER IS MISSING ? (eg. AFTER BUILD)
             path = f"{output_folder}/img_{_file_counter}_{idx}{output_format}"
-            Hm.add_to_hashes(co.img, path)
+            if Cm.get_duplicity_mode() == 1:
+                Hm.add_to_hashes(co.img, path)
             cv2.imwrite(path, co.img)
         else:
             _discarded_cutouts_counter += 1
@@ -63,7 +64,6 @@ def process_next_image():
         _file_counter += 1
         generate_canvas()
         generate_cutouts()
-        time.sleep(1)
         _process_timer += time.perf_counter() - t
 
 

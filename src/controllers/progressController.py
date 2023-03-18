@@ -67,8 +67,11 @@ class ProgressUi(QMainWindow):
             self.update_processed()
             if Cm.get_duplicity_mode() == 1:
                 Hm.remove_non_similar()
-                self.hash_update.emit()
-                self.sw.setCurrentIndex(3)
+                if Hm.is_empty():
+                    self.sw.setCurrentIndex(4)
+                else:
+                    self.hash_update.emit()
+                    self.sw.setCurrentIndex(3)
             else:
                 self.sw.setCurrentIndex(4)
         else:

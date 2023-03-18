@@ -2,7 +2,6 @@ import os
 import cv2
 import numpy as np
 
-from definitions import HASHES_PATH
 import src.utils.graphicUtils as Gra
 
 _hashes = []
