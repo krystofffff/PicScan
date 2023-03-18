@@ -2,7 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QSizePolicy
 from src.utils import graphicUtils as Gra
 import src.managers.dataManager as Dm
-from src.controllers.main.imageDialog import ImageDialog
+from src.controllers.imageDialog import ImageDialog
 
 
 class MainLabel(QLabel):

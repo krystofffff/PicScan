@@ -1,16 +1,15 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QSizePolicy
 from src.utils import graphicUtils as Gra
-import src.managers.dataManager as Dm
-from src.controllers.main.imageDialog import ImageDialog
+from src.controllers.imageDialog import ImageDialog
 
 
 class SimLabel(QLabel):
 
-    def __init__(self, parent, idx, img):
+    def __init__(self, parent, idx, hash_image):
         QLabel.__init__(self, parent)
         self.idx = idx
-        self.img = img
+        self.hash_image = hash_image
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setAlignment(Qt.AlignCenter)
         self.update_pixmap()
@@ -33,17 +32,13 @@ class SimLabel(QLabel):
             self.size(), Qt.KeepAspectRatio,
             Qt.SmoothTransformation))
 
-    def rotate_cutout(self):
-        Dm.rotate_cutout(self.idx)
-        self.update_pixmap()
-
-    def toggle_cutout(self):
-        Dm.toggle_cutout(self.idx)
+    def toggle_sim(self):
+        self.hash_image.toggle()
         self.update_pixmap()
 
     def update_pixmap(self):
-        self.pixmap = Gra.get_qpixmap(self.img)
+        self.pixmap = Gra.get_qpixmap(self.hash_image.get_img())
         self._set_scaled_pixmap(self.pixmap)
 
     def mousePressEvent(self, event):
-        ImageDialog(self.idx)
+        ImageDialog(self.hash_image.img)

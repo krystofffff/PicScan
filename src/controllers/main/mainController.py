@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QScrollAr
 
 from definitions import ROOT_DIR, CSS_DIR
 from src.controllers.edit.editController import EditUi
-from src.controllers.mainLabel import MainLabel
+from src.controllers.main.mainLabel import MainLabel
 from src.controllers.popupDialog import PopupDialog
 from src.managers import dataManager as Dm
 from src.utils import graphicUtils as Gra
@@ -77,10 +77,9 @@ class MainUi(QMainWindow):
             if PopupDialog("Start auto mode ?").exec_():
                 Dm.save_cutouts()
                 self.progress.emit(True)
-                self.sw.setCurrentIndex(1)
         else:
+            Dm.save_cutouts()
             self.progress.emit(False)
-            self.sw.setCurrentIndex(1)
 
     @pyqtSlot()
     def load_new_image(self):

@@ -1,10 +1,10 @@
 from PyQt5.QtCore import Qt, QObject, pyqtSignal, QThread, pyqtSlot
-from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QProgressBar, QHBoxLayout, QFrame
 import src.managers.dataManager as Dm
 import src.managers.configManager as Cm
+import src.managers.hashManager as Hm
 from PyQt5.QtWidgets import QStackedWidget
-from definitions import ROOT_DIR, CSS_DIR
+from definitions import CSS_DIR
 import datetime
 
 
@@ -18,12 +18,12 @@ class Worker(QObject):
 
 class ProgressUi(QMainWindow):
     main_update = pyqtSignal()
+    hash_update = pyqtSignal()
 
     def __init__(self, sw: QStackedWidget):
         super(ProgressUi, self).__init__()
         self.sw = sw
         self.center = QLabel()
-        self.center.setObjectName("A")
         self.center.setMinimumSize(960, 480)
         self.setCentralWidget(self.center)
 
@@ -62,9 +62,15 @@ class ProgressUi(QMainWindow):
     @pyqtSlot(bool)
     def process(self, in_auto_mode):
         self.update_processed()
+        self.sw.setCurrentIndex(1)
         if Dm.is_empty():
             self.update_processed()
-            self.label.setText(f"FINISHED!")
+            if Cm.get_duplicity_mode() == 1:
+                Hm.remove_non_similar()
+                self.hash_update.emit()
+                self.sw.setCurrentIndex(3)
+            else:
+                self.sw.setCurrentIndex(4)
         else:
             self.run_thread(in_auto_mode)
 

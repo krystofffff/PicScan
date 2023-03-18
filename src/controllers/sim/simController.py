@@ -1,4 +1,6 @@
-import random
+import pickle
+import sys
+import tracemalloc
 
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QGridLayout, QPushButton, \
     QSizePolicy, QFrame, QMainWindow
@@ -48,9 +50,9 @@ class SimUI(QMainWindow):
         self.main_h_layout.addWidget(self.scroll_area, 2)
 
         self.next_button = QPushButton("ACCEPT")
-        self.next_button.clicked.connect(lambda: self.switch_to_progress(False))
+        self.next_button.clicked.connect(lambda: self.process(True))
         self.auto_button = QPushButton("DECLINE")
-        self.auto_button.clicked.connect(lambda: self.switch_to_progress(True))
+        self.auto_button.clicked.connect(lambda: self.process(False))
         for i in [self.next_button, self.auto_button]:
             i.setMinimumSize(80, 20)
             i.setMaximumSize(160, 40)
@@ -62,7 +64,12 @@ class SimUI(QMainWindow):
         t = [open(CSS_DIR + x).read() for x in css]
         self.setStyleSheet("".join(t))
 
-        self.load_new_image()
+    def process(self, is_accepted):
+        Hm.process_hash_images(is_accepted)
+        if Hm.is_empty():
+            self.sw.setCurrentIndex(4)
+        else:
+            self.load_new_image()
 
     # TODO CHECK
     def _clear_scroll_area(self):
@@ -75,24 +82,22 @@ class SimUI(QMainWindow):
                 vbox.itemAt(0).widget().setParent(None)
             [x.setParent(None) for x in [vbox, frame, label, item]]
 
-    def switch_to_progress(self, in_auto_mode):
-        if PopupDialog("Start auto mode ?").exec_():
-            Dm.save_cutouts()
-            self.progress.emit(in_auto_mode)
-            self.sw.setCurrentIndex(1)
-
     @pyqtSlot()
-    def load_new_image(self):
+    def load_new_image(self, h=None):
+        self._clear_scroll_area()
         _COLUMN_COUNT = 2
-        for idx, img in enumerate(Hm.load_imgs_for_simui_beta()[1:]):
-            layout = self._build_item(self.scroll_area, idx, img)
+        Hm.build_new_hashimages(h)
+        hash_images = Hm.get_hashimages()
+        for idx, hash_image in enumerate(hash_images[1:]):
+            layout = self._build_item(self.scroll_area, idx, hash_image)
             x, y = idx % _COLUMN_COUNT, idx // _COLUMN_COUNT
             self.grid_layout.addLayout(layout, y, x)
         # # # TODO is there need for self.pixmap ?
-        self.pixmap = Gra.get_qpixmap(Hm.load_imgs_for_simui_beta()[0])
+        self.pixmap = Gra.get_qpixmap(hash_images[0].img)
         self.canvas.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.canvas.setAlignment(Qt.AlignCenter)
         self.update_label()
+        self.scroll_area.verticalScrollBar().setValue(0)
 
     def resizeEvent(self, event):
         self.update_label()
@@ -103,17 +108,17 @@ class SimUI(QMainWindow):
     def update_label(self):
         self.canvas.setPixmap(self.pixmap.scaled(self.canvas.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-    def _build_item(self, parent, idx, img):
+    def _build_item(self, parent, idx, hash_image):
         h_layout = QHBoxLayout()
         frame = QFrame()
         v_layout = QVBoxLayout(frame)
         v_layout.setContentsMargins(0, 0, 0, 0)
-        label = SimLabel(parent, idx, img)
+        label = SimLabel(parent, idx, hash_image)
         v_layout.addWidget(label)
-        perc = QLabel(f"{99-idx} %")
+        perc = QLabel(f"{hash_image.sim * 100: .0f} %")
         perc.setObjectName("perc")
         perc.setMaximumSize(150, 50)
-        edi_button = self._build_swap_button(30, idx, label)
+        edi_button = self._build_swap_button(30, hash_image)
         rem_button = self._build_remove_button(30, label)
         for i in [perc, edi_button, rem_button]:
             v_layout.addWidget(i)
@@ -131,10 +136,10 @@ class SimUI(QMainWindow):
 
     def _build_remove_button(self, size, label):
         button = self._build_button(size, "rem")
-        # button.clicked.connect(lambda: label.toggle_cutout())
+        button.clicked.connect(lambda: label.toggle_sim())
         return button
 
-    def _build_swap_button(self, size, idx, label):
+    def _build_swap_button(self, size, hash_image):
         button = self._build_button(size, "swap")
-        # button.clicked.connect(lambda: self._open_edit(idx, label))
+        button.clicked.connect(lambda: self.load_new_image(hash_image.h))
         return button

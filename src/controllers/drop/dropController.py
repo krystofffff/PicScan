@@ -114,7 +114,6 @@ class DropUi(QMainWindow):
         Dm.set_file_count(urls_clean)
         Dm.add_file(urls_clean)
         self.progress.emit(self.checkbox.isChecked())
-        self.sw.setCurrentIndex(1)
         self.label_1.setText("Drag & Drop")
         event.accept()
 
@@ -124,6 +123,5 @@ class DropUi(QMainWindow):
             return
         Dm.set_file_count(file_name)
         Dm.add_file(file_name)
-        self.sw.setCurrentIndex(1)
         self.progress.emit(self.checkbox.isChecked())
         self.label_1.setText("Drag & Drop")
