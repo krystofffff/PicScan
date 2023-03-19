@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QHBoxLayout, QPushButton
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QFrame
 
 from definitions import CSS_DIR
 
@@ -9,32 +9,34 @@ class PopupDialog(QDialog):
         super().__init__()
         self.setWindowTitle(" ")
 
-        self.layout = QVBoxLayout()
-        self.layout.setAlignment(Qt.AlignCenter)
+        layout = QVBoxLayout()
+        layout.setAlignment(Qt.AlignCenter)
 
-        self.label = QLabel(message)
-        self.label.setAlignment(Qt.AlignCenter)
-        self.label.setMinimumSize(150, 50)
+        label = QLabel(message)
+        label.setAlignment(Qt.AlignCenter)
+        label.setMinimumSize(150, 50)
 
-        self.h_layout = QHBoxLayout()
-        self.button_accept = QPushButton("Yes")
-        self.button_accept.setFixedSize(100, 50)
-        self.button_accept.clicked.connect(lambda: self.selection(True))
-        self.button_decline = QPushButton("No")
-        self.button_decline.setFixedSize(100, 50)
-        self.button_decline.clicked.connect(lambda: self.selection(False))
-        self.h_layout.addStretch()
-        self.h_layout.addWidget(self.button_accept)
-        self.h_layout.addStretch()
-        self.h_layout.addWidget(self.button_decline)
-        self.h_layout.addStretch()
+        h_layout = QHBoxLayout()
+        button_accept = QPushButton("Yes")
+        button_accept.setFixedSize(100, 50)
+        button_accept.clicked.connect(lambda: self.selection(True))
+        button_decline = QPushButton("No")
+        button_decline.setFixedSize(100, 50)
+        button_decline.clicked.connect(lambda: self.selection(False))
+        h_layout.addStretch()
+        h_layout.addWidget(button_accept)
+        h_layout.addStretch()
+        h_layout.addWidget(button_decline)
+        h_layout.addStretch()
 
-        self.layout.addStretch()
-        self.layout.addWidget(self.label)
-        self.layout.addStretch()
-        self.layout.addLayout(self.h_layout)
+        frame = QFrame()
+        frame.setMinimumHeight(20)
 
-        self.setLayout(self.layout)
+        layout.addWidget(label)
+        layout.addWidget(frame)
+        layout.addLayout(h_layout)
+
+        self.setLayout(layout)
 
         self.setFixedSize(360, 160)
 

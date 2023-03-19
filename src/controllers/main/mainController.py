@@ -4,8 +4,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QScrollAr
     QSizePolicy, QFrame, QMainWindow
 
 from definitions import ROOT_DIR, CSS_DIR
-from src.controllers.edit.editController import EditUi
-from src.controllers.main.mainLabel import MainLabel
+from src.controllers.main.scrollAreaItem import ScrollAreaItem
 from src.controllers.popupDialog import PopupDialog
 from src.managers import dataManager as Dm
 from src.utils import graphicUtils as Gra
@@ -53,8 +52,6 @@ class MainUi(QMainWindow):
             i.setMaximumSize(160, 40)
             self.buttons_h_layout.addWidget(i)
 
-        self.icons = {x: QIcon(ROOT_DIR + f"/assets/{x}.png") for x in ["rem", "rot", "edit"]}
-
         css = ["main.css", "buttons.css"]
         t = [open(CSS_DIR + x).read() for x in css]
         self.setStyleSheet("".join(t))
@@ -88,7 +85,7 @@ class MainUi(QMainWindow):
         self.file_name_label.setText(Dm.get_file_name())
         _COLUMN_COUNT = 2
         for i in range(len(Dm.get_cutouts())):
-            layout = self._build_item(self.scroll_area, i)
+            layout = ScrollAreaItem(self.sw, self.scroll_area, i)
             x, y = i % _COLUMN_COUNT, i // _COLUMN_COUNT
             self.grid_layout.addLayout(layout, y, x)
         # TODO is there need for self.pixmap ?
@@ -100,52 +97,10 @@ class MainUi(QMainWindow):
     def resizeEvent(self, event: QResizeEvent):
         scaled_size = self.canvas.size()
         scaled_size.scale(self.canvas.size(), Qt.KeepAspectRatio)
-        self.update_label(event)
+        self.update_label()
 
-    def update_label(self, event=None):
+    def update_label(self):
         self.canvas.setPixmap(self.pixmap.scaled(self.canvas.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
-
-    def _build_item(self, parent, idx):
-        h_layout = QHBoxLayout()
-        frame = QFrame()
-        v_layout = QVBoxLayout(frame)
-        v_layout.setContentsMargins(0, 0, 0, 0)
-        label = MainLabel(parent, idx)
-        rot_button = self._build_rotate_button(25, label)
-        edi_button = self._build_edit_button(25, idx, label)
-        rem_button = self._build_remove_button(25, label)
-        for i in [rot_button, edi_button, rem_button]:
-            v_layout.addWidget(i)
-        h_layout.addWidget(label, 9)
-        h_layout.addWidget(frame, 1)
-        return h_layout
-
-    def _build_button(self, size, icon_path):
-        button = QPushButton()
-        button.setFixedSize(size, size)
-        button.setIcon(self.icons[icon_path])
-        icon_size = size - 5
-        button.setIconSize(QSize(icon_size, icon_size))
-        return button
-
-    def _build_remove_button(self, size, label):
-        button = self._build_button(size, "rem")
-        button.clicked.connect(lambda: label.toggle_cutout())
-        return button
-
-    def _build_rotate_button(self, size, label):
-        button = self._build_button(size, "rot")
-        button.clicked.connect(lambda: label.rotate_cutout())
-        return button
-
-    def _build_edit_button(self, size, idx, label):
-        button = self._build_button(size, "edit")
-        button.clicked.connect(lambda: self._open_edit(idx, label))
-        return button
-
-    def _open_edit(self, idx, label):
-        # TODO should be persistent ? (+ sw indexing ?)
-        EditUi(self.sw, idx, label, Dm.get_canvas())
 
     def _switch_to_drop(self):
         Dm.clear_data()

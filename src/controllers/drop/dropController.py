@@ -44,7 +44,7 @@ class DropUi(QMainWindow):
         self.browser_button.clicked.connect(lambda: self.open_file_explorer())
         self.browser_button.setObjectName("browserButton")
         self.settings_button = QPushButton("Settings")
-        self.settings_button.setMinimumSize(300, 0)
+        self.settings_button.setMinimumWidth(200)
         self.settings_button.clicked.connect(lambda: Sc.ConfigDialog(self))
 
         self.ll = QHBoxLayout()

@@ -53,7 +53,7 @@ class EditUi(QMainWindow):
 
         self.sw = sw
         self.sw.addWidget(self)
-        self.sw.setCurrentIndex(3)
+        self.sw.setCurrentIndex(len(self.sw)-1)
 
         css = ["edit.css", "buttons.css"]
         t = [open(CSS_DIR + x).read() for x in css]
