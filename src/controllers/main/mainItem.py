@@ -8,7 +8,8 @@ from src.controllers.main.mainLabel import MainLabel
 import src.managers.dataManager as Dm
 
 
-class ScrollAreaItem(QHBoxLayout):
+class MainItem(QHBoxLayout):
+    icons: dir
 
     def __init__(self, sw, parent, idx):
         super().__init__()
@@ -17,8 +18,6 @@ class ScrollAreaItem(QHBoxLayout):
         v_layout = QVBoxLayout(frame)
         v_layout.setContentsMargins(0, 0, 0, 0)
         label = MainLabel(parent, idx)
-
-        self.icons = {x: QIcon(ROOT_DIR + f"/assets/{x}.png") for x in ["rem", "rot", "edit"]}
 
         rot_button = self._build_rotate_button(25, label)
         edi_button = self._build_edit_button(25, idx, label)

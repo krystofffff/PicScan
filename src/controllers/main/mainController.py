@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QScrollAr
     QSizePolicy, QFrame, QMainWindow
 
 from definitions import ROOT_DIR, CSS_DIR
-from src.controllers.main.scrollAreaItem import ScrollAreaItem
+from src.controllers.main.mainItem import MainItem
 from src.controllers.popupDialog import PopupDialog
 from src.managers import dataManager as Dm
 from src.utils import graphicUtils as Gra
@@ -18,6 +18,7 @@ class MainUi(QMainWindow):
         super(MainUi, self).__init__()
 
         self.sw = sw
+        MainItem.icons = {x: QIcon(ROOT_DIR + f"/assets/{x}.png") for x in ["rem", "rot", "edit"]}
         self.center = QWidget()
         self.center.setObjectName("outer")
         self.center.setMinimumSize(960, 480)
@@ -85,10 +86,9 @@ class MainUi(QMainWindow):
         self.file_name_label.setText(Dm.get_file_name())
         _COLUMN_COUNT = 2
         for i in range(len(Dm.get_cutouts())):
-            layout = ScrollAreaItem(self.sw, self.scroll_area, i)
+            layout = MainItem(self.sw, self.scroll_area, i)
             x, y = i % _COLUMN_COUNT, i // _COLUMN_COUNT
             self.grid_layout.addLayout(layout, y, x)
-        # TODO is there need for self.pixmap ?
         self.pixmap = Gra.get_qpixmap(Dm.get_canvas())
         self.canvas.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.canvas.setAlignment(Qt.AlignCenter)

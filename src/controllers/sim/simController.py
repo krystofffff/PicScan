@@ -8,6 +8,7 @@ from PyQt5.QtCore import QSize, Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QIcon
 
 from src.controllers.popupDialog import PopupDialog
+from src.controllers.sim.simItem import SimItem
 from src.managers import dataManager as Dm
 from src.utils import graphicUtils as Gra
 from src.controllers.sim.simLabel import SimLabel
@@ -58,7 +59,7 @@ class SimUI(QMainWindow):
             i.setMaximumSize(160, 40)
             self.buttons_h_layout.addWidget(i)
 
-        self.icons = {x: QIcon(ROOT_DIR + f"/assets/{x}.png") for x in ["rem", "swap"]}
+        SimItem.icons = {x: QIcon(ROOT_DIR + f"/assets/{x}.png") for x in ["rem", "swap"]}
 
         css = ["main.css", "buttons.css", "sim.css"]
         t = [open(CSS_DIR + x).read() for x in css]
@@ -89,10 +90,9 @@ class SimUI(QMainWindow):
         Hm.build_new_hashimages(h)
         hash_images = Hm.get_hashimages()
         for idx, hash_image in enumerate(hash_images[1:]):
-            layout = self._build_item(self.scroll_area, idx, hash_image)
+            layout = SimItem(self.scroll_area, idx, hash_image, self)
             x, y = idx % _COLUMN_COUNT, idx // _COLUMN_COUNT
             self.grid_layout.addLayout(layout, y, x)
-        # # # TODO is there need for self.pixmap ?
         self.pixmap = Gra.get_qpixmap(hash_images[0].img)
         self.canvas.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.canvas.setAlignment(Qt.AlignCenter)
@@ -107,39 +107,3 @@ class SimUI(QMainWindow):
 
     def update_label(self):
         self.canvas.setPixmap(self.pixmap.scaled(self.canvas.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
-
-    def _build_item(self, parent, idx, hash_image):
-        h_layout = QHBoxLayout()
-        frame = QFrame()
-        v_layout = QVBoxLayout(frame)
-        v_layout.setContentsMargins(0, 0, 0, 0)
-        label = SimLabel(parent, idx, hash_image)
-        v_layout.addWidget(label)
-        perc = QLabel(f"{hash_image.sim * 100: .0f} %")
-        perc.setObjectName("perc")
-        perc.setMaximumSize(150, 50)
-        edi_button = self._build_swap_button(30, hash_image)
-        rem_button = self._build_remove_button(30, label)
-        for i in [perc, edi_button, rem_button]:
-            v_layout.addWidget(i)
-        h_layout.addWidget(label, 9)
-        h_layout.addWidget(frame, 1)
-        return h_layout
-
-    def _build_button(self, size, icon_path):
-        button = QPushButton()
-        button.setMaximumSize(50, 50)
-        button.setIcon(self.icons[icon_path])
-        icon_size = size - 5
-        button.setIconSize(QSize(icon_size, icon_size))
-        return button
-
-    def _build_remove_button(self, size, label):
-        button = self._build_button(size, "rem")
-        button.clicked.connect(lambda: label.toggle_sim())
-        return button
-
-    def _build_swap_button(self, size, hash_image):
-        button = self._build_button(size, "swap")
-        button.clicked.connect(lambda: self.load_new_image(hash_image.h))
-        return button

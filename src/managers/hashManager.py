@@ -1,8 +1,8 @@
 import os
 import cv2
-import numpy as np
 
 import src.utils.graphicUtils as Gra
+import src.utils.fileUtils as Fil
 
 _hashes = []
 _hash_images = []
@@ -46,7 +46,6 @@ def process_hash_images(is_accepted):
     _remove_from_hashes(_hash_images[0].h)
 
 
-# TODO REMOVE empty sims
 def _remove_from_hashes(h):
     global _hashes
     sims = [x["h"] for x in h.sims]
@@ -97,26 +96,17 @@ def remove_non_similar():
             _hashes.remove(i)
 
 
-# TODO move to file utils ?
-def _load_image(url):
-    stream = open(url, "rb")
-    bts = bytearray(stream.read())
-    nparray = np.asarray(bts, dtype=np.uint8)
-    bgr_image = cv2.imdecode(nparray, cv2.IMREAD_UNCHANGED)
-    return bgr_image
-
-
 def get_hashimages():
     return _hash_images
 
 
 def _build_hashimages(h):
     global _hash_images
-    res = [HashImage(_load_image(h.path), h, 0)]
+    res = [HashImage(Fil.load_image(h.path), h, 0)]
     hs = sorted(h.sims, key=lambda x: x["s"], reverse=True)
     for i in hs:
         hsh = i["h"]
-        img = _load_image(hsh.path)
+        img = Fil.load_image(hsh.path)
         res.append(HashImage(img, hsh, i["s"]))
     _hash_images = res
 

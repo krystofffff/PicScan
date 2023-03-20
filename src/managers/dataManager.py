@@ -2,11 +2,11 @@ import os.path
 import time
 
 import cv2
-import numpy as np
-from src.utils import graphicUtils as Gra
+
 import src.managers.configManager as Cm
 import src.managers.hashManager as Hm
-
+import src.utils.fileUtils as Fil
+import src.utils.graphicUtils as Gra
 
 _files = []
 _cutouts = []
@@ -70,7 +70,7 @@ def process_next_image():
 def generate_canvas():
     global _canvas
     file = _get_next_file()
-    _canvas = _load_image(file)
+    _canvas = Fil.load_image(file)
 
 
 def generate_cutouts():
@@ -85,14 +85,6 @@ def any_disabled_cutouts():
         if not i.enabled:
             return True
     return False
-
-
-def _load_image(url):
-    stream = open(url, "rb")
-    bts = bytearray(stream.read())
-    nparray = np.asarray(bts, dtype=np.uint8)
-    bgr_image = cv2.imdecode(nparray, cv2.IMREAD_UNCHANGED)
-    return bgr_image
 
 
 def clear_data():
