@@ -51,5 +51,5 @@ class MainItem(QHBoxLayout):
         return button
 
     def _open_edit(self, idx, label):
-        # TODO should be persistent ? (+ sw indexing ?) (Yeah probably should)
+        # TODO should be persistent ? (+ sw indexing ?) (Probably should)
         EditUi(self.sw, idx, label, Dm.get_canvas())

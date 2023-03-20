@@ -1,8 +1,8 @@
 import os
+
 import cv2
 
 import src.utils.graphicUtils as Gra
-import src.utils.fileUtils as Fil
 
 _hashes = []
 _hash_images = []
@@ -102,11 +102,11 @@ def get_hashimages():
 
 def _build_hashimages(h):
     global _hash_images
-    res = [HashImage(Fil.load_image(h.path), h, 0)]
+    res = [HashImage(Gra.load_image(h.path), h, 0)]
     hs = sorted(h.sims, key=lambda x: x["s"], reverse=True)
     for i in hs:
         hsh = i["h"]
-        img = Fil.load_image(hsh.path)
+        img = Gra.load_image(hsh.path)
         res.append(HashImage(img, hsh, i["s"]))
     _hash_images = res
 

@@ -1,4 +1,4 @@
-from PyQt5.QtCore import Qt, QPoint, QRectF, pyqtSlot, pyqtProperty
+from PyQt5.QtCore import Qt, QPoint, QRectF, pyqtSlot
 from PyQt5.QtGui import QPen, QBrush, QColor, QPaintEvent, QPainter, QFont
 from PyQt5.QtWidgets import QCheckBox
 
@@ -8,15 +8,7 @@ class ToggleSwitch(QCheckBox):
     _light_grey_pen = QPen(Qt.lightGray)
     _black_pen = QPen(Qt.black)
 
-    def __init__(self,
-                 parent=None,
-                 bar_color="#B3BBBC",
-                 checked_color="#00B0FF",
-                 handle_color=Qt.white,
-                 h_scale=1.0,
-                 v_scale=1.0,
-                 fontSize=10):
-
+    def __init__(self, parent=None, bar_color="#B3BBBC", checked_color="#00B0FF", handle_color=Qt.white, fontSize=10):
         super().__init__(parent)
 
         self._bar_brush = QBrush(QColor(bar_color))
@@ -27,8 +19,6 @@ class ToggleSwitch(QCheckBox):
 
         self.setContentsMargins(0, 0, 0, 0)
         self._handle_position = 0
-        self._h_scale = h_scale
-        self._v_scale = v_scale
         self._fontSize = fontSize
 
         self.stateChanged.connect(self.handle_state_change)
@@ -38,67 +28,46 @@ class ToggleSwitch(QCheckBox):
 
     def paintEvent(self, e: QPaintEvent):
 
-        contRect = self.contentsRect()
-        width = contRect.width() * self._h_scale
-        height = contRect.height() * self._v_scale
-        handleRadius = round(0.25 * height)
+        cont_rect = self.contentsRect()
+        width = cont_rect.width()
+        height = cont_rect.height()
+        handle_radius = round(0.25 * height)
 
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
 
         p.setPen(self._transparent_pen)
-        barRect = QRectF(0, 0, width - handleRadius, 0.40 * height)
-        barRect.moveCenter(contRect.center())
+        bar_rect = QRectF(0, 0, width - handle_radius, 0.40 * height)
+        bar_rect.moveCenter(cont_rect.center())
         rounding = 5
 
-        trailLength = contRect.width() * self._h_scale - 2 * handleRadius
-        xLeft = contRect.center().x() - (trailLength + handleRadius) / 2
-        xPos = xLeft + handleRadius + (trailLength - handleRadius) * self._handle_position
+        trail_length = cont_rect.width() - 2 * handle_radius
+        x_left = cont_rect.center().x() - (trail_length + handle_radius) / 2
+        x_pos = x_left + handle_radius + (trail_length - handle_radius) * self._handle_position
         p.setFont(QFont('Helvetica', self._fontSize, 60))
 
-        textRect = QRectF(0 + handleRadius, 0, width - 2 * handleRadius, height-2)
+        text_rect = QRectF(0 + handle_radius, 0, width - 2 * handle_radius, height-2)
 
         if self.isChecked():
             p.setBrush(self._bar_checked_brush)
-            p.drawRoundedRect(barRect, rounding, rounding)
+            p.drawRoundedRect(bar_rect, rounding, rounding)
             p.setBrush(self._handle_checked_brush)
             p.setPen(self._black_pen)
-            p.drawText(textRect, Qt.AlignLeft | Qt.AlignVCenter, "AUTO")
+            p.drawText(text_rect, Qt.AlignLeft | Qt.AlignVCenter, "AUTO")
         else:
             p.setBrush(self._bar_brush)
-            p.drawRoundedRect(barRect, rounding, rounding)
+            p.drawRoundedRect(bar_rect, rounding, rounding)
             p.setPen(self._light_grey_pen)
             p.setBrush(self._handle_brush)
             p.setPen(self._black_pen)
-            p.drawText(textRect, Qt.AlignRight | Qt.AlignVCenter, "OFF")
+            p.drawText(text_rect, Qt.AlignRight | Qt.AlignVCenter, "OFF")
 
         p.setPen(self._transparent_pen if self.isChecked() else self._light_grey_pen)
         p.drawRoundedRect(
-            QRectF(xPos - handleRadius, barRect.center().y() - handleRadius, handleRadius * 2, handleRadius * 2),
+            QRectF(x_pos - handle_radius, bar_rect.center().y() - handle_radius, handle_radius * 2, handle_radius * 2),
             rounding, rounding)
         p.end()
 
     @pyqtSlot(int)
     def handle_state_change(self, value):
         self._handle_position = 1 if value else 0
-
-    @pyqtProperty(float)
-    def handle_position(self):
-        return self._handle_position
-
-    @handle_position.setter
-    def handle_position(self, pos):
-        self._handle_position = pos
-        self.update()
-
-    def setH_scale(self, value):
-        self._h_scale = value
-        self.update()
-
-    def setV_scale(self, value):
-        self._v_scale = value
-        self.update()
-
-    def setFontSize(self, value):
-        self._fontSize = value
-        self.update()

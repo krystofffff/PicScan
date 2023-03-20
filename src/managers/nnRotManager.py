@@ -7,6 +7,7 @@ from definitions import MODEL_PATH
 import cv2
 
 _model = None
+model_is_loading = False
 
 
 def is_model_loaded():
@@ -18,9 +19,10 @@ def load_model_async():
 
 
 def _load_model():
-    global _model
-    _model = True
+    global _model, model_is_loading
+    model_is_loading = True
     _model = tf.keras.models.load_model(MODEL_PATH)
+    model_is_loading = False
 
 
 def gen_full(imgs):

@@ -1,5 +1,6 @@
 import json
 import copy
+import os.path
 
 from definitions import CONFIG_PATH
 
@@ -36,6 +37,10 @@ def set_output_format(val):
 
 def get_output_folder():
     return _config["output_folder"]
+
+
+def output_folder_exists():
+    return os.path.exists(get_output_folder())
 
 
 def set_output_folder(val):

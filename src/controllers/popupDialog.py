@@ -5,7 +5,7 @@ from definitions import CSS_DIR
 
 
 class PopupDialog(QDialog):
-    def __init__(self, message):
+    def __init__(self, message, yes_mess="Yes", no_mess="No"):
         super().__init__()
         self.setWindowTitle(" ")
 
@@ -17,16 +17,20 @@ class PopupDialog(QDialog):
         label.setMinimumSize(150, 50)
 
         h_layout = QHBoxLayout()
-        button_accept = QPushButton("Yes")
-        button_accept.setFixedSize(100, 50)
-        button_accept.clicked.connect(lambda: self.selection(True))
-        button_decline = QPushButton("No")
-        button_decline.setFixedSize(100, 50)
-        button_decline.clicked.connect(lambda: self.selection(False))
         h_layout.addStretch()
-        h_layout.addWidget(button_accept)
-        h_layout.addStretch()
-        h_layout.addWidget(button_decline)
+        if yes_mess:
+            button_accept = QPushButton(yes_mess)
+            button_accept.setFixedSize(100, 50)
+            button_accept.clicked.connect(lambda: self.selection(True))
+            h_layout.addWidget(button_accept)
+        if no_mess:
+            if yes_mess:
+                h_layout.addStretch()
+            button_decline = QPushButton(no_mess)
+            button_decline.setFixedSize(100, 50)
+            button_decline.clicked.connect(lambda: self.selection(False))
+            h_layout.addWidget(button_decline)
+
         h_layout.addStretch()
 
         frame = QFrame()

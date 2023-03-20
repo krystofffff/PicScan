@@ -3,14 +3,14 @@ import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 
+import src.managers.configManager as Cm
+import src.managers.nnRotManager as Nm
 from src.controllers.drop.dropController import DropUi
 from src.controllers.endController import EndUI
 from src.controllers.main.mainController import MainUi
 from src.controllers.progressController import ProgressUi
 from src.controllers.sim.simController import SimUI
 from src.controllers.stackedWidget import StackedWidget
-import src.managers.configManager as Cm
-import src.managers.nnRotManager as Nm
 
 if __name__ == "__main__":
 

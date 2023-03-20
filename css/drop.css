@@ -11,3 +11,11 @@
     border-radius: 25px;
     margin: 10px 10px;
 }
+
+.QLabel#folder_message {
+    color: red;
+}
+
+.QLabel#loading {
+    font-size: 14px;
+}

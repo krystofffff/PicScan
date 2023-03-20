@@ -5,7 +5,6 @@ import cv2
 
 import src.managers.configManager as Cm
 import src.managers.hashManager as Hm
-import src.utils.fileUtils as Fil
 import src.utils.graphicUtils as Gra
 
 _files = []
@@ -36,7 +35,6 @@ def save_cutouts():
     for idx, co in enumerate(_cutouts):
         if co.enabled:
             _saved_cutouts_counter += 1
-            # TODO IF OUTPUT FOLDER IS MISSING ? (eg. AFTER BUILD)
             path = f"{output_folder}/img_{_file_counter}_{idx}{output_format}"
             if Cm.get_duplicity_mode() == 1:
                 Hm.add_to_hashes(co.img, path)
@@ -70,7 +68,7 @@ def process_next_image():
 def generate_canvas():
     global _canvas
     file = _get_next_file()
-    _canvas = Fil.load_image(file)
+    _canvas = Gra.load_image(file)
 
 
 def generate_cutouts():

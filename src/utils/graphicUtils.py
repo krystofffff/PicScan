@@ -59,6 +59,14 @@ def _is_valid_rectangle(points):
     return True
 
 
+def load_image(url):
+    stream = open(url, "rb")
+    bts = bytearray(stream.read())
+    nparray = np.asarray(bts, dtype=np.uint8)
+    bgr_image = cv2.imdecode(nparray, cv2.IMREAD_UNCHANGED)
+    return bgr_image
+
+
 def _repair_rectangle(points, last_right_index):
     index = (last_right_index + 2) % 4
     v_x = points[(index + 3) % 4][0][1] - points[(index + 2) % 4][0][1]

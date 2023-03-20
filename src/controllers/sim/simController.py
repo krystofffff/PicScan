@@ -72,7 +72,6 @@ class SimUI(QMainWindow):
         else:
             self.load_new_image()
 
-    # TODO CHECK
     def _clear_scroll_area(self):
         for i in range(self.grid_layout.count()):
             item = self.grid_layout.itemAt(0).layout()

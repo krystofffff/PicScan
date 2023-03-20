@@ -4,17 +4,19 @@ import src.managers.configManager as Cm
 import src.managers.nnRotManager as Nm
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QRadioButton, QPushButton, QHBoxLayout, QFileDialog, \
     QCheckBox
-from definitions import ROOT_DIR, CSS_DIR
+from definitions import CSS_DIR
 
 
 class ConfigDialog(QDialog):
     start_loading = pyqtSignal(bool)
+    update_output_folder = pyqtSignal()
 
     def __init__(self, drop):
         super().__init__()
         self.setWindowTitle("Settings")
 
         self.start_loading.connect(drop.stop_nn_loading)
+        self.update_output_folder.connect(drop.update_output_folder_message)
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(25, 25, 25, 25)
         self.setLayout(self.layout)
@@ -77,9 +79,10 @@ class ConfigDialog(QDialog):
 
     def _save_and_close(self):
         Cm.save_config()
-        if Cm.get_nn_loading() and not Nm.is_model_loaded():
+        if Cm.get_nn_loading() and not Nm.model_is_loading:
             Nm.load_model_async()
             self.start_loading.emit(False)
+        self.update_output_folder.emit()
         self.close()
 
     def load_config(self):
