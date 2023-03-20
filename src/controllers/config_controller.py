@@ -1,7 +1,7 @@
 from PyQt5.QtCore import pyqtSignal
 
-import src.managers.configManager as Cm
-import src.managers.nnRotManager as Nm
+import src.managers.config_manager as cm
+import src.managers.nn_rot_manager as nm
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QRadioButton, QPushButton, QHBoxLayout, QFileDialog, \
     QCheckBox
 from definitions import CSS_DIR
@@ -46,8 +46,8 @@ class ConfigDialog(QDialog):
         self.frame_nn_loading.setLayout(self.layout_nn_loading)
         self.label_nn_title = QLabel("Fix rotation using AI:")
         self.checkbox_nn_loading = QCheckBox("Enabled")
-        self.checkbox_nn_loading.setChecked(Cm.get_nn_loading())
-        self.checkbox_nn_loading.clicked.connect(lambda: Cm.set_nn_loading(self.checkbox_nn_loading.isChecked()))
+        self.checkbox_nn_loading.setChecked(cm.get_nn_loading())
+        self.checkbox_nn_loading.clicked.connect(lambda: cm.set_nn_loading(self.checkbox_nn_loading.isChecked()))
         self.layout_nn_loading.addWidget(self.label_nn_title)
         self.layout_nn_loading.addWidget(self.checkbox_nn_loading)
         self.layout.addWidget(self.frame_nn_loading)
@@ -59,9 +59,9 @@ class ConfigDialog(QDialog):
         self.label_format_title = QLabel("Output format:")
         self.label_format_title.setMaximumSize(240, 50)
         self.radio_button_jpg = QRadioButton("JPG")
-        self.radio_button_jpg.clicked.connect(lambda: Cm.set_output_format(0))
+        self.radio_button_jpg.clicked.connect(lambda: cm.set_output_format(0))
         self.radio_button_png = QRadioButton("PNG")
-        self.radio_button_png.clicked.connect(lambda: Cm.set_output_format(1))
+        self.radio_button_png.clicked.connect(lambda: cm.set_output_format(1))
         self.format_radio_buttons = [self.radio_button_jpg, self.radio_button_png]
         for i in [self.label_format_title, *self.format_radio_buttons]:
             self.layout_output_format.addWidget(i)
@@ -78,17 +78,17 @@ class ConfigDialog(QDialog):
         self.layout.addLayout(self.layout_buttons)
 
     def _save_and_close(self):
-        Cm.save_config()
-        if Cm.get_nn_loading() and not Nm.model_is_loading:
-            Nm.load_model_async()
+        cm.save_config()
+        if cm.get_nn_loading() and not nm.model_is_loading:
+            nm.load_model_async()
             self.start_loading.emit(False)
         self.update_output_folder.emit()
         self.close()
 
     def load_config(self):
-        Cm.create_temp_config()
-        self.format_radio_buttons[Cm.get_output_format()].toggle()
-        self.label_o_folder.setText(Cm.get_output_folder())
+        cm.create_temp_config()
+        self.format_radio_buttons[cm.get_output_format()].toggle()
+        self.label_o_folder.setText(cm.get_output_folder())
 
     def _build_output_folder_settings(self):
         self.frame_o_folder = QFrame()
@@ -96,7 +96,7 @@ class ConfigDialog(QDialog):
         self.frame_o_folder.setLayout(self.layout_o_folder_outer)
         self.label_o_folder_title = QLabel("Output folder:")
         self.layout_o_folder = QHBoxLayout()
-        self.label_o_folder = QLabel(Cm.get_output_folder())
+        self.label_o_folder = QLabel(cm.get_output_folder())
         self.button_browse_o_folder = QPushButton("Browse")
         self.button_browse_o_folder.clicked.connect(lambda: self.browse_output_folder())
         self.button_browse_o_folder.setMinimumSize(60, 30)
@@ -113,7 +113,7 @@ class ConfigDialog(QDialog):
         folder = QFileDialog.getExistingDirectory(self, 'Select folder')
         if folder == "":
             return
-        Cm.set_output_folder(folder)
+        cm.set_output_folder(folder)
         self.label_o_folder.setText(folder)
 
     def _build_duplicity_settings(self):
@@ -122,9 +122,9 @@ class ConfigDialog(QDialog):
         frame_duplicity.setLayout(layout_duplicity)
         label_duplicity = QLabel("Detect duplicity:")
         checkbox_duplicity = QCheckBox("Enabled")
-        checkbox_duplicity.setChecked(Cm.get_nn_loading())
-        checkbox_duplicity.clicked.connect(lambda: Cm.set_duplicity_mode(checkbox_duplicity.isChecked()))
+        checkbox_duplicity.setChecked(cm.get_nn_loading())
+        checkbox_duplicity.clicked.connect(lambda: cm.set_duplicity_mode(checkbox_duplicity.isChecked()))
         layout_duplicity.addWidget(label_duplicity)
         layout_duplicity.addWidget(checkbox_duplicity)
         self.layout.addWidget(frame_duplicity)
-        checkbox_duplicity.setChecked(Cm.get_duplicity_mode())
+        checkbox_duplicity.setChecked(cm.get_duplicity_mode())

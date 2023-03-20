@@ -1,8 +1,8 @@
 from PyQt5.QtCore import Qt, QObject, pyqtSignal, QThread, pyqtSlot
 from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QProgressBar, QHBoxLayout, QFrame
-import src.managers.dataManager as Dm
-import src.managers.configManager as Cm
-import src.managers.hashManager as Hm
+import src.managers.data_manager as dm
+import src.managers.config_manager as cm
+import src.managers.hash_manager as hm
 from PyQt5.QtWidgets import QStackedWidget
 from definitions import CSS_DIR
 import datetime
@@ -12,7 +12,7 @@ class Worker(QObject):
     finished = pyqtSignal()
 
     def run(self):
-        Dm.process_next_image()
+        dm.process_next_image()
         self.finished.emit()
 
 
@@ -63,11 +63,11 @@ class ProgressUi(QMainWindow):
     def process(self, in_auto_mode):
         self.update_processed()
         self.sw.setCurrentIndex(1)
-        if Dm.is_empty():
+        if dm.is_empty():
             self.update_processed()
-            if Cm.get_duplicity_mode() == 1:
-                Hm.remove_non_similar()
-                if Hm.is_empty():
+            if cm.get_duplicity_mode() == 1:
+                hm.remove_non_similar()
+                if hm.is_empty():
                     self.sw.setCurrentIndex(4)
                 else:
                     self.hash_update.emit()
@@ -91,7 +91,7 @@ class ProgressUi(QMainWindow):
     def next_step(self, in_auto_mode):
         self.update_processed()
         if in_auto_mode:
-            Dm.save_cutouts()
+            dm.save_cutouts()
             self.process(in_auto_mode)
         else:
             self.switch_to_main_controller()
@@ -101,9 +101,9 @@ class ProgressUi(QMainWindow):
         self.sw.setCurrentIndex(2)
 
     def update_processed(self):
-        fc = Dm.get_file_count()
-        fcr = Dm.get_file_counter()
-        t = Dm.get_process_timer()
+        fc = dm.get_file_count()
+        fcr = dm.get_file_counter()
+        t = dm.get_process_timer()
         fc = 1 if fc == 0 else fc
         if not fcr == 0:
             remaining_t = int((fc - fcr) * (t / fcr))

@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPen, QCursor
 from PyQt5.QtWidgets import QGraphicsEllipseItem, QGraphicsLineItem
 
-from src.utils import geometricUtils as Geo
+from src.utils import geometric_utils as geo
 
 
 def qpoint_to_point(p):
@@ -61,8 +61,8 @@ class CornerAnchor(Anchor):
 
     def mouseMoveEvent(self, event):
         p_oa, p_oc, p_uc = self._get_event_points(event)
-        v = Geo.get_vector_between_points(p_oc, p_uc)
-        p = Geo.get_point_moved_by_vector(p_oa, v)
+        v = geo.get_vector_between_points(p_oc, p_uc)
+        p = geo.get_point_moved_by_vector(p_oa, v)
         self.setPos(p[0], p[1])
         self.center_point.setPos(0, 0)
         self.anchor_s.corner_moved()
@@ -81,8 +81,8 @@ class SlideAnchor(Anchor):
     def corner_moved(self):
         p1 = self.a1.get_point()
         p2 = self.a2.get_point()
-        p_m = Geo.get_mid_point(p1, p2)
-        angle = Geo.get_angle_2p(p1, p2) + self.dist_vect["angle"]
+        p_m = geo.get_mid_point(p1, p2)
+        angle = geo.get_angle_2p(p1, p2) + self.dist_vect["angle"]
         x = p_m[0] + math.cos(angle) * self.dist_vect["dist"]
         y = p_m[1] + math.sin(angle) * self.dist_vect["dist"]
         self.setPos(self._off_pos(x), self._off_pos(y))
@@ -90,14 +90,14 @@ class SlideAnchor(Anchor):
     def _update_distance(self):
         p1 = self.a1.get_point()
         p2 = self.a2.get_point()
-        angle, dist = Geo.get_angle_and_dist_from_line(p1, p2, self.get_point())
+        angle, dist = geo.get_angle_and_dist_from_line(p1, p2, self.get_point())
         self.dist_vect = {"angle": angle, "dist": dist}
 
     def mouseMoveEvent(self, event):
         p_oa, p_oc, p_uc = self._get_event_points(event)
         p1, p2 = self.a1.get_point(), self.a2.get_point()
-        v = Geo.get_vector_projected_on_axis(p1, p2, p_oc, p_uc)
-        p = Geo.get_point_moved_by_vector(p_oa, v)
+        v = geo.get_vector_projected_on_axis(p1, p2, p_oc, p_uc)
+        p = geo.get_point_moved_by_vector(p_oa, v)
         self.setPos(p[0], p[1])
         self.rect.update_lines()
         self._update_distance()
@@ -116,7 +116,7 @@ class Line(QGraphicsLineItem):
         self.setPen(pen)
 
     def update_pos(self, p1, p2, p1_is_anchor, p2_is_anchor):
-        angle = Geo.get_angle_2p(p1, p2)
+        angle = geo.get_angle_2p(p1, p2)
         r = self.a_size / 2
         dx = math.cos(angle) * r
         dy = math.sin(angle) * r
@@ -188,7 +188,7 @@ class SelectionBox:
 
     def update_lines(self):
         if self.is_ready:
-            points = Geo.get_corners_from_anchors(*self.get_points_from_anchors())
+            points = geo.get_corners_from_anchors(*self.get_points_from_anchors())
             points.insert(3, self.anchors[2].get_point())
             for idx, line in enumerate(self.lines):
                 i = idx % 5

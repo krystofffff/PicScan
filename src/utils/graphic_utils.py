@@ -5,9 +5,9 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5.QtGui import QImage, QPixmap
-import src.utils.geometricUtils as Geo
-import src.managers.nnRotManager as Nm
-import src.managers.configManager as Cm
+import src.utils.geometric_utils as Geo
+import src.managers.nn_rot_manager as Nm
+import src.managers.config_manager as Cm
 
 
 # def _show(img):

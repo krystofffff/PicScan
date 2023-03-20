@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QSizePolicy
-from src.utils import graphicUtils as Gra
-from src.controllers.imageDialog import ImageDialog
+from src.utils import graphic_utils as gra
+from src.controllers.image_dialog import ImageDialog
 
 
 class SimLabel(QLabel):
@@ -37,7 +37,7 @@ class SimLabel(QLabel):
         self.update_pixmap()
 
     def update_pixmap(self):
-        self.pixmap = Gra.get_qpixmap(self.hash_image.get_img())
+        self.pixmap = gra.get_qpixmap(self.hash_image.get_img())
         self._set_scaled_pixmap(self.pixmap)
 
     def mousePressEvent(self, event):

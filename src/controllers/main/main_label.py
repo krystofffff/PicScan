@@ -1,8 +1,8 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QSizePolicy
-from src.utils import graphicUtils as Gra
-import src.managers.dataManager as Dm
-from src.controllers.imageDialog import ImageDialog
+from src.utils import graphic_utils as gra
+import src.managers.data_manager as dm
+from src.controllers.image_dialog import ImageDialog
 
 
 class MainLabel(QLabel):
@@ -33,21 +33,21 @@ class MainLabel(QLabel):
             Qt.SmoothTransformation))
 
     def rotate_cutout(self):
-        Dm.rotate_cutout(self.idx)
+        dm.rotate_cutout(self.idx)
         self.update_pixmap()
 
     def toggle_cutout(self):
-        Dm.toggle_cutout(self.idx)
+        dm.toggle_cutout(self.idx)
         self.update_pixmap()
 
     def update_pixmap(self):
-        co = Dm.get_cutouts()[self.idx]
+        co = dm.get_cutouts()[self.idx]
         if co.enabled:
-            self.pixmap = Gra.get_qpixmap(co.img)
+            self.pixmap = gra.get_qpixmap(co.img)
         else:
-            self.pixmap = Gra.get_qpixmap(co.disabled_img)
+            self.pixmap = gra.get_qpixmap(co.disabled_img)
         self._set_scaled_pixmap(self.pixmap)
 
     def mousePressEvent(self, event):
-        img = Dm.get_cutouts()[self.idx].img
+        img = dm.get_cutouts()[self.idx].img
         ImageDialog(img)

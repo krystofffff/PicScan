@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QGraphicsScene, \
     QGraphicsPixmapItem
-from src.utils import graphicUtils as Gra
-import src.managers.dataManager as Dm
-from src.controllers.edit.editController import EditView
+
+from src.controllers.edit.edit_controller import EditView
+from src.utils import graphic_utils as gra
 
 
 class ImageDialog(QDialog):
@@ -11,7 +11,7 @@ class ImageDialog(QDialog):
         self.setWindowTitle("image")
 
         pic = QGraphicsPixmapItem()
-        pixmap = Gra.get_qpixmap(image)
+        pixmap = gra.get_qpixmap(image)
         pic.setPixmap(pixmap)
 
         self.scene = QGraphicsScene()

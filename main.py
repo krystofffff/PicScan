@@ -3,30 +3,30 @@ import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 
-import src.managers.configManager as Cm
-import src.managers.nnRotManager as Nm
-from src.controllers.drop.dropController import DropUi
-from src.controllers.endController import EndUI
-from src.controllers.main.mainController import MainUi
-from src.controllers.progressController import ProgressUi
-from src.controllers.sim.simController import SimUI
-from src.controllers.stackedWidget import StackedWidget
+import src.managers.config_manager as cm
+import src.managers.nn_rot_manager as nm
+from src.controllers.drop.drop_controller import DropUi
+from src.controllers.end_controller import EndUI
+from src.controllers.main.main_controller import MainUi
+from src.controllers.progress_controller import ProgressUi
+from src.controllers.sim.sim_controller import SimUI
+from src.controllers.stacked_widget import StackedWidget
 
 if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     app.setAttribute(Qt.AA_DisableWindowContextHelpButton)
 
-    Cm.load_config()
+    cm.load_config()
 
     sw = StackedWidget()
     sw.setWindowTitle("PicScan beta")
     drop = DropUi(sw)
 
-    nn_loader = Nm.loader
+    nn_loader = nm.loader
     nn_loader.is_loaded.connect(drop.stop_nn_loading)
-    if Cm.get_nn_loading():
-        Nm.load_model_async()
+    if cm.get_nn_loading():
+        nm.load_model_async()
 
     main = MainUi(sw)
     progress = ProgressUi(sw)

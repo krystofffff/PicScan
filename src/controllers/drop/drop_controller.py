@@ -1,15 +1,15 @@
-from PyQt5.QtGui import QMovie, QPen, QBrush, QColor, QPaintEvent, QPainter, QFont
-from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QPushButton, QCheckBox, QMessageBox, QHBoxLayout, QWidget, \
-    QFrame
-from PyQt5.QtCore import QUrl, Qt, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot
+from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import QFileDialog
-import src.managers.dataManager as Dm
-import src.managers.configManager as Cm
-import src.managers.nnRotManager as Nm
-import src.controllers.configController as Sc
-from definitions import ROOT_DIR, CSS_DIR
-from src.controllers.drop.toggleClass import ToggleSwitch
-from src.controllers.popupDialog import PopupDialog
+from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QPushButton, QHBoxLayout, QFrame
+
+import src.controllers.config_controller as cc
+import src.managers.config_manager as cm
+import src.managers.data_manager as dm
+import src.managers.nn_rot_manager as nm
+from definitions import CSS_DIR
+from src.controllers.drop.toggle_widget import ToggleSwitch
+from src.controllers.popup_dialog import PopupDialog
 
 
 class DropUi(QMainWindow):
@@ -47,7 +47,7 @@ class DropUi(QMainWindow):
         self.browser_button.setObjectName("browserButton")
         self.settings_button = QPushButton("Settings")
         self.settings_button.setMinimumWidth(200)
-        self.settings_button.clicked.connect(lambda: Sc.ConfigDialog(self))
+        self.settings_button.clicked.connect(lambda: cc.ConfigDialog(self))
 
         self.ll = QHBoxLayout()
         self.checkbox = ToggleSwitch()
@@ -64,7 +64,7 @@ class DropUi(QMainWindow):
         self.layout.addLayout(self.ll)
 
         self._build_loading()
-        self.stop_nn_loading(not Cm.get_nn_loading())
+        self.stop_nn_loading(not cm.get_nn_loading())
 
         css = ["drop.css", "buttons.css"]
         t = [open(CSS_DIR + x).read() for x in css]
@@ -79,7 +79,7 @@ class DropUi(QMainWindow):
 
     @pyqtSlot()
     def update_output_folder_message(self):
-        state = Cm.output_folder_exists()
+        state = cm.output_folder_exists()
         self.folder_label.setVisible(not state)
         self._update_inputs()
 
@@ -100,8 +100,8 @@ class DropUi(QMainWindow):
         self.loading_container.move(50, 50)
 
     def _update_inputs(self):
-        nn_ready = (Cm.get_nn_loading() and Nm.is_model_loaded()) or not Cm.get_nn_loading()
-        val = Cm.output_folder_exists() and nn_ready
+        nn_ready = (cm.get_nn_loading() and nm.is_model_loaded()) or not cm.get_nn_loading()
+        val = cm.output_folder_exists() and nn_ready
         self.browser_button.setEnabled(val)
         self.setAcceptDrops(val)
 
@@ -128,21 +128,20 @@ class DropUi(QMainWindow):
         urls_clean = []
         for i in urls:
             urls_clean.append(i.path()[1:])
-        Dm.set_file_count(urls_clean)
-        if Dm.get_file_count() > 0:
-            Dm.add_file(urls_clean)
-            self.progress.emit(self.checkbox.isChecked())
-        else:
-            PopupDialog("No images found", yes_mess=None, no_mess="OK").exec_()
+        dm.set_file_count(urls_clean)
+        self._start(urls_clean)
         self.label_1.setText("Drag & Drop")
         event.accept()
 
     def open_file_explorer(self):
         file_name = QFileDialog.getOpenFileNames(self, 'Open file')[0]
         if file_name:
-            Dm.set_file_count(file_name)
-            if Dm.get_file_count() > 0:
-                Dm.add_file(file_name)
-                self.progress.emit(self.checkbox.isChecked())
-            else:
-                PopupDialog("No images found", yes_mess=None, no_mess="OK").exec_()
+            dm.set_file_count(file_name)
+            self._start(file_name)
+
+    def _start(self, inp):
+        if dm.get_file_count() > 0:
+            dm.add_file(inp)
+            self.progress.emit(self.checkbox.isChecked())
+        else:
+            PopupDialog("No images found", yes_mess=None, no_mess="OK").exec_()

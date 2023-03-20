@@ -4,9 +4,9 @@ import unittest
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget
 
-from src.controllers.drop.dropController import DropUi
-from src.controllers.main.mainController import MainUi
-import src.managers.configManager as Cm
+from src.controllers.drop.drop_controller import DropUi
+from src.controllers.main.main_controller import MainUi
+import src.managers.config_manager as Cm
 
 
 class MyTestCase(unittest.TestCase):

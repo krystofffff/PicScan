@@ -5,8 +5,8 @@ import cv2
 from PyQt5.QtCore import QObject, pyqtSignal, QTimer
 from PyQt5.QtTest import QTest
 
-from src.managers import nnRotManager as Nm
-from src.managers.nnRotManager import Loader
+from src.managers import nn_rot_manager as Nm
+from src.managers.nn_rot_manager import Loader
 
 
 class MyClass(QObject):

@@ -1,7 +1,7 @@
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QGraphicsScene, QGraphicsPixmapItem
-import src.utils.graphicUtils as Gra
-from src.controllers.edit.selectionBox import SelectionBox
+import src.utils.graphic_utils as gra
+from src.controllers.edit.selection_box import SelectionBox
 
 
 class MainScene(QGraphicsScene):
@@ -9,7 +9,7 @@ class MainScene(QGraphicsScene):
     def __init__(self, canvas, points, accept_button):
         super().__init__()
         pic = QGraphicsPixmapItem()
-        pixmap = Gra.get_qpixmap(canvas)
+        pixmap = gra.get_qpixmap(canvas)
         pic.setPixmap(pixmap)
         w, h = pixmap.width(), pixmap.height()
         offset = 50

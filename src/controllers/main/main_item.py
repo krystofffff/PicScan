@@ -1,11 +1,9 @@
 from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QHBoxLayout, QFrame, QVBoxLayout, QPushButton, QBoxLayout
+from PyQt5.QtWidgets import QHBoxLayout, QFrame, QVBoxLayout, QPushButton
 
-from definitions import ROOT_DIR
-from src.controllers.edit.editController import EditUi
-from src.controllers.main.mainLabel import MainLabel
-import src.managers.dataManager as Dm
+import src.managers.data_manager as dm
+from src.controllers.edit.edit_controller import EditUi
+from src.controllers.main.main_label import MainLabel
 
 
 class MainItem(QHBoxLayout):
@@ -52,4 +50,4 @@ class MainItem(QHBoxLayout):
 
     def _open_edit(self, idx, label):
         # TODO should be persistent ? (+ sw indexing ?) (Probably should)
-        EditUi(self.sw, idx, label, Dm.get_canvas())
+        EditUi(self.sw, idx, label, dm.get_canvas())

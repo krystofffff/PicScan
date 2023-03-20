@@ -1,14 +1,14 @@
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QSize, Qt
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt
 from PyQt5.QtGui import QIcon, QResizeEvent
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QGridLayout, QPushButton, \
-    QSizePolicy, QFrame, QMainWindow
+    QSizePolicy, QMainWindow
 
+import src.managers.hash_manager as hm
 from definitions import ROOT_DIR, CSS_DIR
-from src.controllers.main.mainItem import MainItem
-from src.controllers.popupDialog import PopupDialog
-from src.managers import dataManager as Dm
-from src.utils import graphicUtils as Gra
-import src.managers.hashManager as Hm
+from src.controllers.main.main_item import MainItem
+from src.controllers.popup_dialog import PopupDialog
+from src.managers import data_manager as dm
+from src.utils import graphic_utils as gra
 
 
 class MainUi(QMainWindow):
@@ -73,23 +73,23 @@ class MainUi(QMainWindow):
     def switch_to_progress(self, in_auto_mode):
         if in_auto_mode:
             if PopupDialog("Start auto mode ?").exec_():
-                Dm.save_cutouts()
+                dm.save_cutouts()
                 self.progress.emit(True)
         else:
-            Dm.save_cutouts()
+            dm.save_cutouts()
             self.progress.emit(False)
 
     @pyqtSlot()
     def load_new_image(self):
         self._clear_scroll_area()
         self.scroll_area.verticalScrollBar().minimum()
-        self.file_name_label.setText(Dm.get_file_name())
+        self.file_name_label.setText(dm.get_file_name())
         _COLUMN_COUNT = 2
-        for i in range(len(Dm.get_cutouts())):
+        for i in range(len(dm.get_cutouts())):
             layout = MainItem(self.sw, self.scroll_area, i)
             x, y = i % _COLUMN_COUNT, i // _COLUMN_COUNT
             self.grid_layout.addLayout(layout, y, x)
-        self.pixmap = Gra.get_qpixmap(Dm.get_canvas())
+        self.pixmap = gra.get_qpixmap(dm.get_canvas())
         self.canvas.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.canvas.setAlignment(Qt.AlignCenter)
         self.update_label()
@@ -103,7 +103,7 @@ class MainUi(QMainWindow):
         self.canvas.setPixmap(self.pixmap.scaled(self.canvas.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
     def _switch_to_drop(self):
-        Dm.clear_data()
-        Hm.clear_hashes()
+        dm.clear_data()
+        hm.clear_hashes()
         self.sw.setCurrentIndex(0)
         self._clear_scroll_area()

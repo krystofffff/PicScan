@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QStackedWidget
 
-from src.controllers.popupDialog import PopupDialog
+from src.controllers.popup_dialog import PopupDialog
 
 
 class StackedWidget(QStackedWidget):

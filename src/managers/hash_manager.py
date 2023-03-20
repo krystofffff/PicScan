@@ -2,7 +2,7 @@ import os
 
 import cv2
 
-import src.utils.graphicUtils as Gra
+import src.utils.graphic_utils as gra
 
 _hashes = []
 _hash_images = []
@@ -15,7 +15,7 @@ class HashImage:
     def __init__(self, img, h, sim):
         self.h = h
         self.img = img
-        self.disabled_img = Gra.get_disabled_image(img)
+        self.disabled_img = gra.get_disabled_image(img)
         self.enabled = True
         self.sim = sim
 
@@ -31,9 +31,6 @@ class Hash:
         self.h = h
         self.path = path
         self.sims = []
-
-    def __repr__(self):
-        return str(len(self.sims))
 
 
 def process_hash_images(is_accepted):
@@ -102,11 +99,11 @@ def get_hashimages():
 
 def _build_hashimages(h):
     global _hash_images
-    res = [HashImage(Gra.load_image(h.path), h, 0)]
+    res = [HashImage(gra.load_image(h.path), h, 0)]
     hs = sorted(h.sims, key=lambda x: x["s"], reverse=True)
     for i in hs:
         hsh = i["h"]
-        img = Gra.load_image(hsh.path)
+        img = gra.load_image(hsh.path)
         res.append(HashImage(img, hsh, i["s"]))
     _hash_images = res
 

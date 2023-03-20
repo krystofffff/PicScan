@@ -1,7 +1,7 @@
 from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QHBoxLayout, QFrame, QVBoxLayout, QLabel, QPushButton, QSizePolicy
 
-from src.controllers.sim.simLabel import SimLabel
+from src.controllers.sim.sim_label import SimLabel
 
 
 class SimItem(QHBoxLayout):

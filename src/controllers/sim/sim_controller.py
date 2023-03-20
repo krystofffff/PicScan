@@ -1,19 +1,12 @@
-import pickle
-import sys
-import tracemalloc
-
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QGridLayout, QPushButton, \
-    QSizePolicy, QFrame, QMainWindow
-from PyQt5.QtCore import QSize, Qt, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QGridLayout, QPushButton, \
+    QSizePolicy, QMainWindow
 
-from src.controllers.popupDialog import PopupDialog
-from src.controllers.sim.simItem import SimItem
-from src.managers import dataManager as Dm
-from src.utils import graphicUtils as Gra
-from src.controllers.sim.simLabel import SimLabel
+import src.managers.hash_manager as hm
 from definitions import ROOT_DIR, CSS_DIR
-import src.managers.hashManager as Hm
+from src.controllers.sim.sim_item import SimItem
+from src.utils import graphic_utils as gra
 
 
 class SimUI(QMainWindow):
@@ -66,8 +59,8 @@ class SimUI(QMainWindow):
         self.setStyleSheet("".join(t))
 
     def process(self, is_accepted):
-        Hm.process_hash_images(is_accepted)
-        if Hm.is_empty():
+        hm.process_hash_images(is_accepted)
+        if hm.is_empty():
             self.sw.setCurrentIndex(4)
         else:
             self.load_new_image()
@@ -86,13 +79,13 @@ class SimUI(QMainWindow):
     def load_new_image(self, h=None):
         self._clear_scroll_area()
         _COLUMN_COUNT = 2
-        Hm.build_new_hashimages(h)
-        hash_images = Hm.get_hashimages()
+        hm.build_new_hashimages(h)
+        hash_images = hm.get_hashimages()
         for idx, hash_image in enumerate(hash_images[1:]):
             layout = SimItem(self.scroll_area, idx, hash_image, self)
             x, y = idx % _COLUMN_COUNT, idx // _COLUMN_COUNT
             self.grid_layout.addLayout(layout, y, x)
-        self.pixmap = Gra.get_qpixmap(hash_images[0].img)
+        self.pixmap = gra.get_qpixmap(hash_images[0].img)
         self.canvas.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.canvas.setAlignment(Qt.AlignCenter)
         self.update_label()

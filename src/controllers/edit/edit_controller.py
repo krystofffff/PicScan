@@ -2,11 +2,11 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, \
     QMainWindow, QVBoxLayout, QPushButton, QSpacerItem, QSizePolicy
 
-import src.managers.dataManager as Dm
-from definitions import ROOT_DIR, CSS_DIR
-from src.controllers.edit.editScene import MainScene
-from src.controllers.edit.editView import EditView
-from src.utils import geometricUtils as Geo
+import src.managers.data_manager as dm
+from definitions import CSS_DIR
+from src.controllers.edit.edit_scene import MainScene
+from src.controllers.edit.edit_view import EditView
+from src.utils import geometric_utils as geo
 
 
 class EditUi(QMainWindow):
@@ -34,7 +34,7 @@ class EditUi(QMainWindow):
         self.accept_button.clicked.connect(lambda: self._accept_selection())
         self.v_spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.points = [x[0] for x in Dm.get_cutout_points(self.idx)]
+        self.points = [x[0] for x in dm.get_cutout_points(self.idx)]
         self.scene = MainScene(canvas, self.points, self.accept_button)
         self.graphicsView = EditView(self.scene)
 
@@ -60,8 +60,8 @@ class EditUi(QMainWindow):
         self.setStyleSheet("".join(t))
 
     def _accept_selection(self):
-        p = Geo.get_corners_from_anchors(*self.scene.selection_box.get_points_from_anchors())
-        Dm.update_cutout(self.idx, p)
+        p = geo.get_corners_from_anchors(*self.scene.selection_box.get_points_from_anchors())
+        dm.update_cutout(self.idx, p)
         self.label.update_pixmap()
         self.sw.removeWidget(self)
         self.sw.setCurrentIndex(2)

@@ -3,9 +3,9 @@ import time
 
 import cv2
 
-import src.managers.configManager as Cm
-import src.managers.hashManager as Hm
-import src.utils.graphicUtils as Gra
+import src.managers.config_manager as cm
+import src.managers.hash_manager as hm
+import src.utils.graphic_utils as gra
 
 _files = []
 _cutouts = []
@@ -14,8 +14,6 @@ _current_file = ""
 _file_counter = 0
 _file_count = 0
 _process_timer = 0
-_saved_cutouts_counter = 0
-_discarded_cutouts_counter = 0
 OUTPUT_FORMATS = [".jpg", ".png"]
 INPUT_FORMATS = ["bmp", "jpeg", "jpg", "tiff", "png"]
 
@@ -23,24 +21,21 @@ INPUT_FORMATS = ["bmp", "jpeg", "jpg", "tiff", "png"]
 class Cutout:
     def __init__(self, img, points):
         self.img = img
-        self.disabled_img = Gra.get_disabled_image(img)
+        self.disabled_img = gra.get_disabled_image(img)
         self.enabled = True
         self.points = points
 
 
 def save_cutouts():
-    global OUTPUT_FORMATS, _file_counter, _cutouts, _saved_cutouts_counter, _discarded_cutouts_counter
-    output_format = OUTPUT_FORMATS[Cm.get_output_format()]
-    output_folder = Cm.get_output_folder()
+    global OUTPUT_FORMATS, _file_counter, _cutouts
+    output_format = OUTPUT_FORMATS[cm.get_output_format()]
+    output_folder = cm.get_output_folder()
     for idx, co in enumerate(_cutouts):
         if co.enabled:
-            _saved_cutouts_counter += 1
             path = f"{output_folder}/img_{_file_counter}_{idx}{output_format}"
-            if Cm.get_duplicity_mode() == 1:
-                Hm.add_to_hashes(co.img, path)
+            if cm.get_duplicity_mode() == 1:
+                hm.add_to_hashes(co.img, path)
             cv2.imwrite(path, co.img)
-        else:
-            _discarded_cutouts_counter += 1
 
 
 def set_file_count(paths):
@@ -68,12 +63,12 @@ def process_next_image():
 def generate_canvas():
     global _canvas
     file = _get_next_file()
-    _canvas = Gra.load_image(file)
+    _canvas = gra.load_image(file)
 
 
 def generate_cutouts():
     global _cutouts
-    cts, points = Gra.get_cut_out_images(_canvas)
+    cts, points = gra.get_cut_out_images(_canvas)
     _cutouts = [Cutout(img, points[i]) for i, img in enumerate(cts)]
 
 
@@ -86,13 +81,15 @@ def any_disabled_cutouts():
 
 
 def clear_data():
-    global _files, _cutouts, _canvas, _file_counter, _saved_cutouts_counter, _discarded_cutouts_counter
+    global _files, _cutouts, _canvas, _file_counter, _current_file, _file_count, _process_timer
     _file_counter = 0
     _files = []
     _cutouts = []
     _canvas = None
-    _saved_cutouts_counter = 0
-    _discarded_cutouts_counter = 0
+    _current_file = ""
+    _file_counter = 0
+    _file_count = 0
+    _process_timer = 0
 
 
 def add_file(path):
@@ -149,8 +146,8 @@ def _get_next_file():
 
 def rotate_cutout(idx):
     global _cutouts
-    _cutouts[idx].img = Gra.rotate_image(_cutouts[idx].img)
-    _cutouts[idx].disabled_img = Gra.rotate_image(_cutouts[idx].disabled_img)
+    _cutouts[idx].img = gra.rotate_image(_cutouts[idx].img)
+    _cutouts[idx].disabled_img = gra.rotate_image(_cutouts[idx].disabled_img)
 
 
 def toggle_cutout(idx):
@@ -165,19 +162,11 @@ def get_file_name():
 
 def update_cutout(idx, p):
     points = [[x] for x in p]
-    get_cutouts()[idx] = Cutout(Gra.subimage(get_canvas(), points), points)
+    get_cutouts()[idx] = Cutout(gra.subimage(get_canvas(), points), points)
 
 
 def get_file_counter():
     return _file_counter
-
-
-def get_discarded_cutouts_counter():
-    return _discarded_cutouts_counter
-
-
-def get_saved_cutouts_counter():
-    return _saved_cutouts_counter
 
 
 def get_cutouts():
