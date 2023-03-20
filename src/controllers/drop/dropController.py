@@ -42,7 +42,7 @@ class DropUi(QMainWindow):
         self.layout.setAlignment(Qt.AlignCenter)
         fr.setLayout(self.layout)
 
-        self.browser_button = QPushButton("Choose file")
+        self.browser_button = QPushButton("Choose files")
         self.browser_button.clicked.connect(lambda: self.open_file_explorer())
         self.browser_button.setObjectName("browserButton")
         self.settings_button = QPushButton("Settings")
@@ -132,13 +132,17 @@ class DropUi(QMainWindow):
         if Dm.get_file_count() > 0:
             Dm.add_file(urls_clean)
             self.progress.emit(self.checkbox.isChecked())
+        else:
+            PopupDialog("No images found", yes_mess=None, no_mess="OK").exec_()
         self.label_1.setText("Drag & Drop")
         event.accept()
 
     def open_file_explorer(self):
         file_name = QFileDialog.getOpenFileNames(self, 'Open file')[0]
-        if not file_name:
-            return
-        Dm.set_file_count(file_name)
-        Dm.add_file(file_name)
-        self.progress.emit(self.checkbox.isChecked())
+        if file_name:
+            Dm.set_file_count(file_name)
+            if Dm.get_file_count() > 0:
+                Dm.add_file(file_name)
+                self.progress.emit(self.checkbox.isChecked())
+            else:
+                PopupDialog("No images found", yes_mess=None, no_mess="OK").exec_()

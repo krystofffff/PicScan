@@ -21,7 +21,7 @@ class ConfigDialog(QDialog):
         self.layout.setContentsMargins(25, 25, 25, 25)
         self.setLayout(self.layout)
 
-        self.setMinimumSize(640, 480)
+        self.setFixedSize(640, 480)
 
         self._build_output_format_settings()
         self._build_output_folder_settings()
