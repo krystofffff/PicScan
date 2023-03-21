@@ -9,6 +9,7 @@ class SimLabel(QLabel):
     def __init__(self, parent, idx, hash_image):
         QLabel.__init__(self, parent)
         self.idx = idx
+        self.pixmap = None
         self.hash_image = hash_image
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setAlignment(Qt.AlignCenter)

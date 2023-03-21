@@ -23,6 +23,7 @@ class MainUi(QMainWindow):
         self.center = QWidget()
         self.center.setObjectName("outer")
         self.center.setMinimumSize(960, 480)
+        self.pixmap = None
         self.setCentralWidget(self.center)
         self.main_h_layout = QHBoxLayout()
         self.center.setLayout(self.main_h_layout)

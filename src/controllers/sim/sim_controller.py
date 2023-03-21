@@ -16,6 +16,7 @@ class SimUI(QMainWindow):
         super(SimUI, self).__init__()
 
         self.sw = sw
+        self.pixmap = None
         self.center = QWidget()
         self.center.setObjectName("outer")
         self.center.setMinimumSize(960, 480)

@@ -29,11 +29,9 @@ class Cutout:
 def save_cutouts():
     global OUTPUT_FORMATS, _file_counter, _cutouts
     output_format = OUTPUT_FORMATS[cm.get_output_format()]
-    # output_folder = cm.get_output_folder()
     for idx, co in enumerate(_cutouts):
         if co.enabled:
             cm.set_temp_output_folder()
-            # path = f"{output_folder}/img_{_file_counter}_{idx}{output_format}"
             path = f"{cm.get_temp_output_folder()}/img_{_file_counter}_{idx}{output_format}"
             if cm.get_duplicity_mode() == 1:
                 hm.add_to_hashes(co.img, path)

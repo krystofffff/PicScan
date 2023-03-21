@@ -1,18 +1,12 @@
 import math
-import time
 
 import cv2
-import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5.QtGui import QImage, QPixmap
-import src.utils.geometric_utils as Geo
-import src.managers.nn_rot_manager as Nm
-import src.managers.config_manager as Cm
 
-
-# def _show(img):
-#     plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-#     plt.show()
+import src.managers.config_manager as cm
+import src.managers.nn_rot_manager as nm
+import src.utils.geometric_utils as geo
 
 
 def rotate_image(img, n=0):
@@ -46,8 +40,8 @@ def _is_valid_rectangle(points):
         p1 = points[i % 4][0]
         p2 = points[(i + 1) % 4][0]
         p3 = points[(i + 2) % 4][0]
-        angle = Geo.get_angle_3p(p1, p2, p3)
-        angle = math.degrees(Geo.pos_angle(angle)) % 180
+        angle = geo.get_angle_3p(p1, p2, p3)
+        angle = math.degrees(geo.pos_angle(angle)) % 180
         if abs(90 - angle) > 2:
             counter += 1
         else:
@@ -81,13 +75,13 @@ def get_cut_out_images(image):
     for i in points:
         s = subimage(img, i)
         images.append(s)
-    if Cm.get_nn_loading():
+    if cm.get_nn_loading():
         images = _fix_rotation(images)
     return images, points
 
 
 def _fix_rotation(images):
-    preds = Nm.get_predictions(images)
+    preds = nm.get_predictions(images)
     for idx, pred in enumerate(preds):
         if not pred == 3:
             images[idx] = rotate_image(images[idx], pred)
@@ -106,7 +100,7 @@ def get_disabled_image(img):
 def subimage(image, corners):
     image = image.copy()
 
-    c_width, c_height, c_center, theta = Geo.get_specs_from_corners(corners)
+    c_width, c_height, c_center, theta = geo.get_specs_from_corners(corners)
 
     image = cv2.cvtColor(image, cv2.COLOR_RGB2RGBA)
     rot = _get_rotated_image(image, theta)
@@ -115,11 +109,11 @@ def subimage(image, corners):
     oi_center = (w / 2, h / 2)
     h, w = rot.shape[:2]
     ni_center = (w / 2, h / 2)
-    v = Geo.get_vector_between_points(oi_center, c_center)
-    vv = Geo.get_point_rotated_around_point([0, 0], v, -theta)
-    p = Geo.get_point_moved_by_vector(ni_center, vv)
+    v = geo.get_vector_between_points(oi_center, c_center)
+    vv = geo.get_point_rotated_around_point([0, 0], v, -theta)
+    p = geo.get_point_moved_by_vector(ni_center, vv)
     p = [int(p[0]), int(p[1])]
-    p = Geo.get_point_moved_by_vector(p, [-c_width // 2, -c_height // 2])
+    p = geo.get_point_moved_by_vector(p, [-c_width // 2, -c_height // 2])
 
     cutout = _cutout_image(rot, p, c_width, c_height, h, w)
 

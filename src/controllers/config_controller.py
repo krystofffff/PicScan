@@ -79,7 +79,7 @@ class ConfigDialog(QDialog):
 
     def _save_and_close(self):
         cm.save_config()
-        if cm.get_nn_loading() and not nm.model_is_loading:
+        if cm.get_nn_loading() and not nm.is_model_loaded() and not nm.model_is_loading:
             nm.load_model_async()
             self.start_loading.emit(False)
         self.update_output_folder.emit()

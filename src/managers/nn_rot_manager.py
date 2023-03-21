@@ -1,3 +1,5 @@
+import os
+
 import cv2
 import numpy as np
 import tensorflow as tf
@@ -10,19 +12,23 @@ _model = None
 model_is_loading = False
 
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+
 def is_model_loaded():
     return _model is not None
 
 
 def load_model_async():
+    global model_is_loading
+    model_is_loading = True
     loader.run_thread()
 
 
 def _load_model():
-    global _model, model_is_loading
-    model_is_loading = True
+    global _model
     _model = tf.keras.models.load_model(MODEL_PATH)
-    model_is_loading = False
 
 
 def gen_full(imgs):
@@ -52,7 +58,7 @@ def get_predictions(imgs):
         temp_imgs.append(img)
     gens, _ = gen_full(temp_imgs)
     augs = [gra.augment(x) for x in gens]
-    preds = _model.predict(x=np.array(augs))
+    preds = _model.predict(x=np.array(augs), verbose=0)
     res = []
     for i in range(0, len(preds), 4):
         p = [0 for _ in range(4)]
@@ -74,9 +80,14 @@ class Loader(QObject):
         self.thread.started.connect(self.worker.run)
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
-        self.thread.finished.connect(lambda: self.is_loaded.emit(True))
+        self.thread.finished.connect(lambda: self.finished())
         self.thread.finished.connect(self.thread.deleteLater)
         self.thread.start()
+
+    def finished(self):
+        global model_is_loading
+        model_is_loading = False
+        self.is_loaded.emit(True)
 
 
 class Worker(QObject):

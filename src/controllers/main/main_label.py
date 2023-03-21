@@ -10,6 +10,7 @@ class MainLabel(QLabel):
     def __init__(self, parent, idx):
         QLabel.__init__(self, parent)
         self.idx = idx
+        self.pixmap = None
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setAlignment(Qt.AlignCenter)
         self.update_pixmap()

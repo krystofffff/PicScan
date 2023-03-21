@@ -17,7 +17,7 @@ class Anchor(QGraphicsEllipseItem):
 
     def __init__(self, point, r, rect, color):
         super().__init__(0, 0, r, r)
-        self.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
+        self.setCursor(QCursor(Qt.PointingHandCursor))
         self.r = r
         self.setPos(self._off_pos(point[0]), self._off_pos(point[1]))
         pen = QPen()
