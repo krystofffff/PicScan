@@ -1,11 +1,31 @@
 import json
 import copy
 import os.path
+from datetime import datetime
 
 from definitions import CONFIG_PATH
 
 _config = {}
 _temp_config = {}
+_temp_output_folder = None
+
+
+def get_temp_output_folder():
+    return _temp_output_folder
+
+
+def set_temp_output_folder():
+    global _temp_output_folder
+    if _temp_output_folder is None:
+        now = datetime.now()
+        t = now.strftime("%Y-%m-%d-%H-%M-%S")
+        _temp_output_folder = f"{get_output_folder()}/{t}"
+        os.makedirs(_temp_output_folder)
+
+
+def clear_temp_output_folder():
+    global _temp_output_folder
+    _temp_output_folder = None
 
 
 def load_config():

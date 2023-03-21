@@ -29,7 +29,7 @@ class EndUI(QMainWindow):
         button_drop = QPushButton("Back to Drop")
         button_drop.clicked.connect(lambda: self._switch_to_drop())
         button_output = QPushButton("Open output folder")
-        button_output.clicked.connect(lambda: os.startfile(cm.get_output_folder()))
+        button_output.clicked.connect(lambda: os.startfile(str(cm.get_temp_output_folder()).replace("/", "\\")))
         for i in [button_drop, button_output]:
             button_layout.addWidget(i)
 
@@ -47,4 +47,5 @@ class EndUI(QMainWindow):
     def _switch_to_drop(self):
         dm.clear_data()
         hm.clear_hashes()
+        cm.clear_temp_output_folder()
         self.sw.setCurrentIndex(0)

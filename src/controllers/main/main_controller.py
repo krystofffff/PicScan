@@ -3,11 +3,12 @@ from PyQt5.QtGui import QIcon, QResizeEvent
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QScrollArea, QGridLayout, QPushButton, \
     QSizePolicy, QMainWindow
 
-import src.managers.hash_manager as hm
 from definitions import ROOT_DIR, CSS_DIR
 from src.controllers.main.main_item import MainItem
 from src.controllers.popup_dialog import PopupDialog
 from src.managers import data_manager as dm
+import src.managers.hash_manager as hm
+import src.managers.config_manager as cm
 from src.utils import graphic_utils as gra
 
 
@@ -105,5 +106,6 @@ class MainUi(QMainWindow):
     def _switch_to_drop(self):
         dm.clear_data()
         hm.clear_hashes()
+        cm.clear_temp_output_folder()
         self.sw.setCurrentIndex(0)
         self._clear_scroll_area()
