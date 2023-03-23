@@ -3,11 +3,12 @@ import copy
 import os.path
 from datetime import datetime
 
-from definitions import CONFIG_PATH
+from definitions import CONFIG_PATH, LANGS_PATH
 
 _config = {}
 _temp_config = {}
 _temp_output_folder = None
+_language = None
 
 
 def get_temp_output_folder():
@@ -32,6 +33,40 @@ def load_config():
     global _config
     with open(CONFIG_PATH, 'r') as f:
         _config = json.load(f)
+    _load_language()
+
+
+from types import SimpleNamespace
+
+
+class Tr(SimpleNamespace):
+    def __init__(self, dictionary):
+        super().__init__()
+        for key, value in dictionary.items():
+            if isinstance(value, dict):
+                self.__setattr__(key, Tr(value))
+            else:
+                self.__setattr__(key, value)
+
+
+def _load_language():
+    global _language
+    with open(f"{LANGS_PATH}/{get_language()}.json", 'r', encoding="utf-8") as f:
+        lang = json.load(f)
+    _language = Tr(lang)
+
+
+def set_language(val):
+    global _temp_config
+    _temp_config["language"] = val
+
+
+def get_language():
+    return _config["language"]
+
+
+def tr():
+    return _language
 
 
 def create_temp_config():

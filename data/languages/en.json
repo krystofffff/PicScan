@@ -1,0 +1,66 @@
+{
+  "drop": {
+    "label_1": "Drag & Drop",
+    "label_1_hover": "Drop it here",
+    "label_2": "or",
+    "browser_button": "Choose files",
+    "settings_button": "Settings",
+    "folder_label": "Output folder doesn't exist",
+    "loading_message": "AI is loading",
+    "popup_dialog": "No images found",
+    "folder": "Open file"
+  },
+  "config": {
+    "window_title": "Settings",
+    "label_nn_title": "Fix rotation using AI:",
+    "checkbox_nn_loading": "Enabled",
+    "label_format_title": "Output format:",
+    "radio_button_jpg": "JPG",
+    "radio_button_png": "PNG",
+    "button_save": "Save",
+    "label_o_folder_title": "Output folder:",
+    "button_browse_o_folder": "Browse",
+    "folder": "Select folder",
+    "label_duplicity": "Detect duplicity:",
+    "checkbox_duplicity":"Enabled",
+    "label_language": "Language (restart for change):",
+    "languages": {
+      "english": "English",
+      "czech": "Czech"
+    }
+  },
+  "main": {
+    "next_button": "NEXT",
+    "auto_button":"AUTO",
+    "quit_button": "QUIT",
+    "popup_dialog": "Start auto mode ?"
+  },
+  "progress": {
+    "label_time": "Time remaining:",
+    "label_files": "Files processed:"
+  },
+  "edit": {
+    "select_button": "Select\npoints",
+    "reset_button": "Reset",
+    "accept_button": "OK"
+  },
+  "end": {
+    "label": "Finished",
+    "button_drop": "Back to Drop",
+    "button_output": "Open output folder"
+  },
+  "sim":{
+    "accept_button": "ACCEPT",
+    "decline_button": "DECLINE"
+  },
+  "stacked": {
+    "popup_dialog": "Close this app ?"
+  },
+  "image_dialog": {
+    "window_title": "image"
+  },
+  "popup_dialog": {
+    "yes": "Yes",
+    "no": "No"
+  }
+}

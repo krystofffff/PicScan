@@ -44,11 +44,11 @@ class MainUi(QMainWindow):
         self.v_layout.addWidget(self.file_name_label, 1)
         self.v_layout.addLayout(self.buttons_h_layout, 1)
 
-        self.next_button = QPushButton("NEXT")
+        self.next_button = QPushButton(cm.tr().main.next_button)
         self.next_button.clicked.connect(lambda: self.switch_to_progress(False))
-        self.auto_button = QPushButton("AUTO")
+        self.auto_button = QPushButton(cm.tr().main.auto_button)
         self.auto_button.clicked.connect(lambda: self.switch_to_progress(True))
-        self.quit_button = QPushButton("QUIT")
+        self.quit_button = QPushButton(cm.tr().main.quit_button)
         self.quit_button.clicked.connect(lambda: self._switch_to_drop())
         for i in [self.next_button, self.auto_button, self.quit_button]:
             i.setMinimumSize(80, 20)
@@ -74,7 +74,7 @@ class MainUi(QMainWindow):
 
     def switch_to_progress(self, in_auto_mode):
         if in_auto_mode:
-            if PopupDialog("Start auto mode ?").exec_():
+            if PopupDialog(cm.tr().main.popup_dialog).exec_():
                 dm.save_cutouts()
                 self.progress.emit(True)
         else:

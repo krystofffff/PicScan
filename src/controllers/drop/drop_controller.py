@@ -32,20 +32,20 @@ class DropUi(QMainWindow):
         lay_h.addWidget(fr)
         lay_h.addStretch()
 
-        self.label_1 = QLabel("Drag & Drop")
+        self.label_1 = QLabel(cm.tr().drop.label_1)
         self.label_1.setObjectName("big")
         self.label_1.setAlignment(Qt.AlignCenter)
-        self.label_2 = QLabel("or")
+        self.label_2 = QLabel(cm.tr().drop.label_2)
         self.label_2.setObjectName("big")
         self.label_2.setAlignment(Qt.AlignCenter)
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignCenter)
         fr.setLayout(self.layout)
 
-        self.browser_button = QPushButton("Choose files")
+        self.browser_button = QPushButton(cm.tr().drop.browser_button)
         self.browser_button.clicked.connect(lambda: self.open_file_explorer())
         self.browser_button.setObjectName("browserButton")
-        self.settings_button = QPushButton("Settings")
+        self.settings_button = QPushButton(cm.tr().drop.settings_button)
         self.settings_button.setMinimumWidth(200)
         self.settings_button.clicked.connect(lambda: cc.ConfigDialog(self))
 
@@ -71,7 +71,7 @@ class DropUi(QMainWindow):
         self.setStyleSheet("".join(t))
 
     def _build_folder_message(self):
-        self.folder_label = QLabel("Output folder doesn't exist")
+        self.folder_label = QLabel(cm.tr().drop.folder_label)
         self.folder_label.setObjectName("folder_message")
         self.folder_label.setAlignment(Qt.AlignHCenter)
         self.update_output_folder_message()
@@ -94,7 +94,7 @@ class DropUi(QMainWindow):
         loading.setFixedSize(50, 50)
         loading.setScaledContents(True)
         loading.setMovie(self.movie)
-        loading_message = QLabel("AI is loading")
+        loading_message = QLabel(cm.tr().drop.loading_message)
         layout_loading.addWidget(loading)
         layout_loading.addWidget(loading_message)
         self.loading_container.move(50, 50)
@@ -115,11 +115,11 @@ class DropUi(QMainWindow):
         self._update_inputs()
 
     def dragEnterEvent(self, event):
-        self.label_1.setText("Drop it here")
+        self.label_1.setText(cm.tr().drop.label_1_hover)
         event.accept()
 
     def dragLeaveEvent(self, event):
-        self.label_1.setText("Drag & Drop")
+        self.label_1.setText(cm.tr().drop.label_1)
         event.accept()
 
     def dropEvent(self, event):
@@ -130,11 +130,11 @@ class DropUi(QMainWindow):
             urls_clean.append(i.path()[1:])
         dm.set_file_count(urls_clean)
         self._start(urls_clean)
-        self.label_1.setText("Drag & Drop")
+        self.label_1.setText(cm.tr().drop.label_1)
         event.accept()
 
     def open_file_explorer(self):
-        file_name = QFileDialog.getOpenFileNames(self, 'Open file')[0]
+        file_name = QFileDialog.getOpenFileNames(self, cm.tr().drop.folder)[0]
         if file_name:
             dm.set_file_count(file_name)
             self._start(file_name)
@@ -144,4 +144,4 @@ class DropUi(QMainWindow):
             dm.add_file(inp)
             self.progress.emit(self.checkbox.isChecked())
         else:
-            PopupDialog("No images found", yes_mess=None, no_mess="OK").exec_()
+            PopupDialog(cm.tr().drop.popup_dialog, yes_mess=None, no_mess="OK").exec_()

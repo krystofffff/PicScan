@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QScrollAr
     QSizePolicy, QMainWindow
 
 import src.managers.hash_manager as hm
+import src.managers.config_manager as cm
 from definitions import ROOT_DIR, CSS_DIR
 from src.controllers.sim.sim_item import SimItem
 from src.utils import graphic_utils as gra
@@ -44,11 +45,11 @@ class SimUI(QMainWindow):
         self.main_h_layout.addWidget(self.temp, 1)
         self.main_h_layout.addWidget(self.scroll_area, 2)
 
-        self.next_button = QPushButton("ACCEPT")
-        self.next_button.clicked.connect(lambda: self.process(True))
-        self.auto_button = QPushButton("DECLINE")
-        self.auto_button.clicked.connect(lambda: self.process(False))
-        for i in [self.next_button, self.auto_button]:
+        self.accept_button = QPushButton(cm.tr().sim.accept_button)
+        self.accept_button.clicked.connect(lambda: self.process(True))
+        self.decline_button = QPushButton(cm.tr().sim.decline_button)
+        self.decline_button.clicked.connect(lambda: self.process(False))
+        for i in [self.accept_button, self.decline_button]:
             i.setMinimumSize(80, 20)
             i.setMaximumSize(160, 40)
             self.buttons_h_layout.addWidget(i)

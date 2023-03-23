@@ -2,12 +2,18 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QFrame
 
 from definitions import CSS_DIR
+import src.managers.config_manager as cm
 
 
 class PopupDialog(QDialog):
-    def __init__(self, message, yes_mess="Yes", no_mess="No"):
+    def __init__(self, message, yes_mess=None, no_mess=None):
         super().__init__()
         self.setWindowTitle(" ")
+
+        if yes_mess is None:
+            yes_mess = cm.tr().popup_dialog.yes
+        if no_mess is None:
+            no_mess = cm.tr().popup_dialog.no
 
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignCenter)

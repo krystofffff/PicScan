@@ -18,7 +18,7 @@ class EndUI(QMainWindow):
         center.setMinimumSize(960, 480)
         self.setCentralWidget(center)
 
-        label = QLabel("Finished")
+        label = QLabel(cm.tr().end.label)
         label.setObjectName("big")
         label.setAlignment(Qt.AlignCenter)
         layout = QVBoxLayout()
@@ -26,9 +26,9 @@ class EndUI(QMainWindow):
         layout.setAlignment(Qt.AlignCenter)
 
         button_layout = QHBoxLayout()
-        button_drop = QPushButton("Back to Drop")
+        button_drop = QPushButton(cm.tr().end.button_drop)
         button_drop.clicked.connect(lambda: self._switch_to_drop())
-        button_output = QPushButton("Open output folder")
+        button_output = QPushButton(cm.tr().end.button_output)
         button_output.clicked.connect(lambda: os.startfile(str(cm.get_temp_output_folder()).replace("/", "\\")))
         for i in [button_drop, button_output]:
             button_layout.addWidget(i)
