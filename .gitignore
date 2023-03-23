@@ -1,5 +1,5 @@
+__pycache__/
 /venv
 /output/*
 /dist
 /build
-/data/hashes.hdf5

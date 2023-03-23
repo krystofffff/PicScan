@@ -1,0 +1,12 @@
+.QPushButton#smaller {
+    font-size: 14px;
+    padding: 5px;
+}
+
+.QLabel {
+    font-size: 16px;
+}
+
+.QVBoxLayout#block {
+    padding: 25px;
+}

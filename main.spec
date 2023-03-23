@@ -8,8 +8,8 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[("./assets/*.png", "./assets"),
-        ("./css/*.css", "./css"),
+    datas=[("./assets/*", "./assets"),
+        ("./css/*", "./css"),
         ("./data/*", "./data")],
     hiddenimports=[],
     hookspath=[],
@@ -38,7 +38,7 @@ exe = EXE(
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
-    entitlements_file=None,
+    entitlements_file=None
 )
 coll = COLLECT(
     exe,
