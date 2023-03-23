@@ -75,6 +75,10 @@ def get_cut_out_images(image):
     for i in points:
         s = subimage(img, i)
         images.append(s)
+    if not images:
+        images = [image]
+        w, h = len(image), len(image[0])
+        points = [[[[0, 0]], [[0, w]], [[h, 0]], [[h, w]]]]
     if cm.get_nn_loading():
         images = _fix_rotation(images)
     return images, points
