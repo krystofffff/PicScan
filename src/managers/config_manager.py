@@ -29,9 +29,11 @@ def clear_temp_output_folder():
     _temp_output_folder = None
 
 
-def load_config():
+def load_config(path=None):
     global _config
-    with open(CONFIG_PATH, 'r') as f:
+    if path is None:
+        path = CONFIG_PATH
+    with open(path, 'r') as f:
         _config = json.load(f)
     _load_language()
 
@@ -74,10 +76,12 @@ def create_temp_config():
     _temp_config = copy.deepcopy(_config)
 
 
-def save_config():
+def save_config(path=None):
     global _config, _temp_config
     _config = _temp_config
-    with open(CONFIG_PATH, 'w') as f:
+    if path is None:
+        path = CONFIG_PATH
+    with open(path, 'w') as f:
         json.dump(_config, f)
 
 
