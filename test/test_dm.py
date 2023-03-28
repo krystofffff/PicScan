@@ -1,25 +1,41 @@
-import unittest
+import json
 import os
 import shutil
-import cv2
+import unittest
+
 import numpy as np
 
-import src.managers.data_manager as dm
 import src.managers.config_manager as cm
+import src.managers.data_manager as dm
 
 
 class TestDataManager(unittest.TestCase):
+
+    config = None
+    config_path = None
+    test_output_folder = None
 
     @classmethod
     def setUpClass(cls):
         cls.test_image = "./testingImages/output.jpg"
         cls.test_output_folder = "./output"
-        cm.load_config()
+        cls.config = {
+            "language": "en",
+            "output_format": 0,
+            "output_folder": cls.test_output_folder,
+            "duplicity_mode": 1,
+            "nn_loading": 0
+        }
+        cls.config_path = "test_config.json"
+        with open(cls.config_path, 'w') as f:
+            json.dump(cls.config, f)
+        cm.load_config(cls.config_path)
         os.makedirs(cls.test_output_folder, exist_ok=True)
 
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree(cls.test_output_folder)
+        os.remove(cls.config_path)
 
     def setUp(self):
         dm.clear_data()

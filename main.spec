@@ -8,9 +8,11 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[("./assets/*", "./assets"),
-        ("./css/*", "./css"),
-        ("./data/*", "./data")],
+    datas=[
+        ("assets", "assets"),
+        ("css", "css"),
+        ("data", "data"),
+        ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -19,7 +21,7 @@ a = Analysis(
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
-    noarchive=False,
+    noarchive=False
 )
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
@@ -38,7 +40,8 @@ exe = EXE(
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
-    entitlements_file=None
+    entitlements_file=None,
+    icon='./assets/logos/logo_256x256.ico'
 )
 coll = COLLECT(
     exe,
@@ -48,5 +51,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='main',
+    name='pic_scan'
 )

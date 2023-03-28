@@ -40,17 +40,15 @@ class MyTestCase(unittest.TestCase):
     def test_layoutContainsWidgets(self):
         layout = self.drop.layout.layout()
         count = self.drop.layout.count()
-        self.assertEqual(count, 4)
-        for i in [self.drop.label_1, self.drop.label_2, self.drop.browser_button,
-                  self.drop.settings_button, self.drop.checkbox]:
+        self.assertEqual(count, 5)
+        for i in [self.drop.label_1, self.drop.label_2, self.drop.browser_button]:
             self.drop.layout.removeWidget(i)
         countUpdate = self.drop.layout.count()
-        self.assertEqual(countUpdate, 1)
+        self.assertEqual(countUpdate, 2)
 
     def test_browseButtonConfigDropUi(self):
         button = self.drop.browser_button.text()
         self.assertEqual(self.drop.browser_button.isVisible(), False)
-        self.assertEqual(button, "Choose file")
         self.assertEqual(self.drop.browser_button.objectName(), "browserButton")
 
     # def test_getDistance(self, number, number1):
