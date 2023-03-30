@@ -2,6 +2,7 @@ import json
 import copy
 import os.path
 from datetime import datetime
+from types import SimpleNamespace
 
 from definitions import CONFIG_PATH, LANGS_PATH
 
@@ -36,9 +37,6 @@ def load_config(path=None):
     with open(path, 'r') as f:
         _config = json.load(f)
     _load_language()
-
-
-from types import SimpleNamespace
 
 
 class Tr(SimpleNamespace):
