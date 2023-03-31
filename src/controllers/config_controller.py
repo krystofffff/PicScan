@@ -1,3 +1,6 @@
+import os
+import sys
+
 from PyQt5.QtCore import pyqtSignal
 
 import src.managers.config_manager as cm
@@ -5,6 +8,7 @@ import src.managers.nn_rot_manager as nm
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QRadioButton, QPushButton, QHBoxLayout, QFileDialog, \
     QCheckBox
 from definitions import CSS_DIR
+from src.controllers.popup_dialog import PopupDialog
 
 
 class ConfigDialog(QDialog):
@@ -96,6 +100,10 @@ class ConfigDialog(QDialog):
         self.layout.addLayout(self.layout_buttons)
 
     def _save_and_close(self):
+        if cm.get_temp_language() != cm.get_language():
+            if PopupDialog(cm.tr().config.popup_dialog).exec_():
+                cm.save_config()
+                os.execl(sys.executable, sys.executable, *sys.argv)
         cm.save_config()
         if cm.get_nn_loading() and not nm.is_model_loaded() and not nm.model_is_loading:
             nm.load_model_async()

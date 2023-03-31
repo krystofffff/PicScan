@@ -96,6 +96,10 @@ def get_output_folder():
     return _config["output_folder"]
 
 
+def get_temp_language():
+    return _temp_config["language"]
+
+
 def output_folder_exists():
     return os.path.exists(get_output_folder())
 

@@ -27,12 +27,12 @@
     "languages": {
       "english": "angličtina",
       "czech": "čeština"
-    }
+    },
+    "popup_dialog": "Restartovat aplikaci ?"
   },
   "main": {
     "next_button": "Další",
     "auto_button":"Auto",
-    "quit_button": "Ukončit",
     "popup_dialog": "Zapnout auto režim ?"
   },
   "progress": {
@@ -51,7 +51,9 @@
   },
   "sim":{
     "accept_button": "Zachovat",
-    "decline_button": "Smazat"
+    "decline_button": "Smazat",
+    "accept_all_button": "Zachovat všechny",
+    "popup_dialog": "Zachovat všechny ?"
   },
   "stacked": {
     "popup_dialog": "Zavřít aplikaci ?"

@@ -1,7 +1,8 @@
+import os
 import sys
 
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSlot
 
 import src.managers.config_manager as cm
 import src.managers.nn_rot_manager as nm
@@ -12,6 +13,7 @@ from src.controllers.progress_controller import ProgressUi
 from src.controllers.sim.sim_controller import SimUI
 from src.controllers.stacked_widget import StackedWidget
 
+
 if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
@@ -20,6 +22,7 @@ if __name__ == "__main__":
     cm.load_config()
 
     sw = StackedWidget()
+
     sw.setWindowTitle("PicScan beta")
     drop = DropUi(sw)
 

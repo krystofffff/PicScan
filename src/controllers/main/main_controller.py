@@ -48,9 +48,8 @@ class MainUi(QMainWindow):
         self.next_button.clicked.connect(lambda: self.switch_to_progress(False))
         self.auto_button = QPushButton(cm.tr().main.auto_button)
         self.auto_button.clicked.connect(lambda: self.switch_to_progress(True))
-        self.quit_button = QPushButton(cm.tr().main.quit_button)
-        self.quit_button.clicked.connect(lambda: self._switch_to_drop())
-        for i in [self.next_button, self.auto_button, self.quit_button]:
+
+        for i in [self.next_button, self.auto_button]:
             i.setMinimumSize(80, 20)
             i.setMaximumSize(160, 40)
             self.buttons_h_layout.addWidget(i)
@@ -96,6 +95,9 @@ class MainUi(QMainWindow):
         self.canvas.setAlignment(Qt.AlignCenter)
         self.update_label()
 
+    def showEvent(self, event):
+        self.update_label()
+
     def resizeEvent(self, event: QResizeEvent):
         scaled_size = self.canvas.size()
         scaled_size.scale(self.canvas.size(), Qt.KeepAspectRatio)
@@ -103,10 +105,3 @@ class MainUi(QMainWindow):
 
     def update_label(self):
         self.canvas.setPixmap(self.pixmap.scaled(self.canvas.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
-
-    def _switch_to_drop(self):
-        dm.clear_data()
-        hm.clear_hashes()
-        cm.clear_temp_output_folder()
-        self.sw.setCurrentIndex(0)
-        self._clear_scroll_area()

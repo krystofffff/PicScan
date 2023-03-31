@@ -6,11 +6,13 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout, QScrollAr
 import src.managers.hash_manager as hm
 import src.managers.config_manager as cm
 from definitions import ROOT_DIR, CSS_DIR
+from src.controllers.popup_dialog import PopupDialog
 from src.controllers.sim.sim_item import SimItem
 from src.utils import graphic_utils as gra
 
 
 class SimUI(QMainWindow):
+    # TODO ???
     progress = pyqtSignal(bool)
 
     def __init__(self, sw):
@@ -37,8 +39,9 @@ class SimUI(QMainWindow):
         self.scroll_area.setWidget(self.scroll_inner_container)
 
         self.buttons_h_layout = QHBoxLayout()
+        self.buttons_v_layout = QVBoxLayout()
         self.v_layout.addWidget(self.canvas, 9)
-        self.v_layout.addLayout(self.buttons_h_layout, 1)
+        self.v_layout.addLayout(self.buttons_v_layout, 1)
 
         self.temp = QWidget()
         self.temp.setLayout(self.v_layout)
@@ -49,10 +52,14 @@ class SimUI(QMainWindow):
         self.accept_button.clicked.connect(lambda: self.process(True))
         self.decline_button = QPushButton(cm.tr().sim.decline_button)
         self.decline_button.clicked.connect(lambda: self.process(False))
-        for i in [self.accept_button, self.decline_button]:
-            i.setMinimumSize(80, 20)
-            i.setMaximumSize(160, 40)
-            self.buttons_h_layout.addWidget(i)
+        self.accept_all_button = QPushButton(cm.tr().sim.accept_all_button)
+        self.accept_all_button.clicked.connect(lambda: self.to_end())
+        for i in [self.accept_button, self.decline_button, self.accept_all_button]:
+            i.setMinimumSize(80, 40)
+        self.buttons_h_layout.addWidget(self.accept_button)
+        self.buttons_h_layout.addWidget(self.decline_button)
+        self.buttons_v_layout.addLayout(self.buttons_h_layout)
+        self.buttons_v_layout.addWidget(self.accept_all_button)
 
         SimItem.icons = {x: QIcon(ROOT_DIR + f"/assets/{x}.png") for x in ["rem", "swap"]}
 
@@ -92,6 +99,11 @@ class SimUI(QMainWindow):
         self.canvas.setAlignment(Qt.AlignCenter)
         self.update_label()
         self.scroll_area.verticalScrollBar().setValue(0)
+
+    def to_end(self):
+        if PopupDialog(cm.tr().sim.popup_dialog).exec_():
+            hm.clear_hashes()
+            self.sw.setCurrentIndex(4)
 
     def resizeEvent(self, event):
         self.update_label()

@@ -1,5 +1,10 @@
+import os
+import sys
+
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QStackedWidget
+from PyQt5.uic.properties import QtGui
 
 from definitions import ASSETS_PATH
 from src.controllers.popup_dialog import PopupDialog

@@ -27,12 +27,12 @@
     "languages": {
       "english": "English",
       "czech": "Czech"
-    }
+    },
+    "popup_dialog": "Restart app ?"
   },
   "main": {
     "next_button": "NEXT",
     "auto_button":"AUTO",
-    "quit_button": "QUIT",
     "popup_dialog": "Start auto mode ?"
   },
   "progress": {
@@ -51,7 +51,9 @@
   },
   "sim":{
     "accept_button": "ACCEPT",
-    "decline_button": "DECLINE"
+    "decline_button": "DECLINE",
+    "accept_all_button": "ACCEPT ALL",
+    "popup_dialog": "Accept all ?"
   },
   "stacked": {
     "popup_dialog": "Close this app ?"

@@ -66,6 +66,8 @@ class DropUi(QMainWindow):
         self._build_loading()
         self.stop_nn_loading(not cm.get_nn_loading())
 
+        # self._get_tree()
+
         css = ["drop.css", "buttons.css"]
         t = [open(CSS_DIR + x).read() for x in css]
         self.setStyleSheet("".join(t))
@@ -138,6 +140,14 @@ class DropUi(QMainWindow):
         if file_name:
             dm.set_file_count(file_name)
             self._start(file_name)
+
+    # def _get_tree(self):
+    #     widgets = []
+    #     results = []
+    #     for i in self.centralWidget().children():
+    #         if isinstance(i, QL):
+    #             widgets.append(i)
+
 
     def _start(self, inp):
         if dm.get_file_count() > 0:
