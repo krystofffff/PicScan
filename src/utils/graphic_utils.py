@@ -54,8 +54,8 @@ def _is_valid_rectangle(points):
 
 
 def load_image(url):
-    stream = open(url, "rb")
-    bts = bytearray(stream.read())
+    with open(url, "rb") as f:
+        bts = bytearray(f.read())
     nparray = np.asarray(bts, dtype=np.uint8)
     bgr_image = cv2.imdecode(nparray, cv2.IMREAD_UNCHANGED)
     return bgr_image

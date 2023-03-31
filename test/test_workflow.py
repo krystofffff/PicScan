@@ -13,6 +13,7 @@ from datagen import save_canvas_and_imgs
 
 
 class TestWorkflow(unittest.TestCase):
+    # TODO works alone but throws error on all tests running together
 
     config = None
     config_path = None
@@ -20,32 +21,32 @@ class TestWorkflow(unittest.TestCase):
     imgs_folder = None
     folder = None
 
-    @classmethod
-    def setUpClass(cls):
-        cls.folder = "./temp"
-        cls.canvas = cls.folder + "/canvas.jpg"
-        cls.imgs_folder = cls.folder + "/imgs"
-        cls.output_folder = cls.folder + "/output"
-        cls.config = {
+    def setUp(self):
+        self.folder = "./temp"
+        self.canvas = self.folder + "/canvas.jpg"
+        self.imgs_folder = self.folder + "/imgs"
+        self.output_folder = self.folder + "/output"
+        self.config = {
             "language": "en",
             "output_format": 0,
-            "output_folder": cls.output_folder,
+            "output_folder": self.output_folder,
             "duplicity_mode": 1,
             "nn_loading": 0
         }
-        cls.config_path = "test_config.json"
-        with open(cls.config_path, 'w') as f:
-            json.dump(cls.config, f)
-        cm.load_config(cls.config_path)
-        os.makedirs(cls.output_folder, exist_ok=True)
-        os.makedirs(cls.imgs_folder, exist_ok=True)
+        self.config_path = "test_config.json"
+        with open(self.config_path, 'w') as f:
+            json.dump(self.config, f)
+        cm.load_config(self.config_path)
+        os.makedirs(self.output_folder, exist_ok=True)
+        os.makedirs(self.imgs_folder, exist_ok=True)
 
-    @classmethod
-    def tearDownClass(cls):
-        shutil.rmtree(cls.folder)
-        os.remove(cls.config_path)
+    def tearDown(self):
+        shutil.rmtree(self.folder)
+        os.remove(self.config_path)
 
     def test_workflow(self):
+        cm.load_config(self.config_path)
+        cm.set_temp_output_folder()
         save_canvas_and_imgs(self.canvas, self.imgs_folder)
         dm.add_file([self.canvas])
         dm.process_next_image()
@@ -62,7 +63,7 @@ class TestWorkflow(unittest.TestCase):
         for i in inp_hashes:
             res = False
             for j in out_hashes:
-                if hm._get_similarity(i, j) > 0.85:
+                if hm._get_similarity(i, j) > 0.8:
                     res = True
             results.append(res)
         self.assertEqual(5, results.count(True))

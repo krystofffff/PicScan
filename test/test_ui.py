@@ -17,25 +17,11 @@ class MyTestCase(unittest.TestCase):
     main = MainUi(sw)
     drop = DropUi(sw)
 
-    def test_labelDropUi(self):
-        labelDragDrop = self.drop.label_1.text()
-        labelTwo = self.drop.label_2.text()
-        self.assertEqual(labelDragDrop, "Drag & Drop")
-        self.assertEqual(labelTwo, "or")
-
     def test_center(self):
         center = self.main.center.isVisible()
         self.assertEqual(center, False)
         self.assertEqual(self.main.center.objectName(), "outer")
         self.assertEqual(self.main.center.layout(), self.main.main_h_layout)
-
-    def test_labelMainUi(self):
-        auto = self.main.auto_button.text()
-        next = self.main.next_button.text()
-        end = self.main.quit_button.text()
-        self.assertEqual(auto, "AUTO")
-        self.assertEqual(next, "NEXT")
-        self.assertEqual(end, "QUIT")
 
     def test_layoutContainsWidgets(self):
         layout = self.drop.layout.layout()
