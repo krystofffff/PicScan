@@ -1,8 +1,7 @@
-import os
 import sys
 
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import Qt, pyqtSlot
+from PyQt5.QtCore import Qt
 
 import src.managers.config_manager as cm
 import src.managers.nn_rot_manager as nm
@@ -12,7 +11,6 @@ from src.controllers.main.main_controller import MainUi
 from src.controllers.progress_controller import ProgressUi
 from src.controllers.sim.sim_controller import SimUI
 from src.controllers.stacked_widget import StackedWidget
-
 
 if __name__ == "__main__":
 

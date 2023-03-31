@@ -17,7 +17,7 @@ class TestDataManager(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.test_image = "./testingImages/output.jpg"
+        cls.test_image = "./test_imgs/output.jpg"
         cls.test_output_folder = "./output"
         cls.config = {
             "language": "en",
