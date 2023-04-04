@@ -25,13 +25,17 @@ def set_temp_output_folder():
         os.makedirs(_temp_output_folder)
 
 
-def clear_temp_output_folder():
-    global _temp_output_folder
+def clear():
+    global _config, _temp_config, _temp_output_folder, _language
+    _config = {}
+    _temp_config = {}
     _temp_output_folder = None
+    _language = None
 
 
 def load_config(path=None):
     global _config
+    clear()
     if path is None:
         path = CONFIG_PATH
     with open(path, 'r') as f:

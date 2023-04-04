@@ -9,11 +9,10 @@ import src.managers.config_manager as cm
 import src.managers.data_manager as dm
 import src.managers.hash_manager as hm
 
-from datagen import save_canvas_and_imgs
+from test.datagen import save_canvas_and_imgs
 
 
-class TestWorkflow(unittest.TestCase):
-    # TODO works alone but throws error on all tests running together
+class TestCutout(unittest.TestCase):
 
     config = None
     config_path = None
@@ -44,7 +43,7 @@ class TestWorkflow(unittest.TestCase):
         shutil.rmtree(self.folder)
         os.remove(self.config_path)
 
-    def test_workflow(self):
+    def test_cutout(self):
         cm.load_config(self.config_path)
         cm.set_temp_output_folder()
         save_canvas_and_imgs(self.canvas, self.imgs_folder)

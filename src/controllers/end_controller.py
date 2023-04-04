@@ -47,5 +47,4 @@ class EndUI(QMainWindow):
     def _switch_to_drop(self):
         dm.clear_data()
         hm.clear_hashes()
-        cm.clear_temp_output_folder()
         self.sw.setCurrentIndex(0)
