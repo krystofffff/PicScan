@@ -12,8 +12,6 @@ from src.utils import graphic_utils as gra
 
 
 class SimUI(QMainWindow):
-    # TODO ???
-    progress = pyqtSignal(bool)
 
     def __init__(self, sw):
         super(SimUI, self).__init__()

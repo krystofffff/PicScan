@@ -1,45 +1,35 @@
 import os
-import unittest
 
 import cv2
-from PyQt5.QtCore import QObject, pyqtSignal, QTimer
-from PyQt5.QtTest import QTest
-
-from src.managers import nn_rot_manager as Nm
+from src.managers import nn_rot_manager as nm
 from src.managers.nn_rot_manager import Loader
 
 
-class MyClass(QObject):
-    my_signal = pyqtSignal()
+class TestNN:
+    imgs = []
 
-    def __init__(self, parent=None):
-        super().__init__(parent)
-
-        QTimer.singleShot(1000, self.my_signal.emit)
-
-
-class MyTestCase(unittest.TestCase):
-
-    def setUp(self):
-        self.imgs = []
-        dir = "nn_test_imgs"
-        for file in os.listdir(dir):
-            i = cv2.imread(dir + "/" + file)
+    def setup_method(self):
+        fld = "nn_test_imgs"
+        for file in os.listdir(fld):
+            i = cv2.imread(fld + "/" + file)
             self.imgs.append(i)
 
     def test_not_loaded(self):
-        self.assertRaises(Exception, lambda x: Nm.get_predictions(self.imgs))
+        try:
+            nm.get_predictions(self.imgs)
+            assert False
+        except nm.NNNotLoadedException:
+            assert True
 
-    # TODO Change wait to signal
-    def test_model_predictions(self):
+    def test_model_predictions(self, qtbot):
         loader = Loader()
-        loader.run_thread()
-        QTest.qWait(10_000)
-        x, y = Nm.gen_full(self.imgs)
-        preds = Nm.get_predictions(x)
+        with qtbot.waitSignal(loader.is_loaded, timeout=15_000):
+            loader.run_thread()
+        x, y = nm.gen_full(self.imgs)
+        preds = nm.get_predictions(x)
         counter = 0
         for idx, i in enumerate(preds):
             if i == y[idx]:
                 counter += 1
         counter /= len(preds)
-        self.assertTrue(counter > 0.9)
+        assert counter > 0.9
