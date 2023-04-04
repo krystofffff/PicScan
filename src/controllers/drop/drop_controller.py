@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QPushButton, QHBoxLayout, QFrame
 
 import src.controllers.config_controller as cc
+import src.controllers.about_controller as ac
 import src.managers.config_manager as cm
 import src.managers.data_manager as dm
 import src.managers.nn_rot_manager as nm
@@ -48,6 +49,8 @@ class DropUi(QMainWindow):
         self.settings_button = QPushButton(cm.tr().drop.settings_button)
         self.settings_button.setMinimumWidth(200)
         self.settings_button.clicked.connect(lambda: cc.ConfigDialog(self))
+        self.about_button = QPushButton(cm.tr().drop.about_button)
+        self.about_button.clicked.connect(lambda: ac.AboutDialog())
 
         self.ll = QHBoxLayout()
         self.checkbox = ToggleSwitch()
@@ -62,11 +65,10 @@ class DropUi(QMainWindow):
         self._build_folder_message()
 
         self.layout.addLayout(self.ll)
+        self.layout.addWidget(self.about_button)
 
         self._build_loading()
         self.stop_nn_loading(not cm.get_nn_loading())
-
-        # self._get_tree()
 
         css = ["drop.css", "buttons.css"]
         t = [open(CSS_DIR + x).read() for x in css]

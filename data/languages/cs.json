@@ -5,6 +5,7 @@
     "label_2": "nebo",
     "browser_button": "Vybrat soubory",
     "settings_button": "Nastavení",
+    "about_button": "O aplikaci",
     "folder_label": "Výstupní složka neexistuje",
     "loading_message": "UI se načítá",
     "popup_dialog": "Nebyly nalezeny žádné obrázky",
@@ -29,6 +30,12 @@
       "czech": "čeština"
     },
     "popup_dialog": "Restartovat aplikaci ?"
+  },
+  "about": {
+    "label_authors_title": "Autoři:",
+    "window_title": "O aplikaci",
+    "label_link": "Odkaz na projekt",
+    "label_version": "Verze:"
   },
   "main": {
     "next_button": "Další",

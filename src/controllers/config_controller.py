@@ -2,12 +2,13 @@ import os
 import sys
 
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtGui import QIcon
 
 import src.managers.config_manager as cm
 import src.managers.nn_rot_manager as nm
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QRadioButton, QPushButton, QHBoxLayout, QFileDialog, \
     QCheckBox
-from definitions import CSS_DIR
+from definitions import CSS_DIR, ICON_PATH
 from src.controllers.popup_dialog import PopupDialog
 
 
@@ -17,6 +18,7 @@ class ConfigDialog(QDialog):
 
     def __init__(self, drop):
         super().__init__()
+        self.setWindowIcon(QIcon(ICON_PATH))
         self.setWindowTitle(cm.tr().config.window_title)
 
         self.start_loading.connect(drop.stop_nn_loading)

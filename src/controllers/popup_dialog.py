@@ -2,7 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QFrame
 
-from definitions import CSS_DIR, ASSETS_PATH
+from definitions import CSS_DIR, ASSETS_PATH, ICON_PATH
 import src.managers.config_manager as cm
 
 
@@ -10,7 +10,7 @@ class PopupDialog(QDialog):
     def __init__(self, message, yes_mess=None, no_mess=None):
         super().__init__()
         self.setWindowTitle(" ")
-        self.setWindowIcon(QIcon(f"{ASSETS_PATH}/logo/logo_24x24.png"))
+        self.setWindowIcon(QIcon(ICON_PATH))
 
         if yes_mess is None:
             yes_mess = cm.tr().popup_dialog.yes

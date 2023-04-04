@@ -5,6 +5,7 @@
     "label_2": "or",
     "browser_button": "Choose files",
     "settings_button": "Settings",
+    "about_button": "About app",
     "folder_label": "Output folder doesn't exist",
     "loading_message": "AI is loading",
     "popup_dialog": "No images found",
@@ -29,6 +30,12 @@
       "czech": "Czech"
     },
     "popup_dialog": "Restart app ?"
+  },
+  "about": {
+    "label_authors_title": "Authors:",
+    "window_title": "About app",
+    "label_link": "Link to the project",
+    "label_version": "Version:"
   },
   "main": {
     "next_button": "NEXT",
