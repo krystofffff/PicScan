@@ -52,7 +52,7 @@ class AboutDialog(QDialog):
 
     def build_version(self):
         frame_version = QFrame()
-        label_version = QLabel(f"{cm.tr().about.label_version}{APP_VERSION}")
+        label_version = QLabel(f"{cm.tr().about.label_version} {APP_VERSION}")
         layout_version = QVBoxLayout()
         layout_version.addWidget(label_version)
         frame_version.setLayout(layout_version)
