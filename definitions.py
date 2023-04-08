@@ -9,6 +9,6 @@ MODEL_PATH = DATA_DIR + "eff2_coco_v2_128_bgen_b32.hdf5"
 ASSETS_PATH = ROOT_DIR + "/assets/"
 ICON_PATH = ASSETS_PATH + "/logo/logo_24x24.png"
 WEB_URL = "https://github.com/krystofffff/Annual-project-1"
-APP_VERSION = "0.9"
+APP_VERSION = "0.9.5"
 AUTHORS = ["Martin Dušek", "Ondřej Urbančík", "Kryštof Krmaschek", "Lucie Solková"]
 

@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import math
 import cv2
@@ -105,7 +107,7 @@ def _add_to_canvas(canvas, image, point, angle):
                 canvas[point[1] - h // 2 + i][point[0] - w // 2 + j] = img[i][j]
 
 
-def _get_random_image():
+def _get_random_image_from_web():
     w = random.randrange(100, 500)
     h = random.randrange(100, 500)
     url = 'https://random.imagecdn.app/' + str(w) + "/" + str(h) + "/"
@@ -117,14 +119,20 @@ def _get_random_image():
     return pix
 
 
-def _generate_canvas(visualize=False):
+def _get_random_image(folder_path):
+    imgs = os.listdir(folder_path)
+    imgs = [f"{folder_path}/{img}" for img in imgs]
+    return np.asarray(cv2.cvtColor(cv2.imread(random.choice(imgs)), cv2.COLOR_BGR2RGB))
+
+
+def _generate_canvas(folder_path, visualize=False):
     canvas = np.zeros((HEIGHT, WIDTH, 3), np.uint8)
     canvas[:] = (255, 255, 255)
     points = _get_points(5)
     imgs = []
     for i in points:
         # cv2.circle(canvas, (i[0], i[1]), i[2], (255, 0, 0), 1)
-        img = _get_random_image()
+        img = _get_random_image(folder_path)
         imgs.append(img)
         _add_to_canvas(canvas, img, i, random.randrange(360))
     if visualize:
@@ -132,8 +140,9 @@ def _generate_canvas(visualize=False):
     return canvas, imgs
 
 
-def save_canvas_and_imgs(c_path, i_path):
-    canvas, imgs = _generate_canvas()
+def save_canvas_and_imgs(c_path, i_path, input_path):
+    canvas, imgs = _generate_canvas(input_path)
     cv2.imwrite(c_path, cv2.cvtColor(canvas, cv2.COLOR_RGB2BGR))
     for idx, i in enumerate(imgs):
         cv2.imwrite(f"{i_path}/{idx}.jpg", cv2.cvtColor(i, cv2.COLOR_RGB2BGR))
+

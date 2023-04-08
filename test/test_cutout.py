@@ -46,13 +46,14 @@ class TestCutout(unittest.TestCase):
     def test_cutout(self):
         cm.load_config(self.config_path)
         cm.set_temp_output_folder()
-        save_canvas_and_imgs(self.canvas, self.imgs_folder)
+        save_canvas_and_imgs(self.canvas, self.imgs_folder, "nn_test_imgs")
         dm.add_file([self.canvas])
         dm.process_next_image()
         dm.save_cutouts()
         out_imgs = [cv2.imread(f"{cm.get_temp_output_folder()}/{i}") for i in os.listdir(cm.get_temp_output_folder())]
         inp_imgs = [cv2.imread(f"{self.imgs_folder}/{i}") for i in os.listdir(self.imgs_folder)]
         out_hashes = []
+        n = len(inp_imgs)
         for i in out_imgs:
             out_hashes.append(hm._get_hash(i))
             for r in range(3):
@@ -65,7 +66,7 @@ class TestCutout(unittest.TestCase):
                 if hm._get_similarity(i, j) > 0.8:
                     res = True
             results.append(res)
-        self.assertEqual(5, results.count(True))
+        self.assertEqual(n, results.count(True))
 
 
 if __name__ == '__main__':
