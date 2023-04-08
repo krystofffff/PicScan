@@ -35,7 +35,8 @@
     "label_authors_title": "Autoři:",
     "window_title": "O aplikaci",
     "label_link": "Odkaz na projekt",
-    "label_version": "Verze:"
+    "label_version": "Verze:",
+    "label_description": "Aplikace byla vytvořena studenty katedry informatiky a počítačů Ostravské univerzity."
   },
   "main": {
     "next_button": "Další",

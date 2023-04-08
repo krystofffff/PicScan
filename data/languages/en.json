@@ -35,7 +35,8 @@
     "label_authors_title": "Authors:",
     "window_title": "About app",
     "label_link": "Link to the project",
-    "label_version": "Version:"
+    "label_version": "Version:",
+    "label_description": "The application was created by students of the Department of Informatics and Computers of the University of Ostrava."
   },
   "main": {
     "next_button": "NEXT",
