@@ -30,7 +30,7 @@ class AboutDialog(QDialog):
         self.setStyleSheet("".join(t))
 
         self.exec_()
-
+# TODO ...
     def build_app_name(self):
         app_name = QLabel("PicScan")
         app_name.setAlignment(Qt.AlignHCenter)
