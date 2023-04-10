@@ -32,7 +32,7 @@ jobs:
       with:
           type: zip
           filename: dist/PicScan.zip
-          path: dist/main
+          path: dist/picscan
     - name: Automatic Releases
       uses: marvinpinto/action-automatic-releases@v1.2.1
       with:
