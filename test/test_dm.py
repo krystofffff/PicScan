@@ -53,7 +53,6 @@ class TestDataManager(unittest.TestCase):
 
     def test_save_cutouts(self):
         dm.add_file([self.test_image])
-        cm.clear_temp_output_folder()
         cm.set_temp_output_folder()
         dm.process_next_image()
         dm.save_cutouts()

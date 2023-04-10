@@ -60,14 +60,6 @@ class TestConfigManager(unittest.TestCase):
         expected_temp_output_folder = f"{self.config['output_folder']}/{t}"
         self.assertEqual(cm.get_temp_output_folder(), expected_temp_output_folder)
 
-    def test_clear_temp_output_folder(self):
-        # Test that clear_temp_output_folder() clears the _temp_output_folder variable
-        cm.load_config(path=self.config_path)
-        cm.create_temp_config()
-        cm.set_temp_output_folder()
-        cm.clear_temp_output_folder()
-        self.assertIsNone(cm._temp_output_folder)
-
     def test_save_config(self):
         # Test that save_config() saves the temporary config to the config file
         cm.create_temp_config()
