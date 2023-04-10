@@ -19,9 +19,8 @@ if __name__ == "__main__":
 
     cm.load_config()
 
-    cm.set_temp_output_folder()
-
     sw = StackedWidget()
+
     sw.setWindowTitle("PicScan beta")
     drop = DropUi(sw)
 

@@ -48,9 +48,13 @@ def rot_list(li, n):
     return li[n:] + li[:n]
 
 
+class NNNotLoadedException(Exception):
+    pass
+
+
 def get_predictions(imgs):
     if _model is None:
-        raise Exception("Model not loaded yet.")
+        raise NNNotLoadedException()
     temp_imgs = []
     for img in imgs:
         img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)

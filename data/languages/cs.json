@@ -1,0 +1,76 @@
+{
+  "drop": {
+    "label_1": "Přetáhni a pusť",
+    "label_1_hover": "Pusť sem",
+    "label_2": "nebo",
+    "browser_button": "Vybrat soubory",
+    "settings_button": "Nastavení",
+    "about_button": "O aplikaci",
+    "folder_label": "Výstupní složka neexistuje",
+    "loading_message": "UI se načítá",
+    "popup_dialog": "Nebyly nalezeny žádné obrázky",
+    "folder": "Výběr souborů"
+  },
+  "config": {
+    "window_title": "Nastavení",
+    "label_nn_title": "Opravit rotaci pomocí UI:",
+    "checkbox_nn_loading": "Zapnuto",
+    "label_format_title": "Výstupní formát:",
+    "radio_button_jpg": "JPG",
+    "radio_button_png": "PNG",
+    "button_save": "Uložit",
+    "label_o_folder_title": "Výstupní složka:",
+    "button_browse_o_folder": "Vybrat",
+    "folder": "Vyběr složky",
+    "label_duplicity": "Detekce duplicity:",
+    "checkbox_duplicity":"Zapnuto",
+    "label_language": "Jazyk (pro změnu je nutno restartovat aplikaci):",
+    "languages": {
+      "english": "angličtina",
+      "czech": "čeština"
+    },
+    "popup_dialog": "Restartovat aplikaci ?"
+  },
+  "about": {
+    "label_authors_title": "Autoři:",
+    "window_title": "O aplikaci",
+    "label_link": "Odkaz na projekt",
+    "label_version": "Verze:",
+    "label_description": "Aplikace byla vytvořena studenty katedry informatiky a počítačů Ostravské univerzity."
+  },
+  "main": {
+    "next_button": "Další",
+    "auto_button":"Auto",
+    "popup_dialog": "Zapnout auto režim ?"
+  },
+  "progress": {
+    "label_time": "Zbývající čas:",
+    "label_files": "Zpracované soubory:"
+  },
+  "edit": {
+    "select_button": "Vybrat\nbody",
+    "reset_button": "Obnovit",
+    "accept_button": "OK"
+  },
+  "end": {
+    "label": "Dokončeno",
+    "button_drop": "Zpět na úvodní obrazovku",
+    "button_output": "Otevřít výstupní složku"
+  },
+  "sim":{
+    "accept_button": "Zachovat",
+    "decline_button": "Smazat",
+    "accept_all_button": "Zachovat všechny",
+    "popup_dialog": "Zachovat všechny ?"
+  },
+  "stacked": {
+    "popup_dialog": "Zavřít aplikaci ?"
+  },
+  "image_dialog": {
+    "window_title": "obrázek"
+  },
+  "popup_dialog": {
+    "yes": "Ano",
+    "no": "Ne"
+  }
+}
