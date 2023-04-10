@@ -107,8 +107,8 @@ class ProgressUi(QMainWindow):
         fc = 1 if fc == 0 else fc
         if not fcr == 0:
             remaining_t = int((fc - fcr) * (t / fcr))
-            self.label_time.setText(f"Time remaining: {datetime.timedelta(seconds=remaining_t)}")
+            self.label_time.setText(f"{cm.tr().progress.label_time} {datetime.timedelta(seconds=remaining_t)}")
         else:
-            self.label_time.setText(f"Time remaining: ...")
+            self.label_time.setText(f"{cm.tr().progress.label_time} ...")
         self.progress_bar.setValue(int(fcr * 1.0 / fc * 100))
-        self.label_files.setText(f"Files processed: {fcr}/{fc}")
+        self.label_files.setText(f"{cm.tr().progress.label_files} {fcr}/{fc}")

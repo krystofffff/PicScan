@@ -2,12 +2,14 @@ import json
 import copy
 import os.path
 from datetime import datetime
+from types import SimpleNamespace
 
-from definitions import CONFIG_PATH
+from definitions import CONFIG_PATH, LANGS_PATH
 
 _config = {}
 _temp_config = {}
 _temp_output_folder = None
+_language = None
 
 
 def get_temp_output_folder():
@@ -23,15 +25,52 @@ def set_temp_output_folder():
         os.makedirs(_temp_output_folder)
 
 
-def clear_temp_output_folder():
-    global _temp_output_folder
+def clear():
+    global _config, _temp_config, _temp_output_folder, _language
+    _config = {}
+    _temp_config = {}
     _temp_output_folder = None
+    _language = None
 
 
-def load_config():
+def load_config(path=None):
     global _config
-    with open(CONFIG_PATH, 'r') as f:
+    clear()
+    if path is None:
+        path = CONFIG_PATH
+    with open(path, 'r') as f:
         _config = json.load(f)
+    _load_language()
+
+
+class Tr(SimpleNamespace):
+    def __init__(self, dictionary):
+        super().__init__()
+        for key, value in dictionary.items():
+            if isinstance(value, dict):
+                self.__setattr__(key, Tr(value))
+            else:
+                self.__setattr__(key, value)
+
+
+def _load_language():
+    global _language
+    with open(f"{LANGS_PATH}/{get_language()}.json", 'r', encoding="utf-8") as f:
+        lang = json.load(f)
+    _language = Tr(lang)
+
+
+def set_language(val):
+    global _temp_config
+    _temp_config["language"] = val
+
+
+def get_language():
+    return _config["language"]
+
+
+def tr():
+    return _language
 
 
 def create_temp_config():
@@ -39,10 +78,12 @@ def create_temp_config():
     _temp_config = copy.deepcopy(_config)
 
 
-def save_config():
+def save_config(path=None):
     global _config, _temp_config
     _config = _temp_config
-    with open(CONFIG_PATH, 'w') as f:
+    if path is None:
+        path = CONFIG_PATH
+    with open(path, 'w') as f:
         json.dump(_config, f)
 
 
@@ -57,6 +98,10 @@ def set_output_format(val):
 
 def get_output_folder():
     return _config["output_folder"]
+
+
+def get_temp_language():
+    return _temp_config["language"]
 
 
 def output_folder_exists():

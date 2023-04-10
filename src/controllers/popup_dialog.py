@@ -1,13 +1,21 @@
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QFrame
 
-from definitions import CSS_DIR
+from definitions import CSS_DIR, ASSETS_PATH, ICON_PATH
+import src.managers.config_manager as cm
 
 
 class PopupDialog(QDialog):
-    def __init__(self, message, yes_mess="Yes", no_mess="No"):
+    def __init__(self, message, yes_mess=None, no_mess=None):
         super().__init__()
         self.setWindowTitle(" ")
+        self.setWindowIcon(QIcon(ICON_PATH))
+
+        if yes_mess is None:
+            yes_mess = cm.tr().popup_dialog.yes
+        if no_mess is None:
+            no_mess = cm.tr().popup_dialog.no
 
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignCenter)

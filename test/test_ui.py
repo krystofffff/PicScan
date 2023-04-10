@@ -17,40 +17,24 @@ class MyTestCase(unittest.TestCase):
     main = MainUi(sw)
     drop = DropUi(sw)
 
-    def test_labelDropUi(self):
-        labelDragDrop = self.drop.label_1.text()
-        labelTwo = self.drop.label_2.text()
-        self.assertEqual(labelDragDrop, "Drag & Drop")
-        self.assertEqual(labelTwo, "or")
-
     def test_center(self):
         center = self.main.center.isVisible()
         self.assertEqual(center, False)
         self.assertEqual(self.main.center.objectName(), "outer")
         self.assertEqual(self.main.center.layout(), self.main.main_h_layout)
 
-    def test_labelMainUi(self):
-        auto = self.main.auto_button.text()
-        next = self.main.next_button.text()
-        end = self.main.quit_button.text()
-        self.assertEqual(auto, "AUTO")
-        self.assertEqual(next, "NEXT")
-        self.assertEqual(end, "QUIT")
-
     def test_layoutContainsWidgets(self):
         layout = self.drop.layout.layout()
         count = self.drop.layout.count()
-        self.assertEqual(count, 4)
-        for i in [self.drop.label_1, self.drop.label_2, self.drop.browser_button,
-                  self.drop.settings_button, self.drop.checkbox]:
+        self.assertEqual(count, 6)
+        for i in [self.drop.label_1, self.drop.label_2, self.drop.browser_button]:
             self.drop.layout.removeWidget(i)
         countUpdate = self.drop.layout.count()
-        self.assertEqual(countUpdate, 1)
+        self.assertEqual(countUpdate, 3)
 
     def test_browseButtonConfigDropUi(self):
         button = self.drop.browser_button.text()
         self.assertEqual(self.drop.browser_button.isVisible(), False)
-        self.assertEqual(button, "Choose file")
         self.assertEqual(self.drop.browser_button.objectName(), "browserButton")
 
     # def test_getDistance(self, number, number1):

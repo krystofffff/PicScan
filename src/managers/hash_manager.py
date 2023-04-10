@@ -67,6 +67,10 @@ def build_new_hashimages(h=None):
 
 
 def _get_hash(img):
+    h, w = len(img), len(img[0])
+    p = 5 / 100.0
+    h, w = int(h * p), int(w * p)
+    img = img[h:-h, w:-w]
     return _hasher.compute(img)
 
 
