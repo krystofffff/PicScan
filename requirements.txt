@@ -7,3 +7,4 @@ requests
 pyinstaller
 h5py
 tensorflow
+tensorflow
