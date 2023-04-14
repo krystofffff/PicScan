@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QPushButton, QHBox
 
 import src.controllers.config_controller as cc
 import src.controllers.about_controller as ac
+import src.controllers.feedback_controller as fc
 import src.managers.config_manager as cm
 import src.managers.data_manager as dm
 import src.managers.nn_rot_manager as nm
@@ -51,6 +52,8 @@ class DropUi(QMainWindow):
         self.settings_button.clicked.connect(lambda: cc.ConfigDialog(self))
         self.about_button = QPushButton(cm.tr().drop.about_button)
         self.about_button.clicked.connect(lambda: ac.AboutDialog())
+        self.feedback_button = QPushButton("Submit Feedback")
+        self.feedback_button.clicked.connect(lambda: fc.FeedbackDialog())
 
         self.ll = QHBoxLayout()
         self.checkbox = ToggleSwitch()
@@ -66,6 +69,8 @@ class DropUi(QMainWindow):
 
         self.layout.addLayout(self.ll)
         self.layout.addWidget(self.about_button)
+
+        self.layout.addWidget(self.feedback_button)
 
         self._build_loading()
         self.stop_nn_loading(not cm.get_nn_loading())
