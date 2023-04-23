@@ -1,6 +1,8 @@
 from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtGui import QIcon, QDesktopServices
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QFrame, QHBoxLayout
+from PyQt5.QtWidgets import QPushButton
+import src.controllers.feedback_controller as fc
 import src.managers.config_manager as cm
 import src.utils.graphic_utils as gra
 from definitions import CSS_DIR, ICON_PATH, ASSETS_PATH, WEB_URL, APP_VERSION, AUTHORS
@@ -14,7 +16,7 @@ class AboutDialog(QDialog):
         self.setWindowIcon(QIcon(ICON_PATH))
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(25, 25, 25, 25)
-        self.setFixedSize(500, 500)
+        self.setFixedSize(500, 530)
         self.setLayout(self.layout)
 
         self.build_app_name()
@@ -24,6 +26,7 @@ class AboutDialog(QDialog):
         self.build_version()
         self.layout.addStretch()
         self.build_university()
+        self.build_feedback_button()
 
         css = ["config.css", "buttons.css"]
         t = [open(CSS_DIR + x).read() for x in css]
@@ -104,3 +107,9 @@ class AboutDialog(QDialog):
         frame_university.setLayout(layout_v)
 
         self.layout.addWidget(frame_university)
+
+    def build_feedback_button(self):
+        self.feedback_button = QPushButton("Send Feedback")
+        self.feedback_button.clicked.connect(lambda: fc.FeedbackDialog())
+        self.layout.addWidget(self.feedback_button)
+
