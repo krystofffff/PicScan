@@ -3,7 +3,7 @@
 App for cutting photos out of scanned images, includes rotation correction and duplicity detection.
 
 ### About
-We made this app as a project for our subjects RPR1/RPR2. It should be an opensource alternative to other similarly functioning software. \
+We made this app as a project for our subjects RPR1/RPR2. It should be an opensource alternative to other similarly functioning software.
 
 Our assignment was:
 - App takes folder or files as an input
@@ -32,5 +32,5 @@ output directory will be located in the "dist"
 ### Structure
 The app is structured into three main layers:
 - [Controllers](documentation/controllers.md) - UI control, every window and dialog has its own
-- [Managers](documentation/controllers.md) - core functionalities
+- [Managers](documentation/managers.md) - core functionalities
 - Utils - supporting functions for managers and controllers
