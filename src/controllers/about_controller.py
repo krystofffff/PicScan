@@ -47,6 +47,7 @@ class AboutDialog(QDialog):
 
         layout_h = QHBoxLayout()
         layout_authors = QVBoxLayout()
+        layout_authors.setAlignment(Qt.AlignTop)
 
         label_authors_title = QLabel(cm.tr().about.label_authors_title)
         label_author_list = "\n".join(AUTHORS)

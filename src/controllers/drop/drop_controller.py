@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot
-from PyQt5.QtGui import QMovie
+from PyQt5.QtGui import QMovie, QTransform
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QPushButton, QHBoxLayout, QFrame
 
