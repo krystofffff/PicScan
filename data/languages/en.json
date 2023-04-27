@@ -73,5 +73,17 @@
   "popup_dialog": {
     "yes": "Yes",
     "no": "No"
+  },
+  "feedback": {
+    "window_title": "Feedback",
+    "feedback_label": "Feedback",
+    "feedback_input": "Enter your feedback here...",
+    "submit_button": "Submit",
+    "cancel_button": "Cancel",
+    "messageBox_Error": "Error",
+    "messageBox_Success": "Success",
+    "messageBox_Thanks": "Thank you for your feedback!",
+    "messageBox_Please": "Please enter your feedback before submitting.",
+    "messageBox_Failed": "Failed to submit feedback: "
   }
 }

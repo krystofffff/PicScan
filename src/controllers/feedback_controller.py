@@ -1,17 +1,19 @@
 import requests
-from requests.auth import HTTPBasicAuth
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (QDialog, QVBoxLayout, QLabel, QPlainTextEdit,
                              QHBoxLayout, QPushButton, QMessageBox)
+from requests.auth import HTTPBasicAuth
+
 from definitions import CSS_DIR, ICON_PATH
+import src.managers.config_manager as cm
 
 
 class FeedbackDialog(QDialog):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Feedback")
+        self.setWindowTitle(cm.tr().feedback.window_title)
         self.setWindowIcon(QIcon(ICON_PATH))
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(25, 25, 25, 25)
@@ -30,20 +32,20 @@ class FeedbackDialog(QDialog):
         self.exec_()
 
     def build_feedback_label(self):
-        feedback_label = QLabel("Feedback")
+        feedback_label = QLabel(cm.tr().feedback.feedback_label)
         feedback_label.setAlignment(Qt.AlignHCenter)
         feedback_label.setStyleSheet("""font-size: 24px;""")
         self.layout.addWidget(feedback_label)
 
     def build_feedback_input(self):
         self.feedback_input = QPlainTextEdit()
-        self.feedback_input.setPlaceholderText("Enter your feedback here...")
+        self.feedback_input.setPlaceholderText(cm.tr().feedback.feedback_input)
         self.layout.addWidget(self.feedback_input)
 
     def build_feedback_buttons(self):
-        submit_button = QPushButton("Submit")
+        submit_button = QPushButton(cm.tr().feedback.submit_button)
         submit_button.clicked.connect(self.submit_feedback)
-        cancel_button = QPushButton("Cancel")
+        cancel_button = QPushButton(cm.tr().feedback.cancel_button)
         cancel_button.clicked.connect(self.reject)
 
         button_layout = QHBoxLayout()
@@ -98,12 +100,12 @@ class FeedbackDialog(QDialog):
             )
 
             if response.status_code == 201:
-                QMessageBox.information(self, "Success",
-                                        "Thank you for your feedback!")
+                QMessageBox.information(self, cm.tr().feedback.messageBox_Success,
+                                        cm.tr().feedback.messageBox_Thanks)
                 self.accept()
             else:
-                QMessageBox.warning(self, "Error",
-                                    f"Failed to submit feedback: {response.content}")
+                QMessageBox.warning(self, cm.tr().feedback.messageBox_Error,
+                                    f"{cm.tr().feedback.messageBox_Failed}, {response.content}")
         else:
-            QMessageBox.warning(self, "Error",
-                                "Please enter your feedback before submitting.")
+            QMessageBox.warning(self, cm.tr().feedback.messageBox_Error,
+                                cm.tr().feedback.messageBox_Please)

@@ -73,5 +73,17 @@
   "popup_dialog": {
     "yes": "Ano",
     "no": "Ne"
+  },
+  "feedback": {
+    "window_title": "Zpětná vazba",
+    "feedback_label": "Zpětná vazba",
+    "feedback_input": "Zde vložte Vaší zpětnou vazbu...",
+    "submit_button": "Potvrdit",
+    "cancel_button": "Zrušit",
+    "messageBox_Error": "Chyba",
+    "messageBox_Success": "Úspěch",
+    "messageBox_Thanks": "Děkujeme za Vaši zpětnou vazbu!",
+    "messageBox_Please": "Před odesláním prosím zadejte svůj názor.",
+    "messageBox_Failed": "Zpětnou vazbu se nepodařilo odeslat: "
   }
 }
