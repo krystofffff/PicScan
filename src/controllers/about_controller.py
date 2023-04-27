@@ -112,6 +112,6 @@ class AboutDialog(QDialog):
         self.layout.addWidget(frame_university)
 
     def build_feedback_button(self):
-        feedback_button = QPushButton("Send Feedback")
+        feedback_button = QPushButton(cm.tr().about.feedback_button)
         feedback_button.clicked.connect(lambda: fc.FeedbackDialog())
         self.layout.addWidget(feedback_button)
