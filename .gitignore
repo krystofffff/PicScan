@@ -4,5 +4,4 @@ __pycache__/
 /dist
 /build
 /test/temp
-/.idea
 /data/config.json
