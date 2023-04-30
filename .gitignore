@@ -1,7 +1,7 @@
 __pycache__/
-/venv
-/output/*
-/dist
-/build
-/test/temp
-/data/config.json
+venv
+output/*
+dist
+build
+test/temp
+data/config.json
