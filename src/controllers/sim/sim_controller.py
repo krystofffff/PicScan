@@ -67,6 +67,7 @@ class SimUI(QMainWindow):
 
     def process(self, is_accepted):
         hm.process_hash_images(is_accepted)
+        hm.remove_non_existing()
         if hm.is_empty():
             self.sw.setCurrentIndex(4)
         else:
