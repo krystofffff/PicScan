@@ -4,4 +4,3 @@ output/*
 dist
 build
 test/temp
-data/config.json
