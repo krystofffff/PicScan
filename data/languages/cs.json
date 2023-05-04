@@ -72,7 +72,8 @@
   },
   "popup_dialog": {
     "yes": "Ano",
-    "no": "Ne"
+    "no": "Ne",
+    "ok": "OK"
   },
   "feedback": {
     "window_title": "Zpětná vazba",
@@ -85,5 +86,8 @@
     "messageBox_Thanks": "Děkujeme za Vaši zpětnou vazbu!",
     "messageBox_Please": "Před odesláním prosím zadejte svůj názor.",
     "messageBox_Failed": "Zpětnou vazbu se nepodařilo odeslat: "
+  },
+  "errors": {
+    "missing_output_folder": "Došlo k chybě: Výstupní složka neexistuje"
   }
 }

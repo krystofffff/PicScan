@@ -36,18 +36,23 @@ class Hash:
 def process_hash_images(is_accepted):
     for i in _hash_images:
         if not i.enabled:
-            remove_file(i.h.path)
+            res = remove_file(i.h.path)
+            if not res:
+                return False
             _remove_from_hashes(i.h)
     if not is_accepted:
-        remove_file(_hash_images[0].h.path)
+        res = remove_file(_hash_images[0].h.path)
+        if not res:
+            return False
     _remove_from_hashes(_hash_images[0].h)
+    return True
 
 
 def remove_file(path):
     try:
         os.remove(path)
     except FileNotFoundError:
-        pass
+        return False
 
 
 def _remove_from_hashes(h):

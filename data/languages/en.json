@@ -72,7 +72,8 @@
   },
   "popup_dialog": {
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "ok": "OK"
   },
   "feedback": {
     "window_title": "Feedback",
@@ -85,5 +86,8 @@
     "messageBox_Thanks": "Thank you for your feedback!",
     "messageBox_Please": "Please enter your feedback before submitting.",
     "messageBox_Failed": "Failed to submit feedback: "
+  },
+  "errors": {
+    "missing_output_folder": "Error occurred: Output folder not found"
   }
 }
