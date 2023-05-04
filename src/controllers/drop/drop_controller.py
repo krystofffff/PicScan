@@ -150,8 +150,8 @@ class DropUi(QMainWindow):
     #         if isinstance(i, QL):
     #             widgets.append(i)
 
-
     def _start(self, inp):
+        cm.update_temp_output_folder()
         if dm.get_file_count() > 0:
             dm.add_file(inp)
             self.progress.emit(self.checkbox.isChecked())
