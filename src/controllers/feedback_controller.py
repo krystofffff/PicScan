@@ -1,10 +1,6 @@
-import requests
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import (QDialog, QVBoxLayout, QLabel, QPlainTextEdit,
-                             QHBoxLayout, QPushButton, QMessageBox)
-from requests.auth import HTTPBasicAuth
-
+from PyQt5.QtWidgets import (QDialog, QVBoxLayout, QLabel, QPushButton, QScrollArea, QWidget, QHBoxLayout)
 from definitions import CSS_DIR, ICON_PATH
 import src.managers.config_manager as cm
 
@@ -20,9 +16,10 @@ class FeedbackDialog(QDialog):
         self.setFixedSize(500, 500)
         self.setLayout(self.layout)
 
-        self.build_feedback_label()
+        self.build_tutorial_label()
 
-        self.build_feedback_input()
+        self.build_tutorial_text()
+
         self.build_feedback_buttons()
 
         css = ["config.css", "buttons.css"]
@@ -31,81 +28,42 @@ class FeedbackDialog(QDialog):
 
         self.exec_()
 
-    def build_feedback_label(self):
-        feedback_label = QLabel(cm.tr().feedback.feedback_label)
-        feedback_label.setAlignment(Qt.AlignHCenter)
-        feedback_label.setStyleSheet("""font-size: 24px;""")
-        self.layout.addWidget(feedback_label)
+    def build_tutorial_label(self):
+        tutorial_label = QLabel(cm.tr().feedback.tutorial_title)
+        tutorial_label.setAlignment(Qt.AlignHCenter)
+        tutorial_label.setStyleSheet("""font-size: 24px;""")
+        self.layout.addWidget(tutorial_label)
 
-    def build_feedback_input(self):
-        self.feedback_input = QPlainTextEdit()
-        self.feedback_input.setPlaceholderText(cm.tr().feedback.feedback_input)
-        self.layout.addWidget(self.feedback_input)
+    def build_tutorial_text(self):
+        tutorial_steps = cm.tr().feedback.tutorial_text.split('\n')
+
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+
+        scroll_content = QWidget()
+        scroll_layout = QVBoxLayout()
+
+        for step in tutorial_steps:
+            if '{github_issues_link}' in step:
+                link = "https://github.com/krystofffff/PicScan/issues"
+                step = step.format(github_issues_link='<a href="{}">{}</a>'.format(link, link))
+                step_label = QLabel(step)
+                step_label.setOpenExternalLinks(True)
+            else:
+                step_label = QLabel(step)
+
+            step_label.setWordWrap(True)
+            step_label.setStyleSheet("font-size: 16px;")
+            scroll_layout.addWidget(step_label)
+
+        scroll_content.setLayout(scroll_layout)
+        scroll_area.setWidget(scroll_content)
+        self.layout.addWidget(scroll_area)
 
     def build_feedback_buttons(self):
-        submit_button = QPushButton(cm.tr().feedback.submit_button)
-        submit_button.clicked.connect(self.submit_feedback)
-        cancel_button = QPushButton(cm.tr().feedback.cancel_button)
-        cancel_button.clicked.connect(self.reject)
+        close_button = QPushButton(cm.tr().feedback.close_button)
+        close_button.clicked.connect(self.reject)
 
         button_layout = QHBoxLayout()
-        button_layout.addWidget(submit_button)
-        button_layout.addWidget(cancel_button)
+        button_layout.addWidget(close_button)
         self.layout.addLayout(button_layout)
-
-    def submit_feedback(self):
-        feedback = self.feedback_input.toPlainText()
-
-        if feedback:
-            username = 'p22156@student.osu.cz'
-            api_token = 'ATATT3xFfGF04RdbgUzoeTlPexCgkYT-zkA-YP-dwxe-S2_dnX_ndkxYqioHwFt4a4A7bxum7rCh99gYvgfW4zmx11GghF55vtTzefNZxDhBrLE03V7Zpq29stSBjFgkBXSq6VKniUjTu1VqdwdUSq_7hFGrVOGgdnfv7MK0hoZ9jOHKkuVGL7w=2CF30DBF'
-
-            project_key = 'PS'
-            issue_type = 'Bug'
-
-            issue_data = {
-                "fields": {
-                    "project": {
-                        "key": project_key
-                    },
-                    "summary": f"Feedback from PicScan: {feedback[:50]}...",
-                    "description": {
-                        "type": "doc",
-                        "version": 1,
-                        "content": [
-                            {
-                                "type": "paragraph",
-                                "content": [
-                                    {
-                                        "type": "text",
-                                        "text": feedback
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    "issuetype": {
-                        "name": issue_type
-                    },
-
-                }
-            }
-
-            jira_url = 'https://osukip.atlassian.net/rest/api/3/issue'
-
-            response = requests.post(
-                jira_url,
-                json=issue_data,
-                auth=HTTPBasicAuth(username, api_token)
-            )
-
-            if response.status_code == 201:
-                QMessageBox.information(self, cm.tr().feedback.messageBox_Success,
-                                        cm.tr().feedback.messageBox_Thanks)
-                self.accept()
-            else:
-                QMessageBox.warning(self, cm.tr().feedback.messageBox_Error,
-                                    f"{cm.tr().feedback.messageBox_Failed}, {response.content}")
-        else:
-            QMessageBox.warning(self, cm.tr().feedback.messageBox_Error,
-                                cm.tr().feedback.messageBox_Please)

@@ -75,18 +75,12 @@
     "no": "Ne",
     "ok": "OK"
   },
-  "feedback": {
+"feedback": {
     "window_title": "Zpětná vazba",
-    "feedback_label": "Zpětná vazba",
-    "feedback_input": "Zde vložte Vaší zpětnou vazbu...",
-    "submit_button": "Potvrdit",
-    "cancel_button": "Zrušit",
-    "messageBox_Error": "Chyba",
-    "messageBox_Success": "Úspěch",
-    "messageBox_Thanks": "Děkujeme za Vaši zpětnou vazbu!",
-    "messageBox_Please": "Před odesláním prosím zadejte svůj názor.",
-    "messageBox_Failed": "Zpětnou vazbu se nepodařilo odeslat: "
-  },
+    "tutorial_title": "Odeslat zpětnou vazbu na GitHub",
+    "tutorial_text": "Pro odeslání zpětné vazby jako problému na GitHubu postupujte podle těchto kroků:\n1. Navštivte stránku s problémy na GitHubu: {github_issues_link}\n2. Přihlaste se ke svému účtu na GitHubu nebo si vytvořte nový, pokud žádný nemáte.\n3. Klikněte na tlačítko 'Nový problém'.\n4. Zadejte název a popis problému a zahrňte do něj zpětnou vazbu z aplikace PicScan.\n5. Problém odešlete kliknutím na tlačítko 'Odeslat nový problém'.",
+    "close_button": "Zavřít"
+},
   "errors": {
     "missing_output_folder": "Došlo k chybě: Výstupní složka neexistuje"
   }

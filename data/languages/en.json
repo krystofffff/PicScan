@@ -75,18 +75,13 @@
     "no": "No",
     "ok": "OK"
   },
-  "feedback": {
+"feedback": {
     "window_title": "Feedback",
-    "feedback_label": "Feedback",
-    "feedback_input": "Enter your feedback here...",
-    "submit_button": "Submit",
-    "cancel_button": "Cancel",
-    "messageBox_Error": "Error",
-    "messageBox_Success": "Success",
-    "messageBox_Thanks": "Thank you for your feedback!",
-    "messageBox_Please": "Please enter your feedback before submitting.",
-    "messageBox_Failed": "Failed to submit feedback: "
-  },
+    "tutorial_title": "Submit feedback as a GitHub issue",
+    "tutorial_text": "Please follow these steps to submit your feedback as a GitHub issue:\n1. Visit the GitHub issues page: {github_issues_link}\n2. Sign in to your GitHub account or create one if you don't have one.\n3. Click on the 'New issue' button.\n4. Provide a title and description for the issue, and include the feedback from PicScan.\n5. Submit the issue by clicking on the 'Submit new issue' button.",
+    "close_button": "Close"
+}
+,
   "errors": {
     "missing_output_folder": "Error occurred: Output folder not found"
   }
