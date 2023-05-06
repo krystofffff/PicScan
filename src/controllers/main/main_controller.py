@@ -74,11 +74,23 @@ class MainUi(QMainWindow):
     def switch_to_progress(self, in_auto_mode):
         if in_auto_mode:
             if PopupDialog(cm.tr().main.popup_dialog).exec_():
-                dm.save_cutouts()
-                self.progress.emit(True)
+                success = dm.save_cutouts()
+                if not success:
+                    self.error_occurred()
+                else:
+                    self.progress.emit(True)
         else:
-            dm.save_cutouts()
-            self.progress.emit(False)
+            success = dm.save_cutouts()
+            if not success:
+                self.error_occurred()
+            else:
+                self.progress.emit(False)
+
+    def error_occurred(self):
+        PopupDialog(message=cm.tr().errors.missing_output_folder, yes_mess=cm.tr().popup_dialog.ok, no_mess=False)\
+            .exec_()
+        dm.clear_data()
+        self.sw.setCurrentIndex(0)
 
     @pyqtSlot()
     def load_new_image(self):

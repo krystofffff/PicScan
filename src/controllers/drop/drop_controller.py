@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot
-from PyQt5.QtGui import QMovie
+from PyQt5.QtGui import QMovie, QTransform
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QPushButton, QHBoxLayout, QFrame
 
@@ -150,8 +150,8 @@ class DropUi(QMainWindow):
     #         if isinstance(i, QL):
     #             widgets.append(i)
 
-
     def _start(self, inp):
+        cm.update_temp_output_folder()
         if dm.get_file_count() > 0:
             dm.add_file(inp)
             self.progress.emit(self.checkbox.isChecked())

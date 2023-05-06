@@ -50,7 +50,7 @@ class PopupDialog(QDialog):
 
         self.setLayout(layout)
 
-        self.setFixedSize(360, 160)
+        self.setMinimumSize(360, 160)
 
         css = ["autoDialog.css", "buttons.css"]
         t = [open(CSS_DIR + x).read() for x in css]

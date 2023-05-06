@@ -36,7 +36,8 @@
     "window_title": "About app",
     "label_link": "Link to the project",
     "label_version": "Version:",
-    "label_description": "The application was created by students of the Department of Informatics and Computers of the University of Ostrava."
+    "label_description": "The application was created by students of the Department of Informatics and Computers of the University of Ostrava.",
+    "feedback_button": "Send feedback"
   },
   "main": {
     "next_button": "NEXT",
@@ -71,6 +72,17 @@
   },
   "popup_dialog": {
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "ok": "OK"
+  },
+"feedback": {
+    "window_title": "Feedback",
+    "tutorial_title": "Submit feedback as a GitHub issue",
+    "tutorial_text": "Please follow these steps to submit your feedback as a GitHub issue:\n1. Visit the GitHub issues page: {github_issues_link}\n2. Sign in to your GitHub account or create one if you don't have one.\n3. Click on the 'New issue' button.\n4. Provide a title and description for the issue, and include the feedback from PicScan.\n5. Submit the issue by clicking on the 'Submit new issue' button.",
+    "close_button": "Close"
+}
+,
+  "errors": {
+    "missing_output_folder": "Error occurred: Output folder not found"
   }
 }

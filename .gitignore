@@ -1,6 +1,6 @@
 __pycache__/
-/venv
-/output/*
-/dist
-/build
-/test/temp
+venv
+output/*
+dist
+build
+test/temp
