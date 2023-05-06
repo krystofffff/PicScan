@@ -1,1 +1,1 @@
-{"language": "en", "output_format": 1, "output_folder": "output", "duplicity_mode": true, "nn_loading": true}
+{"language": "en", "output_format": 0, "output_folder": "output", "duplicity_mode": 1, "nn_loading": false}
