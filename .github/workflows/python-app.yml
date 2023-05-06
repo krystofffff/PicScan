@@ -31,8 +31,8 @@ jobs:
       uses: thedoctor0/zip-release@0.7.1
       with:
           type: zip
-          INPUT_DIRECTORY: dist
-          filename: PicScan.zip
+          directory: dist
+          filename: dist/PicScan.zip
           path: pic_scan
     - name: Automatic Releases
       uses: marvinpinto/action-automatic-releases@v1.2.1
