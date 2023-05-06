@@ -31,9 +31,9 @@ jobs:
       uses: thedoctor0/zip-release@0.7.1
       with:
           type: zip
-          directory: dist
+          directory: dist/pic_scan
           filename: PicScan.zip
-          path: pic_scan
+          path: .
     - name: Automatic Releases
       uses: marvinpinto/action-automatic-releases@v1.2.1
       with:
@@ -42,5 +42,5 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            dist/PicScan.zip
+            dist/pic_scan/PicScan.zip
 
