@@ -32,10 +32,18 @@ def save_cutouts():
     for idx, co in enumerate(_cutouts):
         if co.enabled:
             cm.set_temp_output_folder()
-            path = f"{cm.get_temp_output_folder()}/img_{_file_counter}_{idx}{output_format}"
+
+            if not os.path.exists(cm.get_temp_output_folder()):
+                return False
+
+            file_name = f"img_{_file_counter}_{idx}{output_format}"
+            path = os.path.join(cm.get_temp_output_folder(), file_name)
             if cm.get_duplicity_mode() == 1:
                 hm.add_to_hashes(co.img, path)
-            cv2.imwrite(path, co.img)
+            # sketchy but necessary due to encoding
+            is_success, im_buf_arr = cv2.imencode(output_format, co.img)
+            im_buf_arr.tofile(path)
+    return True
 
 
 def set_file_count(paths):

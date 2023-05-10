@@ -52,6 +52,10 @@ class Tr(SimpleNamespace):
             else:
                 self.__setattr__(key, value)
 
+def update_temp_output_folder():
+    global _temp_output_folder
+    _temp_output_folder = None
+    set_temp_output_folder()
 
 def _load_language():
     global _language
@@ -79,7 +83,8 @@ def create_temp_config():
 
 
 def save_config(path=None):
-    global _config, _temp_config
+    global _config, _temp_config, _temp_output_folder
+    _temp_output_folder = None
     _config = _temp_config
     if path is None:
         path = CONFIG_PATH

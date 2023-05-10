@@ -36,7 +36,8 @@
     "window_title": "O aplikaci",
     "label_link": "Odkaz na projekt",
     "label_version": "Verze:",
-    "label_description": "Aplikace byla vytvořena studenty katedry informatiky a počítačů Ostravské univerzity."
+    "label_description": "Aplikace byla vytvořena studenty katedry informatiky a počítačů Ostravské univerzity.",
+    "feedback_button": "Odeslat zpětnou vazbu"
   },
   "main": {
     "next_button": "Další",
@@ -71,6 +72,16 @@
   },
   "popup_dialog": {
     "yes": "Ano",
-    "no": "Ne"
+    "no": "Ne",
+    "ok": "OK"
+  },
+"feedback": {
+    "window_title": "Zpětná vazba",
+    "tutorial_title": "Odeslat zpětnou vazbu na GitHub",
+    "tutorial_text": "Pro odeslání zpětné vazby jako problému na GitHubu postupujte podle těchto kroků:\n1. Navštivte stránku s problémy na GitHubu: {github_issues_link}\n2. Přihlaste se ke svému účtu na GitHubu nebo si vytvořte nový, pokud žádný nemáte.\n3. Klikněte na tlačítko 'Nový problém'.\n4. Zadejte název a popis problému a zahrňte do něj zpětnou vazbu z aplikace PicScan.\n5. Problém odešlete kliknutím na tlačítko 'Odeslat nový problém'.",
+    "close_button": "Zavřít"
+},
+  "errors": {
+    "missing_output_folder": "Došlo k chybě: Výstupní složka neexistuje"
   }
 }

@@ -47,6 +47,7 @@ class AboutDialog(QDialog):
 
         layout_h = QHBoxLayout()
         layout_authors = QVBoxLayout()
+        layout_authors.setAlignment(Qt.AlignTop)
 
         label_authors_title = QLabel(cm.tr().about.label_authors_title)
         label_author_list = "\n".join(AUTHORS)
@@ -112,6 +113,6 @@ class AboutDialog(QDialog):
         self.layout.addWidget(frame_university)
 
     def build_feedback_button(self):
-        feedback_button = QPushButton("Send Feedback")
+        feedback_button = QPushButton(cm.tr().about.feedback_button)
         feedback_button.clicked.connect(lambda: fc.FeedbackDialog())
         self.layout.addWidget(feedback_button)

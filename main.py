@@ -11,6 +11,7 @@ from src.controllers.main.main_controller import MainUi
 from src.controllers.progress_controller import ProgressUi
 from src.controllers.sim.sim_controller import SimUI
 from src.controllers.stacked_widget import StackedWidget
+from definitions import APP_VERSION
 
 if __name__ == "__main__":
 
@@ -21,7 +22,7 @@ if __name__ == "__main__":
 
     sw = StackedWidget()
 
-    sw.setWindowTitle("PicScan beta")
+    sw.setWindowTitle(f"PicScan {APP_VERSION}")
     drop = DropUi(sw)
 
     nn_loader = nm.loader
