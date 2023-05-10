@@ -17,9 +17,9 @@ class MainItem(QHBoxLayout):
         v_layout.setContentsMargins(0, 0, 0, 0)
         label = MainLabel(parent, idx)
 
-        rot_button = self._build_rotate_button(25, label)
-        edi_button = self._build_edit_button(25, idx, label)
-        rem_button = self._build_remove_button(25, label)
+        rot_button = self._build_rotate_button(35, label)
+        edi_button = self._build_edit_button(35, idx, label)
+        rem_button = self._build_remove_button(35, label)
         for i in [rot_button, edi_button, rem_button]:
             v_layout.addWidget(i)
         self.addWidget(label, 9)
