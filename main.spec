@@ -30,7 +30,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='main',
+    name='PicScan',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -51,5 +51,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='pic_scan'
+    name='PicScan'
 )
