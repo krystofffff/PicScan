@@ -37,7 +37,7 @@ def save_cutouts():
                 return False
 
             file_name = f"img_{_file_counter}_{idx}{output_format}"
-            path = os.path.join(cm.get_temp_output_folder(), file_name)
+            path = f"{cm.get_temp_output_folder()}/{file_name}"
             if cm.get_duplicity_mode() == 1:
                 hm.add_to_hashes(co.img, path)
             # sketchy but necessary due to encoding

@@ -51,6 +51,7 @@ def process_hash_images(is_accepted):
 def remove_file(path):
     try:
         os.remove(path)
+        return True
     except FileNotFoundError:
         return False
 

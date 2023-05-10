@@ -89,8 +89,7 @@ class MainUi(QMainWindow):
     def error_occurred(self):
         PopupDialog(message=cm.tr().errors.missing_output_folder, yes_mess=cm.tr().popup_dialog.ok, no_mess=False)\
             .exec_()
-        dm.clear_data()
-        self.sw.setCurrentIndex(0)
+        self.sw.switch_to_drop()
 
     @pyqtSlot()
     def load_new_image(self):

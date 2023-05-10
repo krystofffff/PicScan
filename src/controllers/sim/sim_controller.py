@@ -79,8 +79,7 @@ class SimUI(QMainWindow):
     def error_occurred(self):
         PopupDialog(message=cm.tr().errors.missing_output_folder, yes_mess=cm.tr().popup_dialog.ok, no_mess=False)\
             .exec_()
-        hm.clear_hashes()
-        self.sw.setCurrentIndex(0)
+        self.sw.switch_to_drop()
 
     def _clear_scroll_area(self):
         for i in range(self.grid_layout.count()):
