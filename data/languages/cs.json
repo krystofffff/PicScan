@@ -73,7 +73,8 @@
   "popup_dialog": {
     "yes": "Ano",
     "no": "Ne",
-    "ok": "OK"
+    "ok": "OK",
+    "try_again": "Zkusit znovu"
   },
 "feedback": {
     "window_title": "Zpětná vazba",

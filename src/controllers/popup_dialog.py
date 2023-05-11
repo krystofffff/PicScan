@@ -28,14 +28,14 @@ class PopupDialog(QDialog):
         h_layout.addStretch()
         if yes_mess:
             button_accept = QPushButton(yes_mess)
-            button_accept.setFixedSize(100, 50)
+            button_accept.setMinimumSize(100, 50)
             button_accept.clicked.connect(lambda: self.selection(True))
             h_layout.addWidget(button_accept)
         if no_mess:
             if yes_mess:
                 h_layout.addStretch()
             button_decline = QPushButton(no_mess)
-            button_decline.setFixedSize(100, 50)
+            button_decline.setMinimumSize(100, 50)
             button_decline.clicked.connect(lambda: self.selection(False))
             h_layout.addWidget(button_decline)
 

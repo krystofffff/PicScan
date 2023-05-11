@@ -73,7 +73,8 @@
   "popup_dialog": {
     "yes": "Yes",
     "no": "No",
-    "ok": "OK"
+    "ok": "OK",
+    "try_again": "Try again"
   },
 "feedback": {
     "window_title": "Feedback",
