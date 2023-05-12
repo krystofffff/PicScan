@@ -83,6 +83,7 @@
     "close_button": "Zavřít"
 },
   "errors": {
-    "missing_output_folder": "Došlo k chybě: Výstupní složka neexistuje"
+    "missing_output_folder": "Došlo k chybě: Výstupní složka neexistuje",
+    "missing_input_file": "Došlo k chybě: Vstupní soubor neexistuje"
   }
 }

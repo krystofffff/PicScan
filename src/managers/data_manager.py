@@ -58,20 +58,30 @@ def set_file_count(paths):
             _file_count += 1
 
 
-def process_next_image():
+def process_next_image(retry):
     global _file_counter, _process_timer
     if not is_empty():
         t = time.perf_counter()
-        _file_counter += 1
-        generate_canvas()
+        res = generate_canvas(retry)
+        if not res:
+            return False
         generate_cutouts()
+        _file_counter += 1
         _process_timer += time.perf_counter() - t
+    return True
 
 
-def generate_canvas():
+def generate_canvas(retry):
     global _canvas
-    file = _get_next_file()
-    _canvas = gra.load_image(file)
+    if not retry:
+        file = _get_next_file()
+    else:
+        file = _current_file
+    try:
+        _canvas = gra.load_image(file)
+        return True
+    except FileNotFoundError:
+        return False
 
 
 def generate_cutouts():
