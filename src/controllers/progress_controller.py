@@ -16,7 +16,6 @@ class Worker(QObject):
     finished = pyqtSignal()
 
     def run(self):
-        time.sleep(1)
         retry = True
         success = True
         while retry:
