@@ -37,6 +37,7 @@ if __name__ == "__main__":
 
     main.progress.connect(progress.process)
     drop.progress.connect(progress.process)
+    sw.check_folder.connect(drop.update_output_folder_message)
     progress.main_update.connect(main.load_new_image)
     progress.hash_update.connect(sim.load_new_image)
 

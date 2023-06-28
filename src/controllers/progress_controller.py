@@ -1,3 +1,5 @@
+import time
+
 from PyQt5.QtCore import Qt, QObject, pyqtSignal, QThread, pyqtSlot
 from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QProgressBar, QHBoxLayout, QFrame
 import src.managers.data_manager as dm
@@ -7,13 +9,28 @@ from PyQt5.QtWidgets import QStackedWidget
 from definitions import CSS_DIR
 import datetime
 
+from src.controllers.popup_dialog import PopupDialog
+
 
 class Worker(QObject):
     finished = pyqtSignal()
 
     def run(self):
-        dm.process_next_image()
+        retry = True
+        success = True
+        while retry:
+            retry = False
+            success = dm.process_next_image(not success)
+            if not success:
+                retry = self.error_dialog()
+                if not retry:
+                    self.sw.switch_to_drop()
+
         self.finished.emit()
+
+    def error_dialog(self):
+        return PopupDialog(message=cm.tr().errors.missing_input_file, no_mess=cm.tr().popup_dialog.ok,
+                           yes_mess=cm.tr().popup_dialog.try_again).exec_()
 
 
 class ProgressUi(QMainWindow):
@@ -80,6 +97,7 @@ class ProgressUi(QMainWindow):
     def run_thread(self, in_auto_mode):
         self.thread = QThread()
         self.worker = Worker()
+        self.worker.sw = self.sw
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.finished.connect(self.thread.quit)
@@ -91,10 +109,22 @@ class ProgressUi(QMainWindow):
     def next_step(self, in_auto_mode):
         self.update_processed()
         if in_auto_mode:
-            dm.save_cutouts()
-            self.process(in_auto_mode)
+            retry = True
+            while retry:
+                retry = False
+                success = dm.save_cutouts()
+                if not success:
+                    retry = self.error_dialog()
+                    if not retry:
+                        self.sw.switch_to_drop()
+                else:
+                    self.process(in_auto_mode)
         else:
             self.switch_to_main_controller()
+
+    def error_dialog(self):
+        return PopupDialog(message=cm.tr().errors.missing_output_folder, no_mess=cm.tr().popup_dialog.ok,
+                           yes_mess=cm.tr().popup_dialog.try_again).exec_()
 
     def switch_to_main_controller(self):
         self.main_update.emit()

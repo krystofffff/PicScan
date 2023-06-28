@@ -66,21 +66,27 @@ class SimUI(QMainWindow):
         self.setStyleSheet("".join(t))
 
     def process(self, is_accepted):
-        success = hm.process_hash_images(is_accepted)
-        hm.remove_non_existing()
-        if not success:
-            self.error_occurred()
-        else:
-            if hm.is_empty():
-                self.sw.setCurrentIndex(4)
+        retry = True
+        while retry:
+            retry = False
+            success = hm.process_hash_images(is_accepted)
+            if not success:
+                retry = self.error_dialog()
+                if retry:
+                    continue
+                else:
+                    self.sw.switch_to_drop()
             else:
-                self.load_new_image()
+                hm.remove_non_existing()
+                if hm.is_empty():
+                    self.sw.setCurrentIndex(4)
+                else:
+                    self.load_new_image()
 
-    def error_occurred(self):
-        PopupDialog(message=cm.tr().errors.missing_output_folder, yes_mess=cm.tr().popup_dialog.ok, no_mess=False)\
-            .exec_()
-        hm.clear_hashes()
-        self.sw.setCurrentIndex(0)
+    def error_dialog(self):
+        return PopupDialog(message=cm.tr().errors.missing_output_folder, no_mess=cm.tr().popup_dialog.ok,
+                           yes_mess=cm.tr().popup_dialog.try_again).exec_()
+        # self.sw.switch_to_drop()
 
     def _clear_scroll_area(self):
         for i in range(self.grid_layout.count()):

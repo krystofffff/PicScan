@@ -26,11 +26,11 @@ class MyTestCase(unittest.TestCase):
     def test_layoutContainsWidgets(self):
         layout = self.drop.layout.layout()
         count = self.drop.layout.count()
-        self.assertEqual(count, 7)
+        self.assertEqual(count, 6)
         for i in [self.drop.label_1, self.drop.label_2, self.drop.browser_button]:
             self.drop.layout.removeWidget(i)
         countUpdate = self.drop.layout.count()
-        self.assertEqual(countUpdate, 4)
+        self.assertEqual(countUpdate, 3)
 
     def test_browseButtonConfigDropUi(self):
         button = self.drop.browser_button.text()

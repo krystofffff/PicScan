@@ -27,7 +27,7 @@ class EndUI(QMainWindow):
 
         button_layout = QHBoxLayout()
         button_drop = QPushButton(cm.tr().end.button_drop)
-        button_drop.clicked.connect(lambda: self._switch_to_drop())
+        button_drop.clicked.connect(lambda: self.sw.switch_to_drop())
         button_output = QPushButton(cm.tr().end.button_output)
         button_output.clicked.connect(lambda: os.startfile(str(cm.get_temp_output_folder()).replace("/", "\\")))
         for i in [button_drop, button_output]:
@@ -43,8 +43,3 @@ class EndUI(QMainWindow):
         css = ["drop.css", "buttons.css"]
         t = [open(CSS_DIR + x).read() for x in css]
         self.setStyleSheet("".join(t))
-
-    def _switch_to_drop(self):
-        dm.clear_data()
-        hm.clear_hashes()
-        self.sw.setCurrentIndex(0)

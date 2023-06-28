@@ -73,7 +73,8 @@
   "popup_dialog": {
     "yes": "Ano",
     "no": "Ne",
-    "ok": "OK"
+    "ok": "OK",
+    "try_again": "Zkusit znovu"
   },
 "feedback": {
     "window_title": "Zpětná vazba",
@@ -82,6 +83,7 @@
     "close_button": "Zavřít"
 },
   "errors": {
-    "missing_output_folder": "Došlo k chybě: Výstupní složka neexistuje"
+    "missing_output_folder": "Došlo k chybě: Výstupní složka neexistuje",
+    "missing_input_file": "Došlo k chybě: Vstupní soubor neexistuje"
   }
 }

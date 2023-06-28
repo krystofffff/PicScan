@@ -73,7 +73,8 @@
   "popup_dialog": {
     "yes": "Yes",
     "no": "No",
-    "ok": "OK"
+    "ok": "OK",
+    "try_again": "Try again"
   },
 "feedback": {
     "window_title": "Feedback",
@@ -83,6 +84,7 @@
 }
 ,
   "errors": {
-    "missing_output_folder": "Error occurred: Output folder not found"
+    "missing_output_folder": "Error occurred: Output folder not found",
+    "missing_input_file": "Error occurred: Input file not found"
   }
 }

@@ -2,7 +2,7 @@ import os
 import sys
 
 from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QFont
 
 import src.managers.config_manager as cm
 import src.managers.nn_rot_manager as nm
@@ -49,13 +49,17 @@ class ConfigDialog(QDialog):
         self.exec_()
 
     def _build_language_settings(self):
+        font = QFont()
+        font.setPointSize(14)
         frame_language = QFrame()
         layout_language = QVBoxLayout()
         frame_language.setLayout(layout_language)
         label_language = QLabel(cm.tr().config.label_language)
         button_english = QRadioButton(cm.tr().config.languages.english)
+        button_english.setFont(font)
         button_english.toggled.connect(lambda: cm.set_language("en"))
         button_czech = QRadioButton(cm.tr().config.languages.czech)
+        button_czech.setFont(font)
         button_czech.toggled.connect(lambda: cm.set_language("cs"))
         buttons = {"en": button_english, "cs": button_czech}
         buttons[cm.get_language()].setChecked(True)
@@ -65,11 +69,14 @@ class ConfigDialog(QDialog):
         self.layout.addWidget(frame_language)
 
     def _build_nn_loading_settings(self):
+        font = QFont()
+        font.setPointSize(14)
         self.frame_nn_loading = QFrame()
         self.layout_nn_loading = QVBoxLayout()
         self.frame_nn_loading.setLayout(self.layout_nn_loading)
         self.label_nn_title = QLabel(cm.tr().config.label_nn_title)
         self.checkbox_nn_loading = QCheckBox(cm.tr().config.checkbox_nn_loading)
+        self.checkbox_nn_loading.setFont(font)
         self.checkbox_nn_loading.setChecked(cm.get_nn_loading())
         self.checkbox_nn_loading.clicked.connect(lambda: cm.set_nn_loading(self.checkbox_nn_loading.isChecked()))
         self.layout_nn_loading.addWidget(self.label_nn_title)
@@ -77,14 +84,18 @@ class ConfigDialog(QDialog):
         self.layout.addWidget(self.frame_nn_loading)
 
     def _build_output_format_settings(self):
+        font = QFont()
+        font.setPointSize(14)
         self.frame_o_format = QFrame()
         self.layout_output_format = QVBoxLayout()
         self.frame_o_format.setLayout(self.layout_output_format)
         self.label_format_title = QLabel(cm.tr().config.label_format_title)
         self.label_format_title.setMaximumSize(240, 50)
         self.radio_button_jpg = QRadioButton("JPG")
+        self.radio_button_jpg.setFont(font)
         self.radio_button_jpg.clicked.connect(lambda: cm.set_output_format(0))
         self.radio_button_png = QRadioButton("PNG")
+        self.radio_button_png.setFont(font)
         self.radio_button_png.clicked.connect(lambda: cm.set_output_format(1))
         self.format_radio_buttons = [self.radio_button_jpg, self.radio_button_png]
         for i in [self.label_format_title, *self.format_radio_buttons]:
@@ -145,11 +156,14 @@ class ConfigDialog(QDialog):
         self.label_o_folder.setText(folder)
 
     def _build_duplicity_settings(self):
+        font = QFont()
+        font.setPointSize(14)
         frame_duplicity = QFrame()
         layout_duplicity = QVBoxLayout()
         frame_duplicity.setLayout(layout_duplicity)
         label_duplicity = QLabel(cm.tr().config.label_duplicity)
         checkbox_duplicity = QCheckBox(cm.tr().config.checkbox_duplicity)
+        checkbox_duplicity.setFont(font)
         checkbox_duplicity.setChecked(cm.get_nn_loading())
         checkbox_duplicity.clicked.connect(lambda: cm.set_duplicity_mode(checkbox_duplicity.isChecked()))
         layout_duplicity.addWidget(label_duplicity)
