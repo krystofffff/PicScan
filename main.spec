@@ -12,6 +12,8 @@ a = Analysis(
         ("assets", "assets"),
         ("css", "css"),
         ("data", "data"),
+        ("documentation/Uživatelská přiručka.pdf", "."),
+        ("documentation/User manual.pdf", ".")
         ],
     hiddenimports=[],
     hookspath=[],
